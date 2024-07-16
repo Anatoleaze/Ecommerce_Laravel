@@ -155,7 +155,7 @@
 				<div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
 					<i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
 					<i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-					 Filtre
+					 Filtres
 				</div>
 
 				<div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
@@ -172,7 +172,7 @@
 						<i class="zmdi zmdi-search"></i>
 					</button>
 
-					<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search">
+					<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Recherche">
 				</div>	
 			</div>
 
@@ -187,7 +187,7 @@
 						<ul>
 							<li class="p-b-6">
 								<a href="#" class="filter-link stext-106 trans-04">
-									Defaut
+									Défaut
 								</a>
 							</li>
 
