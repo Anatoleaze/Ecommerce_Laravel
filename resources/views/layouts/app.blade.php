@@ -48,19 +48,19 @@
 					<div class="menu-desktop">
 						<ul class="main-menu">
 							<li class="active-menu">
-								<a href="index.html">Accueil</a>
+								<a href="{{ route('home2') }}">Accueil</a>
 							</li>
 
 							<li>
-								<a href="product.html">Catalogue</a>
+								<a href="{{ route('products_list') }}">Catalogue</a>
 							</li>
 
 							<li>
-								<a href="shoping-cart.html">Panier</a>
+								<a href="{{ route('cart') }}">Panier</a>
 							</li>
 
 							<li>
-								<a href="contact.html">A propos</a>
+								<a href="{{ route('contact') }}">A propos</a>
 							</li>
 						</ul>
 					</div>	
@@ -234,11 +234,11 @@
 					</div>
 
 					<div class="header-cart-buttons flex-w w-full">
-						<a href="shoping-cart.html" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
-							votre panier
+						<a href="{{ route('cart') }}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+							Votre Panier
 						</a>
 
-						<a href="shoping-cart.html" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
+						<a href="{{ route('products_list') }}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
 							Paiement
 						</a>
 					</div>
