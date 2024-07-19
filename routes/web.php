@@ -9,3 +9,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/home2', [App\Http\Controllers\HomeController::class, 'home'])->name('home2');
+
+Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products_list');
+
+Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart');
+
+Route::get('/contact', [App\Http\Controllers\HomeController::class, 'contact'])->name('contact');
