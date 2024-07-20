@@ -20,7 +20,9 @@ class ProductFactory extends Factory
         $slug = str_replace(' ','_', strtolower($name));
         $price = fake()->randomFloat(2);
         $sale = $price - fake()->randomDigit();
-
+        $types = ['homme', 'femme', 'sacs', 'chaussures', 'montres'];
+        $index = array_rand($types, 1);
+        
         return [
             'name' => $name,
             'slug' => $slug,
@@ -28,6 +30,7 @@ class ProductFactory extends Factory
             'image_name' => fake()->imageUrl(640, 480, 'product', true),
             'price' => $price,
             'sale_price' => $sale,
+            'type'=> $types[$index]
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Product;
 
 class HomeController extends Controller
 {
@@ -22,7 +23,7 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {
+    {   
         return view('home');
     }
 
@@ -33,7 +34,8 @@ class HomeController extends Controller
      */
     public function home()
     {
-        return view('home2');
+        $products = Product::get();
+        return view('home2', compact('products'));
     }
     
     /**
