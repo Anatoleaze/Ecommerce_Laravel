@@ -4,7 +4,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-import './bootstrap';
+//import './bootstrap';
 import { createApp } from 'vue';
 
 /**
@@ -16,7 +16,22 @@ import { createApp } from 'vue';
 const app = createApp({});
 
 import ExampleComponent from './components/ExampleComponent.vue';
+import AddToCartButton from './components/AddToCartButton.vue';
+import ProductComponent from './components/ProductComponent.vue';
+import SliderComponent from './components/home/SliderComponent.vue';
+import CategoryCartComponent from './components/CategoryCartComponent.vue';
+import ProductCartComponent from './components/products/ProductCartComponent.vue';
+import FilterComponent from './components/products/FilterComponent.vue';
+
+
+
 app.component('example-component', ExampleComponent);
+app.component('add-to-cart-button', AddToCartButton);
+app.component('product-component', ProductComponent);
+app.component('slider-component', SliderComponent);
+app.component('category-cart-component', CategoryCartComponent);
+app.component('product-cart-component', ProductCartComponent);
+app.component('filter-component', FilterComponent);
 
 /**
  * The following block of code may be used to automatically register your
@@ -36,4 +51,8 @@ app.component('example-component', ExampleComponent);
  * scaffolding. Otherwise, you will need to add an element yourself.
  */
 
+console.log('app.js loaded');
+
 app.mount('#app');
+
+console.log('app mounted');

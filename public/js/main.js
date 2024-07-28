@@ -1,4 +1,3 @@
-
 (function ($) {
     "use strict";
 
@@ -128,21 +127,19 @@
 
     /*==================================================================
     [ Isotope ]*/
-    var $topeContainer = $('.isotope-grid');
-    var $filter = $('.filter-tope-group');
 
-    // filter items on button click
-    $filter.each(function () {
-        $filter.on('click', 'button', function () {
-            var filterValue = $(this).attr('data-filter');
-            $topeContainer.isotope({filter: filterValue});
-        });
-        
-    });
+    
+    var $topeContainer = $('.isotope-grid');
 
     // init Isotope
     $(window).on('load', function () {
+        console.log('load isotope');
+        console.log(this);
+
         var $grid = $topeContainer.each(function () {
+            console.log('link isotope');
+            console.log(this);
+
             $(this).isotope({
                 itemSelector: '.isotope-item',
                 layoutMode: 'fitRows',
@@ -155,17 +152,45 @@
         });
     });
 
+
+     
+    // Capturing the filterEvent emitted from Vue component
+     window.addEventListener('filterEvent', function(event) {
+        
+        var $filter = $('.filter-tope-group');
+        
+        console.log('link filter to event');
+        console.log(this);
+
+        $filter.on('click', function () {
+            console.log('event déclengé');
+            console.log(this);
+
+            var filterValue = $(this).attr('data-filter');
+            console.log(filterValue);
+
+            $topeContainer.isotope({filter: filterValue});
+        });
+
+    });
+    
+       
+
     var isotopeButton = $('.filter-tope-group button');
 
     $(isotopeButton).each(function(){
-        $(this).on('click', function(){
+        console.log("link isotope button to event click");
+        $(this).on('filterEvent', function(){
+            console.log("remove how-active1 class");
             for(var i=0; i<isotopeButton.length; i++) {
                 $(isotopeButton[i]).removeClass('how-active1');
             }
 
             $(this).addClass('how-active1');
+            console.log('add how-active1 class')
         });
     });
+
 
     /*==================================================================
     [ Filter / Search product ]*/
@@ -188,9 +213,6 @@
             $('.panel-filter').slideUp(400);
         }    
     });
-
-
-
 
     /*==================================================================
     [ Cart ]*/
@@ -265,7 +287,7 @@
             }
         });
     });
-    
+
     /*==================================================================
     [ Show modal1 ]*/
     $('.js-show-modal1').on('click',function(e){
@@ -276,7 +298,5 @@
     $('.js-hide-modal1').on('click',function(){
         $('.js-modal1').removeClass('show-modal1');
     });
-
-
 
 })(jQuery);

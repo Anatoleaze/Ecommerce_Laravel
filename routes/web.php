@@ -12,7 +12,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/home2', [App\Http\Controllers\HomeController::class, 'home'])->name('home2');
 
-Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products_list');
+Route::get('/products/{search?}', [App\Http\Controllers\ProductController::class, 'index'])->name('products_list');
 
 Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart');
 
