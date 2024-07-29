@@ -4,6 +4,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+import axios from 'axios';
 //import './bootstrap';
 import { createApp } from 'vue';
 
@@ -22,7 +23,7 @@ import SliderComponent from './components/home/SliderComponent.vue';
 import CategoryCartComponent from './components/CategoryCartComponent.vue';
 import ProductCartComponent from './components/products/ProductCartComponent.vue';
 import FilterComponent from './components/products/FilterComponent.vue';
-
+import ContactFormComponent from './components/contact/ContactFormComponent.vue';
 
 
 app.component('example-component', ExampleComponent);
@@ -32,6 +33,7 @@ app.component('slider-component', SliderComponent);
 app.component('category-cart-component', CategoryCartComponent);
 app.component('product-cart-component', ProductCartComponent);
 app.component('filter-component', FilterComponent);
+app.component('contact-form-component', ContactFormComponent);
 
 /**
  * The following block of code may be used to automatically register your

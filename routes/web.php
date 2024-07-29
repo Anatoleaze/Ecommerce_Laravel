@@ -16,4 +16,7 @@ Route::get('/products/{search?}', [App\Http\Controllers\ProductController::class
 
 Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart');
 
-Route::get('/contact', [App\Http\Controllers\HomeController::class, 'contact'])->name('contact');
+Route::get('/contact', [App\Http\Controllers\ContactController::class, 'home'])->name('contact');
+
+Route::post('/sendMail', [App\Http\Controllers\ContactController::class, 'send'])->name('send');
+
