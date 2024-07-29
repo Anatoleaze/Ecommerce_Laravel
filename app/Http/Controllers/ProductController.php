@@ -12,16 +12,16 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-
         $search = $request->input('search');
 
+        $query = Product::query();
+
         if ($search) {
-            $products = Product::where('name', 'like', '%' . $search . '%')->get();
-           
-        } else {
-            dd("all");
-            $products = Product::all();
+            $query->where('name', 'like', '%' . $search . '%');
         }
+
+        // Utiliser paginate() pour la pagination
+        $products = $query->paginate(12); // 12 produits par page
  
         return view('products_list', ['products' => $products, 'search' => $search]);
     }

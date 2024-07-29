@@ -34,7 +34,11 @@ class HomeController extends Controller
      */
     public function home()
     {
-        $products = Product::get();
+        $query = Product::query();
+
+        // Utiliser paginate() pour la pagination
+        $products = $query->paginate(8); // 8 produits par page
+
         return view('home2', compact('products'));
     }
     
