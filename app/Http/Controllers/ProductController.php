@@ -17,7 +17,8 @@ class ProductController extends Controller
         $query = Product::query();
 
         if ($search) {
-            $query->where('name', 'like', '%' . $search . '%');
+            $query->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('type', 'like', '%' . $search . '%');
         }
 
         // Utiliser paginate() pour la pagination

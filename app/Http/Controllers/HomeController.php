@@ -14,17 +14,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function index()
-    {   
-        return view('home');
+        //$this->middleware('auth');
     }
 
     /**
@@ -32,15 +22,17 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function home()
-    {
+    public function index()
+    {   
         $query = Product::query();
 
-        // Utiliser paginate() pour la pagination
-        $products = $query->paginate(8); // 8 produits par page
-
-        return view('home2', compact('products'));
+        // Use Pagination 
+        $products = $query->paginate(8); // 8 pproduct by page
+        
+        return view('home', compact('products'));
     }
+
+   
     
 }
 

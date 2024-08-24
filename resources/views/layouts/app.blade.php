@@ -42,7 +42,7 @@
 					<div class="menu-desktop">
 						<ul class="main-menu">
 							<li class="active-menu">
-								<a href="{{ route('home2') }}">Accueil</a>
+								<a href="{{ route('home') }}">Accueil</a>
 							</li>
 
 							<li>
@@ -91,7 +91,7 @@
 									<ul class="navbar-nav ml-auto">
 										<!-- Authentication Links -->
 										@guest
-											<li class="nav-item">
+											<li class="nav-item" style="border-right: 1px solid black;">
 												<a class="nav-link" href="{{ route('login') }}">Connexion</a>
 											</li>
 											@if (Route::has('register'))
@@ -102,11 +102,11 @@
 										@else
 											<li class="nav-item dropdown">
 												<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-													{{ Auth::user()->name }} <img src="images/profil.png" style="width: 30px;" alt="IMG-PROFILs"><span class="caret"></span>
+													{{ Auth::user()->name }} <span class="caret"></span>
 												</a>
 				
 												<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-													<a class="dropdown-item" href="#">
+													<a class="dropdown-item" href="{{ route('profils') }}">
 														Mon profil
 													</a>
 													<a class="dropdown-item" href="#">
@@ -138,7 +138,7 @@
 		<div class="wrap-header-mobile">
 			<!-- Logo moblie -->		
 			<div class="logo-mobile">
-				<a href="{{ route('home2') }}"><img src="images/icons/logo-01.png" alt="IMG-LOGO"></a>
+				<a href="{{ route('home') }}"><img src="images/icons/logo-01.png" alt="IMG-LOGO"></a>
 			</div>
 
 			<!-- Icon header -->
@@ -170,7 +170,7 @@
 			<ul class="main-menu-m">
 				
 				<li>
-					<a href="{{ route('home2') }}">Accueil</a>
+					<a href="{{ route('home') }}">Accueil</a>
 				</li>
 
 				<li>
@@ -305,31 +305,32 @@
 
 					<ul>
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+							<a href="{{ route('products_list', [], false) }}?search=femmes" class="stext-107 cl7 hov-cl1 trans-04">
+									
 								Femmes
 							</a>
 						</li>
 
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+							<a href="{{ route('products_list', [], false) }}?search=hommes" class="stext-107 cl7 hov-cl1 trans-04">
 								Hommes
 							</a>
 						</li>
 
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+							<a href="{{ route('products_list', [], false) }}?search=chaussures" class="stext-107 cl7 hov-cl1 trans-04">
 								Chaussures
 							</a>
 						</li>
                         
                         <li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+							<a href="{{ route('products_list', [], false) }}?search=sacs" class="stext-107 cl7 hov-cl1 trans-04">
 								Sacs
 							</a>
 						</li>
 
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+							<a href="{{ route('products_list', [], false) }}?search=montes" class="stext-107 cl7 hov-cl1 trans-04">
 								Montres
 							</a>
 						</li>
@@ -338,19 +339,19 @@
 
 				<div class="col-sm-6 col-lg-4 p-b-50">
 					<h4 class="stext-301 cl0 p-b-30">
-						Help
+						Mon compte
 					</h4>
 
 					<ul>
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Commandes
+							<a href="{{ route('profils') }}" class="stext-107 cl7 hov-cl1 trans-04">
+								Mon profils
 							</a>
 						</li>
 
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Retours 
+								Mes Commandes 
 							</a>
 						</li>
 
@@ -466,7 +467,6 @@
         });
     </script>
 
-    <script src="js/isotope/isotope.pkgd.min.js"></script>
 
     <script src="js/sweetalert/sweetalert.min.js"></script>
     

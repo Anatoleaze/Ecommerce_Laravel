@@ -2,21 +2,31 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/home2', [App\Http\Controllers\HomeController::class, 'home'])->name('home2');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/products/{search?}', [App\Http\Controllers\ProductController::class, 'index'])->name('products_list');
-
-Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart');
 
 Route::get('/contact', [App\Http\Controllers\ContactController::class, 'home'])->name('contact');
 
 Route::post('/sendMail', [App\Http\Controllers\ContactController::class, 'send'])->name('send');
 
+Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart');
+
+
+// Only connect user
+Route::middleware(['auth'])->group(function () {
+    
+    Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart');
+
+    Route::get('/updateProfils', [App\Http\Controllers\UserController::class, 'edit'])->name('updateProfils');
+    
+    Route::post('/profilUpdated', [App\Http\Controllers\UserController::class, 'update']);
+    
+    Route::get('/profils', [App\Http\Controllers\UserController::class, 'index'])->name('profils');
+});

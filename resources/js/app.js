@@ -16,24 +16,25 @@ import { createApp } from 'vue';
 
 const app = createApp({});
 
-import ExampleComponent from './components/ExampleComponent.vue';
 import AddToCartButton from './components/AddToCartButton.vue';
-import ProductComponent from './components/ProductComponent.vue';
 import SliderComponent from './components/home/SliderComponent.vue';
 import CategoryCartComponent from './components/CategoryCartComponent.vue';
 import ProductCartComponent from './components/products/ProductCartComponent.vue';
 import FilterComponent from './components/products/FilterComponent.vue';
 import ContactFormComponent from './components/contact/ContactFormComponent.vue';
+import ProfilUpdateComponent from './components/user/ProfilUpdateComponent.vue';
+import ProfilComponent from './components/user/ProfilComponent.vue';
 
-
-app.component('example-component', ExampleComponent);
 app.component('add-to-cart-button', AddToCartButton);
-app.component('product-component', ProductComponent);
 app.component('slider-component', SliderComponent);
 app.component('category-cart-component', CategoryCartComponent);
 app.component('product-cart-component', ProductCartComponent);
 app.component('filter-component', FilterComponent);
 app.component('contact-form-component', ContactFormComponent);
+app.component('profil-update-component', ProfilUpdateComponent);
+app.component('profil-component', ProfilComponent);
+
+
 
 /**
  * The following block of code may be used to automatically register your
