@@ -112,6 +112,13 @@
 													<a class="dropdown-item" href="#">
 														Mes commandes
 													</a>
+												
+													@if(Auth::user()->isAdmin())
+														<a class="dropdown-item" href="{{ route('products_list_admin') }}">
+															Liste des produits
+														</a>
+													@endif
+												
 													<a class="dropdown-item" href="{{ route('logout') }}"
 													   onclick="event.preventDefault();
 																	 document.getElementById('logout-form').submit();">
@@ -354,6 +361,11 @@
 								Mes Commandes 
 							</a>
 						</li>
+						@if(Auth::user()->isAdmin())
+							<a class="stext-107 cl7 hov-cl1 trans-04" href="{{ route('products_list_admin') }}">
+								Liste des produits
+							</a>
+						@endif
 
 					</ul>
 				</div>

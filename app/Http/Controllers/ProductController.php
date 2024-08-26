@@ -27,6 +27,18 @@ class ProductController extends Controller
         return view('products_list', ['products' => $products, 'search' => $search]);
     }
 
+    /**
+     * List all products
+     */
+    public function list(){
+        $query = Product::query();
+
+        // Use Pagination 
+        $products = $query->paginate(50); // 50 pproduct by page
+    
+        return view('products_list_admin', ['products' => $products]);
+    
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -44,13 +56,7 @@ class ProductController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
-    {
-        //
-    }
+ 
 
     /**
      * Show the form for editing the specified resource.

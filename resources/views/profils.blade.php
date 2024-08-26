@@ -3,12 +3,14 @@
 @section('content')
 
 <!-- Product -->
+<section class="bg-img1 txt-center p-lr-15 p-tb-92 m-b-75" style="background-image: url('images/bg-01.jpg');">
+    <h2 class="ltext-105 cl0 txt-center">
+        Mon profils
+    </h2>
+</section>
+
 <div class="bg0 m-t-23 p-b-140">
     <div class="container">
-
-        <h2 class="text-center ltext-103 cl5" style="margin: 100px;">
-            Mon profils
-        </h2>
            
         <div class="flex-w flex-sb-m p-b-52">
             <profil-component

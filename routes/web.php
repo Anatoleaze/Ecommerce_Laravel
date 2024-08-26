@@ -20,9 +20,10 @@ Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name
 
 Route::get('/add_newsletter', [App\Http\Controllers\UserController::class, 'addNewsLetter'])->name('addNewsLetter');
 
+
 // Only connect user
 Route::middleware(['auth'])->group(function () {
-    
+
     Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart');
 
     Route::get('/updateProfils', [App\Http\Controllers\UserController::class, 'edit'])->name('updateProfils');
@@ -30,5 +31,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/profilUpdated', [App\Http\Controllers\UserController::class, 'update']);
     
     Route::get('/profils', [App\Http\Controllers\UserController::class, 'index'])->name('profils');
+
+    Route::get('/products_list', [App\Http\Controllers\ProductController::class, 'list'])->name('products_list_admin');
 });
 
