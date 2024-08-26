@@ -18,6 +18,7 @@ Route::post('/sendMail', [App\Http\Controllers\ContactController::class, 'send']
 
 Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart');
 
+Route::get('/add_newsletter', [App\Http\Controllers\UserController::class, 'addNewsLetter'])->name('addNewsLetter');
 
 // Only connect user
 Route::middleware(['auth'])->group(function () {
@@ -30,3 +31,4 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get('/profils', [App\Http\Controllers\UserController::class, 'index'])->name('profils');
 });
+

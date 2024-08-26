@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ContactMail extends Mailable
+class ModifyUserDataMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -29,8 +29,8 @@ class ContactMail extends Mailable
     public function build()
     {
       
-        return $this->subject('Un Utilisateur vous à contacté')
-                    ->view('emails.contact');
+        return $this->subject('Confirmation de la mise à jour de vos informations personnelles')
+                    ->view('emails.modifyUserData');
     }
 
     

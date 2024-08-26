@@ -3,7 +3,7 @@
 @section('content')
 
 <!-- Product -->
-<div class="bg0 m-t-23 p-b-140">
+<div class="bg0 m-t-23 p-b-50">
     <div class="container">
 
         <h2 class="text-center ltext-103 cl5" style="margin: 100px;">
@@ -14,21 +14,17 @@
             @endif
         </h2>
            
-        <div class="container" >
-            <filter-component
-		    :products="{{ json_encode($products) }}"
-	    />
-        </div>
+        <filter-component
+            :products="{{ json_encode($products) }}"
+        />
         
-
-
-
-        <!-- Pagination-->
-        <!--<div class="pagination m-t-75 m-b-75 text-center">
-            {{ $products->links() }}
-        </div>-->
-
     </div>
+</div>
+
+
+<!-- Pagination-->
+<div class="pagination m-t-50 m-b-75 text-center">
+    {{ $products->links() }}
 </div>
     
 @endsection

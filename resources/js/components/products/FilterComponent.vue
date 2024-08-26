@@ -217,7 +217,7 @@
     <!-- Grille de produits -->
     <div ref="productGrid" class="row isotope-grid">
 
-      <div  v-for="product in products.data" :key="product.id"
+      <div v-for="product in products.data" :key="product.id"
         :class="`col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item ${product.type}`">
 
         <!-- Block2 -->
@@ -428,4 +428,11 @@ onUpdated(() => {
   position: relative; 
   height: inherit !important;
 }
+
+.isotope-item{
+  left: inherit !important;
+  top: inherit !important;
+  position: inherit !important;
+}
+
 </style>

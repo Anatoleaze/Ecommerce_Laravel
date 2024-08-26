@@ -362,8 +362,17 @@
 					<h4 class="stext-301 cl0 p-b-30">
 						Newsletter
 					</h4>
-
-					<form>
+					
+					@if (session('message'))
+						@if (session('message') == 'Vous avez été ajouté à la newsletter !')
+							<div class="alert alert-success">{{ session('message') }}</div>
+						@else
+							<div class="alert alert-danger">{{ session('message') }}</div>
+						@endif
+								
+					@endif
+					
+					<form method='GET' action={{route('addNewsLetter')}}>
 						<div class="wrap-input1 w-full p-b-4">
 							<input class="input1 bg-none plh1 stext-107 cl7" type="text" name="email" placeholder="email@example.com">
 							<div class="focus-input1 trans-04"></div>

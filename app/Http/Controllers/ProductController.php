@@ -22,7 +22,7 @@ class ProductController extends Controller
         }
 
         // Utiliser paginate() pour la pagination
-        $products = $query->paginate(12); // 12 produits par page
+        $products = $query->paginate(4); // 12 produits par page
  
         return view('products_list', ['products' => $products, 'search' => $search]);
     }

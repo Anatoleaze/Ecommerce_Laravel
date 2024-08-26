@@ -60,7 +60,7 @@
 </div>
 
 <!-- Pagination-->
-<div class="pagination m-t-75 m-b-75 text-center">
+<div class="pagination m-t-50 m-b-75 text-center">
     {{ $products->links() }}
 </div>
 @endsection
