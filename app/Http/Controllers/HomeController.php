@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Product;
 
 class HomeController extends Controller
 {
@@ -13,38 +14,25 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     /**
-     * Show the application dashboard.
+     * Show the home page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {
-        return view('home');
+    {   
+        $query = Product::query();
+
+        // Use Pagination 
+        $products = $query->paginate(8); // 8 pproduct by page
+        return view('home', compact('products'));
     }
 
-    /**
-     * Show the home page.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function home()
-    {
-        return view('home2');
-    }
+   
     
-    /**
-     * Show the home page.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function contact()
-    {
-        return view('contact');
-    }
 }
 
 
