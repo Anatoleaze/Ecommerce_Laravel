@@ -4,7 +4,8 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-import './bootstrap';
+import axios from 'axios';
+//import './bootstrap';
 import { createApp } from 'vue';
 
 /**
@@ -15,8 +16,24 @@ import { createApp } from 'vue';
 
 const app = createApp({});
 
-import ExampleComponent from './components/ExampleComponent.vue';
-app.component('example-component', ExampleComponent);
+import AddToCartButton from './components/AddToCartButton.vue';
+import SliderComponent from './components/home/SliderComponent.vue';
+import CategoryCartComponent from './components/CategoryCartComponent.vue';
+import FilterComponent from './components/products/FilterComponent.vue';
+import ContactFormComponent from './components/contact/ContactFormComponent.vue';
+import ProfilUpdateComponent from './components/user/ProfilUpdateComponent.vue';
+import ProfilComponent from './components/user/ProfilComponent.vue';
+import Create_Product_Component from './components/products/Create_Product_Component.vue';
+
+app.component('add-to-cart-button', AddToCartButton);
+app.component('slider-component', SliderComponent);
+app.component('category-cart-component', CategoryCartComponent);
+app.component('filter-component', FilterComponent);
+app.component('contact-form-component', ContactFormComponent);
+app.component('profil-update-component', ProfilUpdateComponent);
+app.component('profil-component', ProfilComponent);
+app.component('create-product-component',Create_Product_Component);
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -36,4 +53,8 @@ app.component('example-component', ExampleComponent);
  * scaffolding. Otherwise, you will need to add an element yourself.
  */
 
+console.log('app.js loaded');
+
 app.mount('#app');
+
+console.log('app mounted');
