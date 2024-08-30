@@ -23,6 +23,7 @@ import FilterComponent from './components/products/FilterComponent.vue';
 import ContactFormComponent from './components/contact/ContactFormComponent.vue';
 import ProfilUpdateComponent from './components/user/ProfilUpdateComponent.vue';
 import ProfilComponent from './components/user/ProfilComponent.vue';
+import Create_Product_Component from './components/products/Create_Product_Component.vue';
 
 app.component('add-to-cart-button', AddToCartButton);
 app.component('slider-component', SliderComponent);
@@ -31,7 +32,7 @@ app.component('filter-component', FilterComponent);
 app.component('contact-form-component', ContactFormComponent);
 app.component('profil-update-component', ProfilUpdateComponent);
 app.component('profil-component', ProfilComponent);
-
+app.component('create-product-component',Create_Product_Component);
 
 
 /**

@@ -9,11 +9,17 @@
 </section>
 
 <!-- Shoping Cart -->
-<form class="bg0 p-t-75 p-b-85">
+<div class="bg0 p-t-75 p-b-85">
     <div class="container">
-        <div class="row">
+        <a href="{{route('create_product')}}" class="flex-c-m stext-101 cl0 size-103 bg1 bor1 p-lr-15" style="width: 25%;margin: auto; color:white;margin-bottom:50px;cursor: pointer;">Création d'un produit</a>
+        <div class="row">    
             <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
                 <div class="m-l-25 m-r--38 m-lr-0-xl">
+                    @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
                     <div class="wrap-table-shopping-cart">
                         <table class="table-shopping-cart">
                             <tr class="table_head">
@@ -33,10 +39,18 @@
                                         </div>
                                     </td>
                                     <td class="column-2">{{$product->name}}</td>
-                                    <td class="column-3"> {{$product->price}} €</td>
-                                    <td class="column-4"> {{$product->type}}</td>
+                                    <td class="column-3">{{$product->price}} €</td>
+                                    <td class="column-4">{{$product->type}}</td>
                                     <td class="column-5"> <a href=""><i class="zmdi zmdi-hc-2x zmdi-edit"></i></a></td>
-                                    <td class="column-5"> <a href=""><i class="zmdi zmdi-hc-2x zmdi-delete"></i></a></td>
+                                    <td class="column-5"> 
+                                        <form action="{{ route('delete_product', $product->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">  
+                                                <i class="zmdi zmdi-hc-2x zmdi-delete"></i>
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                            
@@ -50,7 +64,7 @@
     <div class="pagination m-t-50 m-b-75 text-center">
         {{ $products->links() }}
     </div>
-</form>
+</div>
     
 	
 	

@@ -361,11 +361,15 @@
 								Mes Commandes 
 							</a>
 						</li>
-						@if(Auth::user()->isAdmin())
-							<a class="stext-107 cl7 hov-cl1 trans-04" href="{{ route('products_list_admin') }}">
-								Liste des produits
-							</a>
-						@endif
+						@guest
+						@else 
+							@if(Auth::user()->isAdmin())
+								<a class="stext-107 cl7 hov-cl1 trans-04" href="{{ route('products_list_admin') }}">
+									Liste des produits
+								</a>
+							@endif
+						@endguest
+						
 
 					</ul>
 				</div>
