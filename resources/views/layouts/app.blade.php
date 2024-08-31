@@ -10,17 +10,17 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-        <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
-        <link rel="stylesheet" href="css/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="css/fonts/iconic/css/material-design-iconic-font.min.css">
-        <link rel="stylesheet" href="css/fonts/linearicons-v1.0.0/icon-font.min.css">
-        <link rel="stylesheet" href="css/animate/animate.css">
-        <link rel="stylesheet" href="css/css-hamburgers/hamburgers.min.css">
-        <link rel="stylesheet" href="css/animsition/animsition.min.css">
-        <link rel="stylesheet" href="css/select2/select2.min.css">
-        <link rel="stylesheet" href="css/perfect-scrollbar/perfect-scrollbar.css">
-        <link rel="stylesheet" href="css/util.css">
-        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="{{ asset('css/bootstrap/bootstrap.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/fonts/iconic/css/material-design-iconic-font.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/fonts/linearicons-v1.0.0/icon-font.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/animate/animate.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/css-hamburgers/hamburgers.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/animsition/animsition.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/select2/select2.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/perfect-scrollbar/perfect-scrollbar.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/util.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/main.css') }}">
 
 </head> 
 
@@ -35,7 +35,7 @@
 					
 					<!-- Logo desktop -->		
 					<a href="{{ url('/') }}" class="logo">
-						<img src="images/icons/logo-01.png" alt="IMG-LOGO">
+						<img src="{{ asset('images/icons/logo-01.png') }}" alt="IMG-LOGO">
 					</a>
 
 					<!-- Menu desktop -->
@@ -145,7 +145,7 @@
 		<div class="wrap-header-mobile">
 			<!-- Logo moblie -->		
 			<div class="logo-mobile">
-				<a href="{{ route('home') }}"><img src="images/icons/logo-01.png" alt="IMG-LOGO"></a>
+				<a href="{{ route('home') }}"><img src="{{ asset('images/icons/logo-01.png')}}" alt="IMG-LOGO"></a>
 			</div>
 
 			<!-- Icon header -->
@@ -199,7 +199,7 @@
 		<div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
 			<div class="container-search-header">
 				<button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
-					<img src="images/icons/icon-close2.png" alt="CLOSE">
+					<img src="{{ asset('images/icons/icon-close2.png')}}" alt="CLOSE">
 				</button>
 
 				<form class="wrap-search-header flex-w p-l-15" method="GET" action="{{ route('products_list') }}">
@@ -232,7 +232,7 @@
 				<ul class="header-cart-wrapitem w-full">
 					<li class="header-cart-item flex-w flex-t m-b-12">
 						<div class="header-cart-item-img">
-							<img src="images/item-cart-01.jpg" alt="IMG">
+							<img src="{{ asset('images/item-cart-01.jpg')}}" alt="IMG">
 						</div>
 
 						<div class="header-cart-item-txt p-t-8">
@@ -248,7 +248,7 @@
 
 					<li class="header-cart-item flex-w flex-t m-b-12">
 						<div class="header-cart-item-img">
-							<img src="images/item-cart-02.jpg" alt="IMG">
+							<img src="{{ asset('images/item-cart-02.jpg')}}" alt="IMG">
 						</div>
 
 						<div class="header-cart-item-txt p-t-8">
@@ -264,7 +264,7 @@
 
 					<li class="header-cart-item flex-w flex-t m-b-12">
 						<div class="header-cart-item-img">
-							<img src="images/item-cart-03.jpg" alt="IMG">
+							<img src="{{ asset('images/item-cart-03.jpg')}}" alt="IMG">
 						</div>
 
 						<div class="header-cart-item-txt p-t-8">
@@ -406,28 +406,35 @@
 			<div class="p-t-40">
 				<div class="flex-c-m flex-w p-b-18">
 					<a href="#" class="m-all-1">
-						<img src="images/icons/icon-pay-01.png" alt="ICON-PAY">
+						<img src="{{ asset('images/icons/icon-pay-01.png')}}" alt="ICON-PAY">
 					</a>
 
 					<a href="#" class="m-all-1">
-						<img src="images/icons/icon-pay-02.png" alt="ICON-PAY">
+						<img src="{{ asset('images/icons/icon-pay-02.png')}}" alt="ICON-PAY">
 					</a>
 
 					<a href="#" class="m-all-1">
-						<img src="images/icons/icon-pay-03.png" alt="ICON-PAY">
+						<img src="{{ asset('images/icons/icon-pay-03.png')}}" alt="ICON-PAY">
 					</a>
 
 					<a href="#" class="m-all-1">
-						<img src="images/icons/icon-pay-04.png" alt="ICON-PAY">
+						<img src="{{ asset('images/icons/icon-pay-04.png')}}" alt="ICON-PAY">
 					</a>
 
 					<a href="#" class="m-all-1">
-						<img src="images/icons/icon-pay-05.png" alt="ICON-PAY">
+						<img src="{{ asset('images/icons/icon-pay-05.png')}}" alt="ICON-PAY">
 					</a>
 				</div>
 
 				<p class="stext-107 cl6 txt-center">
-			Copyright &copy;<script>document.write(new Date().getFullYear());</script> Tous droits réservés | Réalisé par <a href="https://colorlib.com" target="_blank">{{ config('app.name', 'Laravel') }}</a>
+			Copyright &copy;<script>document.write(new Date().getFullYear());</script> Tous droits réservés | Réalisé par 
+		
+			@isset($link)
+				<a href="{{$link}}" target="_blank">{{ config('app.name', 'Laravel') }}</a>
+			@else
+				<a href="#" target="_blank">{{ config('app.name', 'Laravel') }}</a>	
+			@endif
+			
 			</p>
 			</div>
 		</div>
@@ -444,15 +451,15 @@
 
 
 
-  	<script src="js/jquery/jquery-3.2.1.min.js"></script>
+  	<script src="{{ asset('js/jquery/jquery-3.2.1.min.js')}}"></script>
     
-    <script src="js/animsition/animsition.min.js"></script>
+    <script src="{{ asset('js/animsition/animsition.min.js')}}"></script>
 
-    <script src="js/bootstrap/popper.js"></script>
+    <script src="{{ asset('js/bootstrap/popper.js')}}"></script>
     
-    <script src="js/bootstrap/bootstrap.min.js"></script>
+    <script src="{{ asset('js/bootstrap/bootstrap.min.js')}}"></script>
     
-    <script src="js/select2/select2.min.js"></script>
+    <script src="{{ asset('js/select2/select2.min.js')}}"></script>
     
     <script>
         $(".js-select2").each(function(){
@@ -463,21 +470,21 @@
         })
     </script>
     
-    <script src="js/daterangepicker/moment.min.js"></script>
+    <script src="{{ asset('js/daterangepicker/moment.min.js')}}"></script>
 
-    <script src="js/daterangepicker/daterangepicker.js"></script>
+    <script src="{{ asset('js/daterangepicker/daterangepicker.js')}}"></script>
 
-    <script src="js/slick/slick.min.js"></script>
+    <script src="{{ asset('js/slick/slick.min.js')}}"></script>
 
-    <script src="js/slick-custom.js"></script>
+    <script src="{{ asset('js/slick-custom.js')}}"></script>
 
-    <script src="js/parallax100/parallax100.js"></script>
+    <script src="{{ asset('js/parallax100/parallax100.js')}}"></script>
 
     <script>
         $('.parallax100').parallax100();
     </script>
 
-    <script src="js/MagnificPopup/jquery.magnific-popup.min.js"></script>
+    <script src="{{ asset('js/MagnificPopup/jquery.magnific-popup.min.js')}}"></script>
     
     <script>
         $('.gallery-lb').each(function() { // the containers for all your galleries
@@ -493,7 +500,7 @@
     </script>
 
 
-    <script src="js/sweetalert/sweetalert.min.js"></script>
+    <script src="{{ asset('js/sweetalert/sweetalert.min.js')}}"></script>
     
     <script>
         $('.js-addwish-b2').on('click', function(e){
@@ -529,7 +536,7 @@
         });
     </script>
 
-    <script src="js/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="{{ asset('js/perfect-scrollbar/perfect-scrollbar.min.js')}}"></script>
     
     <script>
         $('.js-pscroll').each(function(){
@@ -547,7 +554,7 @@
         });
     </script>
 
-	<script src="js/main.js"></script>
+	<script src="{{ asset('js/main.js')}}"></script>
 
 	<!-- JS Script Vue -->
 	@vite([ 'resources/js/app.js'])

@@ -12,7 +12,9 @@ class CartController extends Controller
      */
     public function index()
     {
-        return view('cart');
+        $link = config('app.url');
+
+        return view('cart', compact('link'));
     }
 
     /**

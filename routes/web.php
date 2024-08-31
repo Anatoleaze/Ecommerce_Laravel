@@ -45,10 +45,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/new_product', [ProductController::class, 'store'])->name('store_product');    
 
     // Edit a product form
-    Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('edit');
+    Route::get('/product/{id}', [ProductController::class, 'edit'])->name('edit');
   
     // Edit a product backend
-    Route::put('/products/{id}', [ProductController::class, 'update'])->name('update');
+    Route::put('/product/{id}/update', [ProductController::class, 'update'])->name('update');
 
 });
 

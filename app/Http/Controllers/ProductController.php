@@ -30,7 +30,9 @@ class ProductController extends Controller
         // Utiliser paginate() pour la pagination
         $products = $query->paginate(4); // 12 produits par page
  
-        return view('products_list', ['products' => $products, 'search' => $search]);
+        $link = config('app.url');
+
+        return view('products_list', ['products' => $products, 'search' => $search, 'link' => $link]);
     }
 
     /**
@@ -41,7 +43,9 @@ class ProductController extends Controller
         // Use Pagination 
         $products = Product::paginate(50); // 50 pproduct by page
 
-        return view('products_list_admin', ['products' => $products]);
+        $link = config('app.url');
+
+        return view('products_list_admin', ['products' => $products, 'link'=> $link]);
     
     }
 
@@ -51,7 +55,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('create_product');
+        $link = config('app.url');
+        return view('create_product',['link' => $link]);
     }
 
     /**
@@ -109,7 +114,9 @@ class ProductController extends Controller
                
         }
 
-        return redirect()->route('create_product')->with('success', 'Produit créé avec succès.');
+        $link = config('app.url');
+
+        return redirect()->route('create_product', ['link' => $link])->with('success', 'Produit créé avec succès.');
     }
 
  
@@ -117,18 +124,66 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit($id)
     {
-        //
+        $product = Product::findOrFail($id);
+        
+        $link = config('app.url');
+        
+        return view('editProduct', compact('product', 'link'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        //
+        // Data Validation
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'sale_price' => 'nullable|numeric',
+            'type' => 'required|string',
+            'image_name' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $product = Product::findOrFail($id);
+
+        // Update product
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->price = $request->input('price');
+        $product->sale_price = $request->input('sale_price');
+        $product->type = $request->input('type');
+
+        // Image
+        if ($request->hasFile('image_name')) {
+            
+            // Old image
+            $oldImagePath = public_path($product->image_name);
+           
+            // Remove if old image exist
+            if (file_exists($oldImagePath)) {
+                
+                unlink($oldImagePath);
+            }
+
+            // Download New image
+            $request->file('image_name')->move(public_path('images'), $request->file('image_name')->getClientOriginalName());
+            $path = 'images/' . $request->file('image_name')->getClientOriginalName();
+
+            $product->image_name = $path;
+        }
+
+        // Save Modification
+        $product->save();
+
+        $link = config('app.url');
+
+        return redirect()->route('edit', ['id' => $product->id, 'link' => $link])->with('success', 'Produit mis à jour avec succès.');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -147,7 +202,9 @@ class ProductController extends Controller
 
         $product->delete();
         
-        return redirect()->route('products_list_admin')->with('success', 'Produit supprimé avec succès.');
+        $link = config('app.url');
+
+        return redirect()->route('products_list_admin',['link'=>$link])->with('success', 'Produit supprimé avec succès.');
     
     }
 }
