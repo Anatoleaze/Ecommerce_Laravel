@@ -17,7 +17,9 @@ class ContactController extends Controller
     */
     public function home()
     {
-        return view('contact');
+        $link = config('app.url');
+
+        return view('contact',['link' => $link]);
     }
 
     public function send(Request $request)

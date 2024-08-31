@@ -35,13 +35,21 @@
                                 <tr class="table_row">
                                     <td class="column-1">
                                         <div class="how-itemcart1">
-                                            <img src="{{$product->image_name}}" alt="IMG">
+                                            <img src="{{ asset($product->image_name)}}" alt="IMG">
                                         </div>
                                     </td>
                                     <td class="column-2">{{$product->name}}</td>
                                     <td class="column-3">{{$product->price}} €</td>
                                     <td class="column-4">{{$product->type}}</td>
-                                    <td class="column-5"> <a href=""><i class="zmdi zmdi-hc-2x zmdi-edit"></i></a></td>
+                                    <td class="column-5"> 
+                                        <form action="{{ route('edit', $product->id) }}" method="GET">
+                                            @csrf
+                                            <button type="submit" class="btn btn-info">  
+                                                <i class="zmdi zmdi-hc-2x zmdi-edit"></i>
+                                            </button>
+                                        </form>
+
+                                    </td>
                                     <td class="column-5"> 
                                         <form action="{{ route('delete_product', $product->id) }}" method="POST">
                                             @csrf
