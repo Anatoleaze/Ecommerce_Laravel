@@ -28,7 +28,10 @@ class HomeController extends Controller
 
         // Use Pagination 
         $products = $query->paginate(8); // 8 pproduct by page
-        return view('home', compact('products'));
+        
+        $link = config('app.url');
+
+        return view('home', compact('products','link'));
     }
 
    

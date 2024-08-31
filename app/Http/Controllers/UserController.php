@@ -34,7 +34,9 @@ class UserController extends Controller
 
         ];
 
-        return view('update_profil',['user' =>$data]);
+        $link = config('app.url');
+
+        return view('update_profil',['user' =>$data, 'link'=>$link]);
     }
 
     /**
@@ -100,6 +102,8 @@ class UserController extends Controller
      */
     public function addNewsLetter(Request $request){
         
+        $link = config('app.url');
+
         // Check email 
         $data = $request->validate([
             'email' => 'required|email|max:255',
@@ -112,7 +116,8 @@ class UserController extends Controller
         $existingUser = User::where('email', $email)->first();
         
         if ($existingUser) {
-            return redirect()->route('home')->with('message', 'Cet email est déjà utilisé.');
+
+            return redirect()->route('home', ['link'=>$link])->with('message', 'Cet email est déjà utilisé.');
         }
 
         // Creation of User
@@ -125,7 +130,7 @@ class UserController extends Controller
         // Save User 
         $user->save();
 
-        return redirect()->route('home')->with('message', 'Vous avez été ajouté à la newsletter !');
+        return redirect()->route('home',['link'=>$link])->with('message', 'Vous avez été ajouté à la newsletter !');
     }
 
 }
