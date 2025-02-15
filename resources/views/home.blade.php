@@ -2,6 +2,29 @@
 
 @section('content')
 
+<!-- Header -->
+<div>
+	<header-component
+		:home-link="'{{ route('home') }}'"
+		:logo="'{{ asset('images/icons/logo-01.png') }}'"
+		:catalog-link="'{{ route('products_list') }}'"
+		:cart-link="'{{ route('cart_show') }}'"
+		:contact-link="'{{ route('contact') }}'"
+		:is-authenticated="{{ json_encode(Auth::check()) }}"
+		:user="{{ json_encode(Auth::user()) }}"
+		:login="'{{ route('login') }}'"
+		:register="'{{ route('register') }}'"
+		:profile="'{{ route('profils') }}'"
+		:orders="'{{ route('order') }}'"
+		:admin-products="'{{ route('products_list_admin') }}'"
+		:logout="'{{ route('logout') }}'"
+		:logo-close="'{{ asset('images/icons/icon-close2.png') }}'"
+		:csrfToken="'{{ csrf_token() }}'"
+		
+	/>
+	
+</div>
+
 <!-- Slider -->
 <section class="section-slide">
 	<slider-component link={{ route('products_list', [], false) }}?search=femmes />
@@ -50,11 +73,12 @@
 		<h3 class="ltext-103 cl5 m-b-25 text-center" >
 			Les plus populaires
 		</h3>
-	</div>	
+	</div>
 	
 	<!-- Filter -->
 	<filter-component
 		:products="{{ json_encode($products) }}"
+		:is-authenticated="{{ json_encode(Auth::check()) }}"
 	/>
 			
 </div>

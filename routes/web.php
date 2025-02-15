@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderController;
 
 Auth::routes();
 
@@ -26,7 +27,7 @@ Route::get('/add_newsletter', [UserController::class, 'addNewsLetter'])->name('a
 // Only connect user
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    
 
     Route::get('/updateProfils', [UserController::class, 'edit'])->name('updateProfils');
     
@@ -49,6 +50,26 @@ Route::middleware(['auth'])->group(function () {
   
     // Edit a product backend
     Route::put('/product/{id}/update', [ProductController::class, 'update'])->name('update');
+
+    Route::get('/order',[OrderController::class, 'index'])->name('order');
+
+    // Add to cart (basket)
+    Route::post('/cart/store',[CartController::class, 'store'])->name('store');
+
+    // Remove from cart (basket)
+    Route::delete('/cart/remove/{id}', [CartController::class, 'remove']);
+
+    // Count products in cart (basket)
+    Route::get('/cart/count', [CartController::class, 'getCartCount']);
+
+    // Get cart of user
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+
+    // Show cart of user
+    Route::get('/cart/show', [CartController::class, 'show'])->name('cart_show');
+
+    // Update quantity of product in cart (basket)
+    Route::post('/cart/update', [CartController::class, 'update'])->name('cart_update');
 
 });
 

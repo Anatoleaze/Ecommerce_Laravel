@@ -223,7 +223,7 @@
         <!-- Block2 -->
         <div class="block2">
           <div class="block2-pic hov-img0">
-            <img :src="product.image_name" alt="IMG-PRODUCT">
+            <img class="img-product" :src="product.image_name" alt="IMG-PRODUCT">
 
             <a href="#" @click="openModal(product)"
               class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
@@ -265,7 +265,7 @@
                   <div class="slick3 gallery-lb">
                     <div class="item-slick3">
                       <div class="wrap-pic-w pos-relative">
-                        <img :src="selectedProduct.image_name" alt="IMG-PRODUCT">
+                        <img class="img-product-modal" :src="selectedProduct.image_name" alt="IMG-PRODUCT">
 
                         <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
                           :href="selectedProduct.image_name">
@@ -293,46 +293,63 @@
                   {{ selectedProduct.description }}
                 </p>
 
+                <div class="flex-w flex-m p-l-100 p-t-40 respon7">
+
+                    <a href="#"  @click="shareOnFacebook" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100 share-button-facebook" data-tooltip="Facebook">
+                      <i class="fa fa-facebook"></i>
+                    </a>
+
+                    <a href="#" @click="shareOnTwitter(selectedProduct)" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100 share-button-twitter" data-tooltip="Twitter">
+                      <i class="fa fa-twitter"></i>
+                    </a>
+
+                    <a href="#" @click="shareOnGmail(selectedProduct)" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100 share-button-google" data-tooltip="Google Plus">
+                      <i class="fa fa-google-plus"></i>
+                    </a>
+
+                </div>
+
                 <div class="flex-w flex-r-m p-b-10">
-                  <div class="size-204 flex-w flex-m respon6-next">
-                    <div class="wrap-num-product flex-w m-r-20 m-tb-10">
-                      <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-                        <i class="fs-16 zmdi zmdi-minus"></i>
-                      </div>
+                  
+                  <template v-if="!isAuthenticated">
+                      <div class="alert alert-danger alert-danger-no-cart" role="alert">Vous devez être connecté pour ajouter un article à votre panier !</div>
+                  </template>
+                  
+                  <template v-else>
+                                      
+                    <div class="size-204 flex-w flex-m respon6-next">
+                      <div class="wrap-num-product flex-w m-r-20 m-tb-10">
+                        
+                        <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" @click="decreaseQuantity">
+                          <i class="fs-16 zmdi zmdi-minus"></i>
+                        </div>
 
-                      <input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
+                        <input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" v-model="quantity" min="1">
 
-                      <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-                        <i class="fs-16 zmdi zmdi-plus"></i>
+                        <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m" @click="increaseQuantity">
+                          <i class="fs-16 zmdi zmdi-plus"></i>
+                        </div>
+
                       </div>
+                    
+                    <div v-if="alertMessage!=''" :class="['alert', alertType]" role="alert">
+                        {{ alertMessage }}
                     </div>
-
-                    <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail"
-                      @click="addToCart(selectedProduct)">
-                      Ajouter au panier
+                    
+                    <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail btn-cart"
+                          @click="() => addToCart(selectedProduct.id,selectedProduct.price)"
+                    >Ajouter au panier
                     </button>
 
+
                   </div>
+                  
+                    </template>
+
+                  
                 </div>
               </div>
 
-              <div class="flex-w flex-m p-l-100 p-t-40 respon7">
-
-                <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                  data-tooltip="Facebook">
-                  <i class="fa fa-facebook"></i>
-                </a>
-
-                <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                  data-tooltip="Twitter">
-                  <i class="fa fa-twitter"></i>
-                </a>
-
-                <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                  data-tooltip="Google Plus">
-                  <i class="fa fa-google-plus"></i>
-                </a>
-              </div>
             </div>
           </div>
         </div>
@@ -343,17 +360,136 @@
 
 </template>
 
-<script setup>
+<script>
+
+import { mapActions } from 'vuex';
+import axios from 'axios';
+import Isotope from 'isotope-layout';
+
+export default {
+  props: {
+    products: {
+      type: Array,
+      required: true
+    },
+
+    isAuthenticated:{
+      type: Object,
+      required: true
+    },
+
+  },
+  data() {
+    return {
+      isotopeInstance: null,
+      showModal: false,
+      selectedProduct: {},
+      alertMessage: '', 
+      alertType: '',
+      quantities: 1,
+     
+    };
+  },
+  methods: {
+    filterProducts(filter) {
+      this.isotopeInstance.arrange({ filter });
+    },
+    openModal(product) {
+      this.selectedProduct = product;
+      this.showModal = true;
+      this.alertMessage = "";
+      this.alertType = "";
+      this.quantity = 1;
+      
+    },
+    closeModal() {
+      this.showModal = false;
+    },
+
+    increaseQuantity() {
+      this.quantity++;
+    },
+
+    decreaseQuantity() {
+      if (this.quantity > 1) {
+        this.quantity--;
+      }
+    },
+   
+    ...mapActions({
+      addToCartAction: 'addToCart' // Rename VueX action
+    }),
+
+   
+    addToCart(productId, productPrice) {
+      
+      this.addToCartAction({
+          product_id: productId,
+          quantity: this.quantity || 1, 
+          price: productPrice * (this.quantity || 1)
+      })
+      .then(response => {
+          
+          if (response.status === 200) {
+              this.alertMessage = response.data.message;
+              this.alertType = 'alert-success';
+              this.$store.dispatch('fetchCartCount'); // Update Macaron
+          } else {
+              this.alertMessage = 'Une erreur est survenue.';
+              this.alertType = 'alert-danger';
+          }
+      })
+      .catch(error => {
+        console.error("Erreur lors de l'ajout au panier:", error);
+        this.alertMessage = 'Une erreur est survenue.';
+        this.alertType = 'alert-danger';
+      });
+    },
+
+    shareOnGmail(product) {
+      const subject = encodeURIComponent(`Découvrez ${product.name}`);
+      const body = encodeURIComponent(`Je voulais partager cet article avec vous : ${window.location.href}`);
+      const mailtoLink = `https://mail.google.com/mail/?view=cm&fs=1&to=&su=${subject}&body=${body}`;
+      window.open(mailtoLink, '_blank');
+    },
+
+    shareOnFacebook() {
+      const url = encodeURIComponent(window.location.href); 
+      const facebookShareLink = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+      window.open(facebookShareLink, '_blank');
+    },
+
+    shareOnTwitter(product) {
+      const url = encodeURIComponent(window.location.href); // URL actuelle
+      const text = encodeURIComponent(`Découvrez ce produit : ${product.name} !`); // Message personnalisé
+      const twitterShareLink = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+      window.open(twitterShareLink, '_blank', 'width=600,height=400');
+    }
+
+    
+  },
+
+  async mounted() {
+
+    this.$nextTick(() => {
+      this.isotopeInstance = new Isotope(this.$refs.productGrid, {
+        itemSelector: '.isotope-item',
+        layoutMode: 'fitRows'
+      });
+    });
+
+  },
+
+  updated() {
+    this.isotopeInstance.reloadItems();
+    this.isotopeInstance.arrange();
+  }
+};
+
+/*
 import { ref, onMounted, onUpdated } from 'vue'
 import Isotope from 'isotope-layout'
 
-// Recevoir les produits en tant que prop
-const props = defineProps({
-  products: {
-    type: Array,
-    required: true,
-  }
-})
 
 const isotopeInstance = ref(null)
 const productGrid = ref(null)
@@ -377,29 +513,14 @@ const openModal = (product) => {
 // Fonction pour fermer la modale
 const closeModal = () => {
   showModal.value = false
-}
-
-// Fonction pour ajouter un produit au panier (exemple de logique)
-const addToCart = (product) => {
-  alert(`${product.name} a été ajouté au panier!`)
-  closeModal()
-}
-
-// Initialisation d'Isotope lorsque le composant est monté
-onMounted(() => {
-  setTimeout(() => {
-    isotopeInstance.value = new Isotope(productGrid.value, {
-      itemSelector: '.isotope-item',
-      layoutMode: 'fitRows',
-    });
-  }, 0);
-});
+};
 
 // Réinitialisation d'Isotope lorsque les produits sont mis à jour
 onUpdated(() => {
   isotopeInstance.value.reloadItems()
   isotopeInstance.value.arrange()
 })
+*/
 </script>
 
 <style scoped>
@@ -414,6 +535,10 @@ onUpdated(() => {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+}
+
+.alert{
+  margin-left: -15%;
 }
 
 .close {
@@ -435,4 +560,64 @@ onUpdated(() => {
   position: inherit !important;
 }
 
+.alert-danger-no-cart{
+    margin: auto;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.alert{
+  margin-left: -30px;
+}
+
+.btn-cart{
+  margin-left:-15px;
+}
+
+
+.share-button-facebook {
+  background-color: #1877F2;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left:12px;
+}
+
+.share-button-google {
+  background-color: #D93025;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.share-button-twitter {
+  display: flex;
+  align-items: center;
+  background-color: #1DA1F2;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+  text-decoration: none;
+}
+
+.img-product{
+  height: 350px;
+}
+
+.item-slick3 img{
+  margin-right: 45px;
+}
+
+.modal .container {
+  width: 60%;
+}
 </style>
