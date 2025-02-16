@@ -7,6 +7,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PromoController;
 
 Auth::routes();
 
@@ -70,6 +71,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Update quantity of product in cart (basket)
     Route::post('/cart/update', [CartController::class, 'update'])->name('cart_update');
+
+    Route::post('/check-promo', [PromoController::class, 'checkPromo']);
+
 
 });
 

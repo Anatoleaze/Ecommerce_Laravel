@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('promos', function (Blueprint $table) {
             $table->id();
+            $table->string('code')->unique();  
+            $table->integer('remise');         
+            $table->integer('min_achat');      
+            $table->date('started_at');        
+            $table->date('expired_at');        
             $table->timestamps();
         });
     }

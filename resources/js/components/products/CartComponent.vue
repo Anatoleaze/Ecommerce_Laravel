@@ -45,11 +45,11 @@
 
                     <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
                         <div class="flex-w flex-m m-r-20 m-tb-5">
-                            <input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="coupon" placeholder="Coupon de réduction">
+                            <input v-model="couponCode" class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="coupon" placeholder="Coupon de réduction">
                                 
-                            <button class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
-                            Valider le coupon
-                            </button>
+                            <div @click="applyCoupon" class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
+                            Appliquer le coupon
+                            </div>
                         </div>
 
                     </div>
@@ -61,30 +61,41 @@
                     <h4 class="mtext-109 cl2 p-b-30">
                         Récapitulatif
                     </h4>
-                    <!--<div class="alert alert-success flex-c-m stext-101 cl2 size-115 bor13 p-lr-15 trans-04">
-                        Une réduction de 15 % est appliqué
-                    </div>-->
-                    <div class="alert alert-danger flex-c-m stext-101 cl2 size-115 bor13 p-lr-15 trans-04">
-                        Le code est périmé ou ne s'applique pas 
+                    
+                    <div v-if="couponSuccess" class="alert alert-success flex-c-m stext-101 cl2 size-115 bor13 p-lr-15 trans-04">
+                        {{ couponSuccess }}
                     </div>
+                    
+                    <div v-if="couponError" class="alert alert-danger flex-c-m stext-101 cl2 size-115 bor13 p-lr-15 trans-04">
+                        {{ couponError }}
+                    </div>
+                    
                     <div class="flex-w flex-t bor12 p-b-13">
                         <div class="size-208">
                             <span class="stext-110 cl2">
-                                Total:
+                                Total :
                             </span>
                         </div>
 
-                        <div class="size-209">
-                            <span class="mtext-110 cl2">
-                                79.65 €
-                            </span>
-                        </div>
+                           <div v-if="discount > 0" class="size-229">
+                                <p class="msg-promo">Réduction appliquée : -{{ discount.toFixed(2) }} €</p>
+                                <p class="msg-promo">Nouveau total : <strong class="new-total">{{ newTotal.toFixed(2) }} €</strong></p>
+                            </div>
+                        
+                            <div v-else class="size-209">
+                               
+                                <span class="mtext-110 cl2">
+                                    {{ totalCartPrice }} €
+                                </span>
+                            </div>
+                        
+
                     </div>
-
+                    
                     <div class="flex-w flex-t bor12 p-t-15 p-b-30">
                         <div class="size-208 w-full-ssm">
                             <span class="stext-110 cl2">
-                                Livraison:
+                                Livraison :
                             </span>
                         </div>
 
@@ -144,8 +155,20 @@
 <script>
 
 import { mapActions,mapGetters } from 'vuex';
+import axios from 'axios';
 
 export default {
+
+  data() {
+    return {
+        couponCode: '',
+        discount: 0,
+        newTotal: 0,
+        couponError: '',
+        couponSuccess: '',
+    };
+  },
+
   computed: {
   ...mapGetters(["cart", "totalCartPrice"])
   },
@@ -157,13 +180,14 @@ export default {
     increaseQuantity(row) {
             row.qty++;
             row.price = (row.qty * row.product.price).toFixed(2);
-
+    
             this.updateCartItem({
                 product_id: row.product_id,
                 quantity: row.qty,
                 price: row.price,
             });
-        },
+    },
+
 
 
     decreaseQuantity(row) {
@@ -187,6 +211,28 @@ export default {
         this.fetchCart(); 
     },
 
+    async applyCoupon() {
+        console.log("In applyCoupon");
+        this.couponError = '';
+        this.couponSuccess = '';
+
+        try {
+        const response = await axios.post('/check-promo', {
+            code: this.couponCode,
+            total: this.totalCartPrice
+        });
+        console.log(response);
+        this.discount = response.data.discount;
+        this.newTotal = response.data.newTotal;
+        this.couponSuccess = response.data.success;
+
+        } catch (error) {
+            console.log(error);
+            this.couponError = error.response.data.error;
+
+        }
+    }
+
   },
 
   
@@ -194,6 +240,7 @@ export default {
   mounted() {
 
     this.fetchCart();
+    console.log("discount : "+this.discount);
     
   },
 
@@ -207,4 +254,13 @@ export default {
 .column-2{
     text-align: center;
 }
+
+.msg-promo{
+    padding-left: 15px;
+}
+
+.new-total{
+    color:green;
+}
+
 </style>
