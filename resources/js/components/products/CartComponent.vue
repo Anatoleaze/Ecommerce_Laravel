@@ -73,13 +73,13 @@
                     <div class="flex-w flex-t bor12 p-b-13">
                         <div class="size-208">
                             <span class="stext-110 cl2">
-                                Total :
+                                Total du Panier :
                             </span>
                         </div>
 
                            <div v-if="discount > 0" class="size-229">
                                 <p class="msg-promo">Réduction appliquée : -{{ discount.toFixed(2) }} €</p>
-                                <p class="msg-promo">Nouveau total : <strong class="new-total">{{ newTotal.toFixed(2) }} €</strong></p>
+                                <p class="msg-promo">Nouveau total : <strong class="new-total">{{ (totalCartPrice-discount).toFixed(2) }} €</strong></p>
                             </div>
                         
                             <div v-else class="size-209">
@@ -93,37 +93,47 @@
                     </div>
                     
                     <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                        <div class="size-208 w-full-ssm">
-                            <span class="stext-110 cl2">
-                                Livraison :
-                            </span>
-                        </div>
+                        <div class="w-full-ssm p-r-15">
 
-                        <div class="size-209 p-r-18 p-r-0-sm w-full-ssm">
-                            
-                            <div class="p-t-15">
-                                <span class="stext-112 cl8">
-                                    Calculer les frais de port
+                            <span class="stext-110 cl2">
+                                Livraison : 
+                                
+                                <span v-if="deliveryFees>0" class="mtext-110 cl2">
+                                    {{ deliveryFees }} €
                                 </span>
 
-                                <div class="rs1-select2 rs2-select2 m-b-12 m-t-9">
-                                    <select class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" name="time">
-                                        <option>Sélectionnez votre pays</option>
-                                        <option value="USA">USA</option>
-                                        <option value="UK">UK</option>
-                                        <option value="FR">FR</option>
-                                    </select>
-                                    <div class="dropDownSelect2"></div>
-                                </div>
- 
-                                <div class="flex-w">
-                                    <div class="flex-c-m stext-101 cl2 size-115 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer">
-                                      Mettre à jour le total
-                                    </div>
-                                </div>
-                                    
-                            </div>
+                            </span>
+                            
+                             
                         </div>
+                    </div>
+
+                    <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+                        <div class="rs1-select2 rs2-select2 m-b-12 m-t-9">
+                            <select v-model="selectedCountry" class="stext-104 cl2 plh4 size-116 bor13 p-lr-20" name="time">
+                                <option selected>Sélectionnez votre pays</option>
+                                <option v-for="pays in paysList" :key="pays" :value="pays">{{ pays }}</option>
+                            </select>
+                            <div class="dropDownSelect2"></div>
+                        </div>
+
+                        <div class="rs1-select2 rs2-select2 m-b-12 m-t-9">
+                            <input class="stext-104 cl2 plh4 bor13 size-116 p-lr-20" type="text" name="rue" placeholder="Rue" :disabled="isAddressDisabled">
+                        </div>
+
+                        <div class="rs1-select2 rs2-select2 m-b-12 m-t-9">
+                            <input class="stext-104 cl2 plh4 bor13 size-116 p-lr-20" type="number" name="code_postal" placeholder="Code Postal" :disabled="isAddressDisabled">
+                        </div>
+
+                        <div class="rs1-select2 rs2-select2 m-b-12 m-t-9">
+                            <input class="stext-104 cl2 plh4 bor13 size-116 p-lr-20" type="text" name="ville" placeholder="Ville" :disabled="isAddressDisabled">
+                        </div>
+
+                        <div @click="onUpdateTotalClick" class="flex-c-m stext-101 cl2 size-116 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer">
+                                Mettre à jour le total
+                        </div>
+
+                    
                     </div>
 
                     <div class="flex-w flex-t p-t-27 p-b-33">
@@ -132,10 +142,10 @@
                                 Total :
                             </span>
                         </div>
-
-                        <div class="size-209 p-t-1">
+                        
+                        <div v-if="newTotal >0" class="size-209 p-t-1">
                             <span class="mtext-110 cl2">
-                                79.65 €
+                                {{ newTotal}} €
                             </span>
                         </div>
                     </div>
@@ -163,14 +173,19 @@ export default {
     return {
         couponCode: '',
         discount: 0,
-        newTotal: 0,
+        newTotal: 0,  
         couponError: '',
         couponSuccess: '',
+        paysList: [],
+        selectedCountry: "Sélectionnez votre pays",
+        isAddressDisabled: false,
+        deliveryFees: 0,
     };
   },
 
   computed: {
-  ...mapGetters(["cart", "totalCartPrice"])
+    ...mapGetters(["cart", "totalCartPrice"]),
+
   },
   
   methods: {
@@ -187,8 +202,6 @@ export default {
                 price: row.price,
             });
     },
-
-
 
     decreaseQuantity(row) {
         if (row.qty > 1) {
@@ -212,7 +225,6 @@ export default {
     },
 
     async applyCoupon() {
-        console.log("In applyCoupon");
         this.couponError = '';
         this.couponSuccess = '';
 
@@ -221,17 +233,66 @@ export default {
             code: this.couponCode,
             total: this.totalCartPrice
         });
-        console.log(response);
+
         this.discount = response.data.discount;
-        this.newTotal = response.data.newTotal;
         this.couponSuccess = response.data.success;
+        this.updateTotal();
 
+        this.$nextTick(() => {
+            this.newTotal = (parseFloat(this.totalCartPrice) + parseFloat(this.deliveryFees) - this.discount).toFixed(2);
+        });
         } catch (error) {
-            console.log(error);
             this.couponError = error.response.data.error;
-
         }
+    },
+
+    async fetchPays() {
+      try {
+        const response = await axios.get("/pays");
+        this.paysList = response.data;
+      } catch (error) {
+        console.error("Erreur lors de la récupération des pays :", error);
+      }
+    },
+
+    async fetchDeliveryFees() {
+        if (!this.selectedCountry) {
+            this.deliveryFees = 0;
+            return;
+        }
+
+        try {
+            const response = await axios.get(`/frais-livraison/${this.selectedCountry}`);
+            this.deliveryFees = response.data.frais;
+        } catch (error) {
+            console.error("Erreur lors de la récupération des frais de livraison :", error);
+            this.deliveryFees = 0;
+        }
+    },
+
+    async updateTotal() {
+        await this.fetchDeliveryFees(); // Get delevry cost
+    
+        this.newTotal = ( parseFloat(this.totalCartPrice) + parseFloat(this.deliveryFees) - this.discount ).toFixed(2);
+        
+    },
+
+     // Click on button "Mettre à jour le total"
+     async onUpdateTotalClick() {
+        await this.updateTotal();
+        this.disableAddressInputs();
+    },
+
+
+    disableAddressInputs() {
+
+        // Block modification of “street”, “postal code”, and “city” fields
+        const addressFields = document.querySelectorAll('input[name="rue"], input[name="code_postal"], input[name="ville"]');
+        addressFields.forEach(field => {
+            field.disabled = true;
+        });
     }
+
 
   },
 
@@ -240,7 +301,7 @@ export default {
   mounted() {
 
     this.fetchCart();
-    console.log("discount : "+this.discount);
+    this.fetchPays();  // fetch pays when the component is mounted
     
   },
 

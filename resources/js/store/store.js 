@@ -180,7 +180,6 @@ export default createStore({
 
   },
   getters: {
-    //cartCount: state => state.cartCount,
     cartItemCount(state) {
       return state.cart.reduce((sum, item) => sum + item.qty, 0);
     },

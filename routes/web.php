@@ -9,6 +9,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PromoController;
 
+use App\Models\FraisLivraison;
+
 Auth::routes();
 
 
@@ -24,6 +26,23 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart');
 
 Route::get('/add_newsletter', [UserController::class, 'addNewsLetter'])->name('addNewsLetter');
 
+// Get Country of database
+Route::get('/pays', function () {
+    return response()->json(FraisLivraison::pluck('pays'));
+});
+
+// Get Frais de livrais by pays selected
+Route::get('/frais-livraison/{pays}', function ($pays) {
+    $fraisLivraison = FraisLivraison::where('pays', $pays)->first();
+
+    if ($fraisLivraison) {
+        return response()->json([
+            'frais' => $fraisLivraison->frais
+        ]);
+    }
+
+    return response()->json(['frais' => 0], 404);
+});
 
 // Only connect user
 Route::middleware(['auth'])->group(function () {
