@@ -386,7 +386,7 @@ export default {
       selectedProduct: {},
       alertMessage: '', 
       alertType: '',
-      quantities: 1,
+      quantity: 1,
      
     };
   },

@@ -110,7 +110,7 @@
 
                     <div class="flex-w flex-t bor12 p-t-15 p-b-30">
                         <div class="rs1-select2 rs2-select2 m-b-12 m-t-9">
-                            <select v-model="selectedCountry" class="stext-104 cl2 plh4 size-116 bor13 p-lr-20" name="time">
+                            <select v-model="selectedCountry" class="stext-104 cl2 plh4 size-116 bor13 p-lr-20" name="time" required>
                                 <option selected>Sélectionnez votre pays</option>
                                 <option v-for="pays in paysList" :key="pays" :value="pays">{{ pays }}</option>
                             </select>
@@ -118,18 +118,21 @@
                         </div>
 
                         <div class="rs1-select2 rs2-select2 m-b-12 m-t-9">
-                            <input class="stext-104 cl2 plh4 bor13 size-116 p-lr-20" type="text" name="rue" placeholder="Rue" :disabled="isAddressDisabled">
+                            <input v-model="address.rue" class="stext-104 cl2 plh4 bor13 size-116 p-lr-20" type="text" placeholder="Rue" :disabled="isAddressDisabled" required>
+                            <p v-if="addressErrors.rue" class="alert alert-danger m-t-15">{{ addressErrors.rue }}</p>
                         </div>
 
                         <div class="rs1-select2 rs2-select2 m-b-12 m-t-9">
-                            <input class="stext-104 cl2 plh4 bor13 size-116 p-lr-20" type="number" name="code_postal" placeholder="Code Postal" :disabled="isAddressDisabled">
+                            <input v-model="address.code_postal" class="stext-104 cl2 plh4 bor13 size-116 p-lr-20" type="number" name="code_postal" placeholder="Code Postal" :disabled="isAddressDisabled" required>
+                            <p v-if="addressErrors.code_postal" class="alert alert-danger m-t-15">{{ addressErrors.code_postal }}</p>
                         </div>
 
                         <div class="rs1-select2 rs2-select2 m-b-12 m-t-9">
-                            <input class="stext-104 cl2 plh4 bor13 size-116 p-lr-20" type="text" name="ville" placeholder="Ville" :disabled="isAddressDisabled">
+                            <input v-model="address.ville" class="stext-104 cl2 plh4 bor13 size-116 p-lr-20 " type="text" name="ville" placeholder="Ville" :disabled="isAddressDisabled" required>
+                            <p v-if="addressErrors.ville" class="alert alert-danger m-t-15">{{ addressErrors.ville }}</p>
                         </div>
 
-                        <div @click="onUpdateTotalClick" class="flex-c-m stext-101 cl2 size-116 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer">
+                        <div @click="validateAddress" class="flex-c-m stext-101 cl2 size-116 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer">
                                 Mettre à jour le total
                         </div>
 
@@ -180,6 +183,12 @@ export default {
         selectedCountry: "Sélectionnez votre pays",
         isAddressDisabled: false,
         deliveryFees: 0,
+        address: {
+            rue: '',
+            code_postal: '',
+            ville: ''
+        },
+        addressErrors: {},
     };
   },
 
@@ -291,7 +300,28 @@ export default {
         addressFields.forEach(field => {
             field.disabled = true;
         });
+    },
+
+    async validateAddress() {
+        this.addressErrors = {}; 
+
+        if (!this.address.rue || this.address.rue.length < 3) {
+            this.addressErrors.rue = "Le champ rue doit contenir au moins 3 caractères.";
+        }
+        
+        if (!this.address.ville || this.address.ville.length < 3) {
+            this.addressErrors.ville = "Le champ ville doit contenir au moins 3 caractères.";
+        }
+        
+        if (!this.address.code_postal || !/^\d{4,5}$/.test(this.address.code_postal)) {
+            this.addressErrors.code_postal = "Le code postal doit contenir 4 ou 5 chiffres.";
+        }
+        
+        if (Object.keys(this.addressErrors).length === 0) {
+            await this.onUpdateTotalClick();
+        }
     }
+
 
 
   },
