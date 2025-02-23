@@ -5,8 +5,8 @@
  */
 
 import axios from 'axios';
-//import './bootstrap';
 import { createApp } from 'vue';
+import store from './store/store.js ';
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
@@ -16,7 +16,6 @@ import { createApp } from 'vue';
 
 const app = createApp({});
 
-import AddToCartButton from './components/AddToCartButton.vue';
 import SliderComponent from './components/home/SliderComponent.vue';
 import CategoryCartComponent from './components/CategoryCartComponent.vue';
 import FilterComponent from './components/products/FilterComponent.vue';
@@ -24,8 +23,11 @@ import ContactFormComponent from './components/contact/ContactFormComponent.vue'
 import ProfilUpdateComponent from './components/user/ProfilUpdateComponent.vue';
 import ProfilComponent from './components/user/ProfilComponent.vue';
 import Create_Product_Component from './components/products/Create_Product_Component.vue';
+import HeaderComponent from './components/header/HeaderComponent.vue';
+import CartComponent from './components/products/CartComponent.vue';
+import OrderComponent from './components/orders/OrderComponent.vue';
+import OrderDetailsComponent from './components/orders/OrderDetailsComponent.vue';  
 
-app.component('add-to-cart-button', AddToCartButton);
 app.component('slider-component', SliderComponent);
 app.component('category-cart-component', CategoryCartComponent);
 app.component('filter-component', FilterComponent);
@@ -33,7 +35,12 @@ app.component('contact-form-component', ContactFormComponent);
 app.component('profil-update-component', ProfilUpdateComponent);
 app.component('profil-component', ProfilComponent);
 app.component('create-product-component',Create_Product_Component);
+app.component('header-component', HeaderComponent);
+app.component('cart-component', CartComponent);
+app.component('order-component', OrderComponent);
+app.component('order-details-component', OrderDetailsComponent);
 
+app.use(store);
 
 /**
  * The following block of code may be used to automatically register your
@@ -52,9 +59,4 @@ app.component('create-product-component',Create_Product_Component);
  * an "id" attribute of "app". This element is included with the "auth"
  * scaffolding. Otherwise, you will need to add an element yourself.
  */
-
-console.log('app.js loaded');
-
 app.mount('#app');
-
-console.log('app mounted');

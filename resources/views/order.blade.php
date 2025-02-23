@@ -25,13 +25,16 @@
 	/>
 </div>
 
-<div style="margin:55px;">
-    <h3 class="text-center">Modifier mon profils</h3>
+<section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('/images/bg-01.jpg');">
+    <h2 class="ltext-105 cl0 txt-center">
+        {{ $title }}
+    </h2>
+</section>
 
-    <profil-update-component 
-        :user-data="{{ json_encode($user) }}"
-    />
-    
-</div>
-
+<order-component 
+    :orders= "{{json_encode($data)}}"
+	:user="{{ json_encode(Auth::user()) }}"
+/>    
+	
+	
 @endsection

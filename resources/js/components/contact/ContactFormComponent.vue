@@ -6,17 +6,16 @@
             Envoyez-nous un message
         </h4>
 
-        <div class="alert alert-success" style="width: 63%;margin: auto;margin-bottom: 20px;" v-if="successMessage">
+        <div class="alert alert-success" style="margin: auto;margin-bottom: 20px;" v-if="successMessage">
             <p>{{ successMessage }}</p>
         </div>
-        <div class="alert alert-danger" style="width: 63%;margin: auto;margin-bottom: 20px;" v-if="errorMessage">
+        <div class="alert alert-danger" style="margin: auto;margin-bottom: 20px;" v-if="errorMessage">
             <p>{{ errorMessage }}</p>
         </div>
     
 
         <div class="bor8 m-b-20 how-pos4-parent">
-            <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="email" name="email" v-model="form.email" value="userEmail"  required>
-            <img class="how-pos4 pointer-none" src="{{ asset('images/icons/icon-email.png')}}" alt="ICON">
+            <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="email" name="email" v-model="form.email" value="userEmail" placeholder="Votre Email" required>
         </div>
 
         <div class="bor8 m-b-30">
