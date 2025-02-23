@@ -25,6 +25,8 @@ import ProfilComponent from './components/user/ProfilComponent.vue';
 import Create_Product_Component from './components/products/Create_Product_Component.vue';
 import HeaderComponent from './components/header/HeaderComponent.vue';
 import CartComponent from './components/products/CartComponent.vue';
+import OrderComponent from './components/orders/OrderComponent.vue';
+import OrderDetailsComponent from './components/orders/OrderDetailsComponent.vue';  
 
 app.component('slider-component', SliderComponent);
 app.component('category-cart-component', CategoryCartComponent);
@@ -35,6 +37,8 @@ app.component('profil-component', ProfilComponent);
 app.component('create-product-component',Create_Product_Component);
 app.component('header-component', HeaderComponent);
 app.component('cart-component', CartComponent);
+app.component('order-component', OrderComponent);
+app.component('order-details-component', OrderDetailsComponent);
 
 app.use(store);
 

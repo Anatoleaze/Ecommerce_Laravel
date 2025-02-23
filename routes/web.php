@@ -9,6 +9,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PromoController;
 
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\FraisLivraison;
 
 Auth::routes();
@@ -93,6 +95,19 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/check-promo', [PromoController::class, 'checkPromo']);
 
+
+    Route::post('/commandes/create', [OrderController::class, 'store']);
+
+
+    Route::get('/commandes/show', [OrderController::class, 'index']);
+
+    // Show details of order
+    Route::get('/commandes/details/{id}', [OrderController::class, 'details']);
+
+    // Show order in admin
+    Route::get('/commandes/admin/show', [OrderController::class, 'adminShow'])->name('adminOrderShow');
+
+    Route::patch('/commande/{orderId}/status', [OrderController::class, 'updateOrderStatus']);
 
 });
 

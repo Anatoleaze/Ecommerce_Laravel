@@ -10,6 +10,7 @@
 		:catalog-link="'{{ route('products_list') }}'"
 		:cart-link="'{{ route('cart_show') }}'"
 		:contact-link="'{{ route('contact') }}'"
+		:admin-order-show="'{{ route('adminOrderShow') }}'"
 		:is-authenticated="{{ json_encode(Auth::check()) }}"
 		:user="{{ json_encode(Auth::user()) }}"
 		:login="'{{ route('login') }}'"

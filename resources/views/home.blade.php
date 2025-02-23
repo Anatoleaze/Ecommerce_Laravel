@@ -10,6 +10,7 @@
 		:catalog-link="'{{ route('products_list') }}'"
 		:cart-link="'{{ route('cart_show') }}'"
 		:contact-link="'{{ route('contact') }}'"
+		:admin-order-show="'{{ route('adminOrderShow') }}'"
 		:is-authenticated="{{ json_encode(Auth::check()) }}"
 		:user="{{ json_encode(Auth::user()) }}"
 		:login="'{{ route('login') }}'"
@@ -68,7 +69,7 @@
 
 
 <!-- Product -->
-<div class="bg0 p-t-23 p-b-140" style="height: 1200px;">
+<div class="bg0 p-t-23 p-b-140">
 	<div class="p-b-10">
 		<h3 class="ltext-103 cl5 m-b-25 text-center" >
 			Les plus populaires

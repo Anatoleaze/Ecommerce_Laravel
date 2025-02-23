@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Basket;
 use Illuminate\Http\Request;
 use App\Models\Product;
+
+use Illuminate\Support\Facades\Log;
 class HomeController extends Controller
 {
     /**
@@ -30,23 +32,7 @@ class HomeController extends Controller
         $products = $query->paginate(8); // 8 pproduct by page
         
         $link = config('app.url');
-
-        // Get User 
-        /*$current_user = auth()->user();
         
-        $quantity = 0;
-        
-        if ($current_user){
-            $user_id = $current_user->id;
-            
-            // Get product in cart
-            $cart = Basket::find(['user_id' => $user_id]);
-            
-            foreach ($cart as $product){
-                $quantity += $product->qty;
-            }
-        }*/
-
         return view('home', compact('products','link'));
     }
 

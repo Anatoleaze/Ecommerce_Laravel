@@ -75,10 +75,14 @@
 
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <a class="dropdown-item" :href="profile">Mon profil</a>
-                                                <a class="dropdown-item" :href="orders">Mes commandes</a>
+                                                <a v-if="user.role != 'admin'" class="dropdown-item" :href="orders">Mes commandes</a>
 
-                                                <a v-if="user.is_admin" class="dropdown-item" :href="adminProducts">
+
+                                                <a v-if="user.role = 'admin'" class="dropdown-item" :href="adminProducts">
                                                 Liste des produits
+                                                </a>
+                                                <a v-if="user.role = 'admin'" class="dropdown-item" :href="adminOrderShow">
+                                                Liste des commandes
                                                 </a>
 
                                                 <a class="dropdown-item" href="#" @click.prevent="logoutUser">
@@ -171,8 +175,12 @@
                         <a class="dropdown-item" :href="profile">Mon profil</a>
                         <a class="dropdown-item" :href="orders">Mes commandes</a>
 
-                        <a v-if="user.is_admin" class="dropdown-item" :href="adminProducts">
+                        <a v-if="user.role = 'admin'" class="dropdown-item" :href="adminProducts">
                         Liste des produits
+                        </a>
+
+                        <a v-if="user.role = 'admin'" class="dropdown-item" :href="adminOrderShow">
+                        Liste des commandes
                         </a>
 
                         <a class="dropdown-item" href="#" @click.prevent="logoutUser">
@@ -241,6 +249,11 @@
         },
 
         contactLink:{
+            type: String,
+            required: true
+        },
+
+        adminOrderShow:{
             type: String,
             required: true
         },
