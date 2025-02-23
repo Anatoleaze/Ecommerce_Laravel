@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Basket;
 use Illuminate\Http\Request;
 use App\Models\Product;
 
+use Illuminate\Support\Facades\Log;
 class HomeController extends Controller
 {
     /**
@@ -30,7 +32,7 @@ class HomeController extends Controller
         $products = $query->paginate(8); // 8 pproduct by page
         
         $link = config('app.url');
-
+        
         return view('home', compact('products','link'));
     }
 

@@ -6,6 +6,12 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PromoController;
+
+use Illuminate\Support\Facades\Auth;
+
+use App\Models\FraisLivraison;
 
 Auth::routes();
 
@@ -22,11 +28,28 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart');
 
 Route::get('/add_newsletter', [UserController::class, 'addNewsLetter'])->name('addNewsLetter');
 
+// Get Country of database
+Route::get('/pays', function () {
+    return response()->json(FraisLivraison::pluck('pays'));
+});
+
+// Get Frais de livrais by pays selected
+Route::get('/frais-livraison/{pays}', function ($pays) {
+    $fraisLivraison = FraisLivraison::where('pays', $pays)->first();
+
+    if ($fraisLivraison) {
+        return response()->json([
+            'frais' => $fraisLivraison->frais
+        ]);
+    }
+
+    return response()->json(['frais' => 0], 404);
+});
 
 // Only connect user
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    
 
     Route::get('/updateProfils', [UserController::class, 'edit'])->name('updateProfils');
     
@@ -49,6 +72,42 @@ Route::middleware(['auth'])->group(function () {
   
     // Edit a product backend
     Route::put('/product/{id}/update', [ProductController::class, 'update'])->name('update');
+
+    Route::get('/order',[OrderController::class, 'index'])->name('order');
+
+    // Add to cart (basket)
+    Route::post('/cart/store',[CartController::class, 'store'])->name('store');
+
+    // Remove from cart (basket)
+    Route::delete('/cart/remove/{id}', [CartController::class, 'remove']);
+
+    // Count products in cart (basket)
+    Route::get('/cart/count', [CartController::class, 'getCartCount']);
+
+    // Get cart of user
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+
+    // Show cart of user
+    Route::get('/cart/show', [CartController::class, 'show'])->name('cart_show');
+
+    // Update quantity of product in cart (basket)
+    Route::post('/cart/update', [CartController::class, 'update'])->name('cart_update');
+
+    Route::post('/check-promo', [PromoController::class, 'checkPromo']);
+
+
+    Route::post('/commandes/create', [OrderController::class, 'store']);
+
+
+    Route::get('/commandes/show', [OrderController::class, 'index']);
+
+    // Show details of order
+    Route::get('/commandes/details/{id}', [OrderController::class, 'details']);
+
+    // Show order in admin
+    Route::get('/commandes/admin/show', [OrderController::class, 'adminShow'])->name('adminOrderShow');
+
+    Route::patch('/commande/{orderId}/status', [OrderController::class, 'updateOrderStatus']);
 
 });
 

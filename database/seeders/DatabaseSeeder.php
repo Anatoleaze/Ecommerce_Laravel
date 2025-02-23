@@ -22,7 +22,12 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);*/
 
-        Product::factory(10)->create();
+        $this->call([
+            OrderSeeder::class,
+            OrderDetailsSeeder::class,
+        ]);
+
+
         
     }
 }
