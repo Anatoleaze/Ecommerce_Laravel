@@ -17,6 +17,7 @@
         "vue": "^3.2.37"
     },
     "dependencies": {
+        "@stripe/stripe-js": "^5.7.0",
         "isotope-layout": "^3.0.6",
         "vuex": "^4.1.0"
     }

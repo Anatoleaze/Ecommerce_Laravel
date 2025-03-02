@@ -22,6 +22,9 @@
 	<link rel="stylesheet" href="{{ asset('css/util.css') }}">
 	<link rel="stylesheet" href="{{ asset('css/main.css') }}">
 	
+	<!-- Stripe Integration-->
+	<script src="https://js.stripe.com/v3/"></script>
+
 
 </head> 
 

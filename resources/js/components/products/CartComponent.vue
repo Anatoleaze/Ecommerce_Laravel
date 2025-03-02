@@ -153,9 +153,21 @@
                         </div>
                     </div>
 
-                    <button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
+                    <button v-if="deliveryFees>0"   @click.prevent="openPaymentModal" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
                         Procéder au paiement
                     </button>
+                    
+                    <PaymentModal                      
+                        :isOpen="isPaymentModalOpen"
+                        :total="newTotal"
+                        :userName="user.name"
+                        :userEmail="user.email"
+                        :userAdressLine="address.rue"
+                        :userCodePostal="address.code_postal"
+                        :userVille="address.ville"
+                        :userPays="selectedCountry"
+                        @update:isOpen="isPaymentModalOpen = false"
+                    />
                 </div>
             </div>
         </div>
@@ -168,9 +180,23 @@
 <script>
 
 import { mapActions,mapGetters } from 'vuex';
+import PaymentModal from "../orders/PaymentModal.vue";
 import axios from 'axios';
 
 export default {
+
+  name: 'CartComponent',
+
+  props : {
+    user: {
+        type: Object,
+        required: true
+    },
+  },
+
+  components: {
+    PaymentModal,
+  },
 
   data() {
     return {
@@ -189,6 +215,7 @@ export default {
             ville: ''
         },
         addressErrors: {},
+        isPaymentModalOpen: false,
     };
   },
 
@@ -320,19 +347,27 @@ export default {
         if (Object.keys(this.addressErrors).length === 0) {
             await this.onUpdateTotalClick();
         }
+    },
+
+    openPaymentModal(event) {
+        if (event) {
+            event.preventDefault(); // Stop default behavior
+            event.stopPropagation(); // Stop propagation
+        }
+        this.isPaymentModalOpen = true;
+    },
+    closePaymentModal() {
+      this.isPaymentModalOpen = false;
     }
-
-
 
   },
 
   
 
-  mounted() {
-
+  mounted() {  
     this.fetchCart();
     this.fetchPays();  // fetch pays when the component is mounted
-    
+
   },
 
 };

@@ -8,6 +8,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PromoController;
+use App\Http\Controllers\PaymentController;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -107,7 +108,21 @@ Route::middleware(['auth'])->group(function () {
     // Show order in admin
     Route::get('/commandes/admin/show', [OrderController::class, 'adminShow'])->name('adminOrderShow');
 
+    // Update order status in admin
     Route::patch('/commande/{orderId}/status', [OrderController::class, 'updateOrderStatus']);
+
+    // Route creation payement intent
+    Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
+
+
+    Route::post('/payment', [PaymentController::class, 'processPayment'])->middleware('auth:sanctum');
+
+    
+    Route::delete('/cart/clear', function () {
+        \App\Models\Basket::where('user_id', Auth::id())->delete();
+        return response()->json(['success' => true]);
+    })->middleware('auth:sanctum');
+    
 
 });
 
