@@ -193,14 +193,14 @@ export default {
           this.alertMessage = "Paiement validé !";
           this.alertClass = "alert alert-success";
 
-          /*setTimeout(() => {
+          setTimeout(() => {
             this.$emit('payment-success');
             this.closeModal();
-          }, 2000);*/
+          }, 2000);
 
 
         }else{
-          console.log("Échec du paiement : " + confirmError.message);
+          console.error("Échec du paiement : " + confirmError.message);
           this.alertMessage = "Oups... Une erreur est survenue";
           this.alertClass = "alert alert-danger";
         }
@@ -215,7 +215,8 @@ export default {
     },
 
     // Fermer la modale
-    closeModal() {
+    closeModal(event) {
+      if (event) event.preventDefault();
       this.$emit("update:isOpen", false); // Update parent
     },
   },

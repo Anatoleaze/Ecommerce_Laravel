@@ -110,6 +110,7 @@
 
                     <div class="flex-w flex-t bor12 p-t-15 p-b-30">
                         <div class="rs1-select2 rs2-select2 m-b-12 m-t-9">
+                            <p v-if="selectedCountryErrors" class="alert alert-danger" style="font-size:15px;">{{ selectedCountryErrors }}</p>
                             <select v-model="selectedCountry" class="stext-104 cl2 plh4 size-116 bor13 p-lr-20" name="time" required>
                                 <option selected>Sélectionnez votre pays</option>
                                 <option v-for="pays in paysList" :key="pays" :value="pays">{{ pays }}</option>
@@ -207,6 +208,7 @@ export default {
         couponSuccess: '',
         paysList: [],
         selectedCountry: "Sélectionnez votre pays",
+        selectedCountryErrors: '',
         isAddressDisabled: false,
         deliveryFees: 0,
         address: {
@@ -331,6 +333,11 @@ export default {
 
     async validateAddress() {
         this.addressErrors = {}; 
+        this.selectedCountryErrors = '';    
+
+        if (this.selectedCountry === "Sélectionnez votre pays"){
+            this.selectedCountryErrors = "Le pays doit être renseigné.";
+        }
 
         if (!this.address.rue || this.address.rue.length < 3) {
             this.addressErrors.rue = "Le champ rue doit contenir au moins 3 caractères.";
@@ -343,8 +350,8 @@ export default {
         if (!this.address.code_postal || !/^\d{4,5}$/.test(this.address.code_postal)) {
             this.addressErrors.code_postal = "Le code postal doit contenir 4 ou 5 chiffres.";
         }
-        
-        if (Object.keys(this.addressErrors).length === 0) {
+     
+        if (Object.keys(this.addressErrors).length === 0 && this.selectedCountryErrors == "") {
             await this.onUpdateTotalClick();
         }
     },
@@ -356,8 +363,13 @@ export default {
         }
         this.isPaymentModalOpen = true;
     },
-    closePaymentModal() {
+    closePaymentModal(event) {
+      if (event) event.preventDefault();
+
       this.isPaymentModalOpen = false;
+
+      // Reaload fess delivry
+      this.fetchDeliveryFees();
     }
 
   },

@@ -47,8 +47,6 @@ class PaymentController extends Controller
                 
                 $cart = Basket::where('user_id', Auth::id())->get();
                 
-                Log::debug('Products in cart');
-                Log::debug($cart);
                 // Create OrderDetails
                 foreach ($cart as $product) {
                     $order_detail = OrderDetails::create([
