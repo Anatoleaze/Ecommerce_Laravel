@@ -33,6 +33,9 @@
 </section>	
 
 
-<cart-component />
+<cart-component 
+	:user="{{ json_encode(Auth::user()) }}"
+
+/>
 	
 @endsection

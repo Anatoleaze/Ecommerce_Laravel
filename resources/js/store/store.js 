@@ -9,8 +9,6 @@ export default createStore({
   },
   mutations: {
     SET_CART(state, cart) {
-     // state.cart = Array.isArray(cart) ? cart : [];
-      console.log("🔄 Data received in SET_CART:", cart);
       state.cart = cart;
       state.cartCount = cart.reduce((total, item) => total + (item.quantity || 0), 0);
     },
@@ -48,11 +46,8 @@ export default createStore({
     },
 
     UPDATE_CART_ITEM(state, { product_id, quantity, price }) {
-      console.log("UPDATE_CART_ITEM");
-      console.log(state.cart);
       const item = state.cart.find(p => p.product_id === product_id);
-      console.log('item');
-      console.log(item);
+   
       if (item) {
         if (quantity === 0) {
           state.cart = state.cart.filter(p => p.product_id !== product_id);
@@ -63,32 +58,28 @@ export default createStore({
         }
       }
       state.cartTotal = state.cart.reduce((sum, item) => sum + item.qty, 0);
-      console.log("Cart updated:", state.cart); // ✅ Vérifier dans la console
     }
 
   },
   actions: {
     async fetchCart({ commit }) {
-      console.log("📢 fetchCart() called!"); 
       
       try {
         const response = await fetch("/cart");
         const data = await response.json();
         
-        console.log("🛒 API response:", data); // 🔍 Vérifier l'API
-  
-        // Reformater les données pour correspondre au format attendu
+   
+        // Formate data 
         const formattedCart = data.map(item => ({
           product_id: item.product.id,  
           name: item.product.name,  
           price: parseFloat(item.product.price), // Convertir en float
           quantity: item.qty, 
           img: item.product.image_name, 
-          totalPrice: (item.qty * parseFloat(item.product.price)).toFixed(2) // Total arrondi
+          totalPrice: (item.qty * parseFloat(item.product.price)).toFixed(2) // Total around
         }));
   
-        console.log("✅ Formatted cart:", formattedCart); // Vérifier le format
-  
+   
         commit("SET_CART", formattedCart);
       } catch (error) {
         console.error("❌ Error fetching cart:", error);
@@ -103,7 +94,7 @@ export default createStore({
 
         if (response.status === 200) {
           commit('ADD_TO_CART', response.data);
-          dispatch('fetchCartCount'); // 🔹 Actualiser le macaron
+          dispatch('fetchCartCount'); // 🔹 Update le macaron
           dispatch('fetchCart');
         }
 
@@ -126,7 +117,7 @@ export default createStore({
     },
 
     async fetchCartCount({ commit }) {
-      console.log("In fetchCartCount");
+     
       try {
         const response = await axios.get('/cart/count');
         commit('SET_CART_COUNT', response.data.count);
@@ -137,12 +128,10 @@ export default createStore({
 
     toggleCart({ commit }, value) {  // Update State of modal cart
       commit('TOGGLE_CART', value);
-      console.log("Toggle Cart : ", value);
     },
 
     async updateCartItem({ commit, dispatch }, { product_id, quantity, price }) {
-      console.log("📢 updateCartItem() called!", { product_id, quantity, price });
-  
+    
       try {
         // 🔥 Envoie la mise à jour au backend
         const response = await fetch(`/cart/update`, {
@@ -155,7 +144,6 @@ export default createStore({
         });
   
         const data = await response.json();
-        console.log("✅ Server response:", data);
         
         if (response.ok) {
           commit("UPDATE_CART_ITEM", { product_id, quantity, price });

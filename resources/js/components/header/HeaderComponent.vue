@@ -78,10 +78,10 @@
                                                 <a v-if="user.role != 'admin'" class="dropdown-item" :href="orders">Mes commandes</a>
 
 
-                                                <a v-if="user.role = 'admin'" class="dropdown-item" :href="adminProducts">
+                                                <a v-if="user.role == 'admin'" class="dropdown-item" :href="adminProducts">
                                                 Liste des produits
                                                 </a>
-                                                <a v-if="user.role = 'admin'" class="dropdown-item" :href="adminOrderShow">
+                                                <a v-if="user.role == 'admin'" class="dropdown-item" :href="adminOrderShow">
                                                 Liste des commandes
                                                 </a>
 

@@ -27,6 +27,7 @@ import HeaderComponent from './components/header/HeaderComponent.vue';
 import CartComponent from './components/products/CartComponent.vue';
 import OrderComponent from './components/orders/OrderComponent.vue';
 import OrderDetailsComponent from './components/orders/OrderDetailsComponent.vue';  
+import PaymentModal from './components/orders/PaymentModal.vue';
 
 app.component('slider-component', SliderComponent);
 app.component('category-cart-component', CategoryCartComponent);
@@ -39,6 +40,7 @@ app.component('header-component', HeaderComponent);
 app.component('cart-component', CartComponent);
 app.component('order-component', OrderComponent);
 app.component('order-details-component', OrderDetailsComponent);
+app.component('payment-modal', PaymentModal);
 
 app.use(store);
 
