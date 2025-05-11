@@ -51,7 +51,7 @@ Cela va construire les containers et démarrer l'application en mode détaché.
 Une fois les containers démarrés, vous pouvez appliquer les migrations de la base de données avec Laravel :
 
 ```bash
-docker exec -it justeat-app php artisan migrate
+docker exec -it laravel-app php artisan migrate
 ```
 
 Cela créera les tables nécessaires dans la base de données MySQL.
