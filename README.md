@@ -19,7 +19,7 @@ Avant de commencer, assurez-vous d'avoir installé les outils suivants sur votre
 - **Docker** : [Docker installation](https://www.docker.com/get-started)
 - **Docker Compose** : [Docker Compose installation](https://docs.docker.com/compose/install/)
 
-## Installation
+## 🛠️ Installation
 
 ### 1. Cloner le projet
 
@@ -31,34 +31,48 @@ cd JustEat
 ```
 
 ### 2. Configurer les variables d'environnement
-Copiez le fichier .env.example en .env et configurez-le selon vos besoins. Vous devrez probablement spécifier les informations de connexion à la base de données.
+Copiez le fichier .env.local en .env et configurez-le selon vos besoins. Vous devrez probablement spécifier les informations de connexion à la base de données.
 
 ```bash
 cp .env.local .env
 ```
 
 ### 3. Lancer les containers Docker
-Utilisez Docker Compose pour démarrer les containers nécessaires (MySQL, Nginx, et l'application Laravel).
+Utilisez Docker Compose pour démarrer les containers nécessaires (MySQL, Nginx, PHP, Node.js) :
 
 ```bash
 docker compose up -d --build
 ```
 
-Cela va construire les containers et démarrer l'application en mode détaché.
+### 4. Installer les dépendances PHP avec Composer
 
-### 4. Lancer les migrations
+```bash
+docker exec -it laravel-app composer install
+```
 
-Une fois les containers démarrés, vous pouvez appliquer les migrations de la base de données avec Laravel :
+### 5. Donner les bonnes permissions aux dossiers nécessaires
+
+```bash
+docker exec -it laravel-app chown -R www-data:www-data /var/www/storage
+docker exec -it laravel-app chown -R www-data:www-data /var/www/bootstrap/cache
+```
+
+### 6. Générer la clé d'application Laravel
+
+```bash
+docker exec -it laravel-app php artisan key:generate
+```
+
+### 7. Lancer les migrations
 
 ```bash
 docker exec -it laravel-app php artisan migrate
+
 ```
 
-Cela créera les tables nécessaires dans la base de données MySQL.
+### 8. Accéder à l'application
 
-### 5. Accéder à l'application
-
-Une fois les containers en place et les migrations exécutées, vous pouvez accéder à l'application via votre navigateur à l'adresse suivante :
+Ouvrez votre navigateur à l'adresse suivante :
 
 ```bash
 http://localhost:8000
