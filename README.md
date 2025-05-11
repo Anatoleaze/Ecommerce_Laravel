@@ -1,6 +1,4 @@
-# JustEat
-
-## E-Commerce Laravel & Vue.js
+# E-Commerce Laravel & Vue.js
 
 Ce projet est un site e-commerce développé avec **Laravel** pour le back-end et **Vue.js** pour le front-end. L'application permet la gestion des produits, des paniers, des utilisateurs et des commandes dans un environnement moderne et performant.
 
