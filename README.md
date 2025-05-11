@@ -24,8 +24,8 @@ Avant de commencer, assurez-vous d'avoir installé les outils suivants sur votre
 Clonez le projet depuis le repository GitHub :
 
 ```bash
-git clone https://github.com/Anatoleaze/JustEat.git
-cd JustEat
+git clone https://github.com/Anatoleaze/Ecommerce_Laravel.git
+cd Ecommerce_Laravel
 ```
 
 ### 2. Configurer les variables d'environnement
