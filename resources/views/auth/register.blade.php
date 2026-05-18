@@ -36,12 +36,12 @@
                         @csrf
 
                         <div class="row mb-3">
-                            <label for="frist_name" class="col-md-4 col-form-label text-md-end">Nom</label>
+                            <label for="name" class="col-md-4 col-form-label text-md-end">Nom</label>
 
                             <div class="col-md-6">
-                                <input id="frist_name" type="text" class="form-control @error('frist_name') is-invalid @enderror" name="frist_name" value="{{ old('frist_name') }}" required autocomplete="frist_name" autofocus>
+                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
 
-                                @error('frist_name')
+                                @error('name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -50,10 +50,10 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="name" class="col-md-4 col-form-label text-md-end">Prénom</label>
+                            <label for="first_name" class="col-md-4 col-form-label text-md-end">Prénom</label>
 
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                                <input id="first_name" type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name') }}" required autocomplete="first_name" autofocus>
 
                                 @error('name')
                                     <span class="invalid-feedback" role="alert">

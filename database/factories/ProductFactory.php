@@ -4,33 +4,35 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
- */
 class ProductFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
-        $name = implode(" ",fake()->words(3));
-        $slug = str_replace(' ','_', strtolower($name));
-        $price = fake()->randomFloat(2);
-        $sale = $price - fake()->randomDigit();
-        $types = ['homme', 'femme', 'sacs', 'chaussures', 'montres'];
-        $index = array_rand($types, 1);
-        
+        $name = implode(' ', fake()->words(3));
+        $slug = str_replace(' ', '_', strtolower($name));
+
+        $price = fake()->randomFloat(2, 10, 500);
+        $sale = $price - fake()->randomFloat(2, 1, 50);
+
+        $type = fake()->randomElement([
+            'homme',
+            'femme',
+            'chaussures',
+            'sacs',
+            'montres'
+        ]);
+
+        // 🔥 image unique garantie via seed basé sur le nom
+        $imageSeed = md5($name . microtime(true) . rand());
+
         return [
             'name' => $name,
             'slug' => $slug,
             'description' => fake()->text(),
-            'image_name' => fake()->imageUrl(640, 480, 'product', true),
+            'image_name' => "https://picsum.photos/seed/{$imageSeed}/640/480",
             'price' => $price,
-            'sale_price' => $sale,
-            'type'=> $types[$index]
+            'sale_price' => max($sale, 0),
+            'type' => $type,
         ];
     }
 }

@@ -28,7 +28,7 @@ class ProductController extends Controller
         }
 
         // Utiliser paginate() pour la pagination
-        $products = $query->paginate(4); // 12 produits par page
+        $products = $query->paginate(20)->withQueryString(); // 20 produits par page (4 colonnes x 5 lignes)
  
         $link = config('app.url');
 
