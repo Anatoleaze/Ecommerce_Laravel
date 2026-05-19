@@ -19,7 +19,6 @@
     "dependencies": {
         "@stripe/stripe-js": "^5.7.0",
         "isotope-layout": "^3.0.6",
-        "pinia": "^3.0.4",
         "vuex": "^4.1.0"
     }
 }
