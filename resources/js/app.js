@@ -6,7 +6,7 @@
 
 import axios from 'axios';
 import { createApp } from 'vue';
-import store from './store/store.js ';
+import store from './store/store.js';
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
