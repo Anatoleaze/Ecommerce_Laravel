@@ -28,21 +28,14 @@ git clone https://github.com/Anatoleaze/Ecommerce_Laravel.git
 cd Ecommerce_Laravel
 ```
 
-### 2. Configurer les variables d'environnement
-Copiez le fichier .env.local en .env et configurez-le selon vos besoins. Vous devrez probablement spécifier les informations de connexion à la base de données.
-
-```bash
-cp .env.local .env
-```
-
-### 3. Lancer les containers Docker
+### 2. Lancer les containers Docker
 Utilisez Docker Compose pour démarrer les containers nécessaires (MySQL, Nginx, PHP, Node.js) :
 
 ```bash
 docker compose up -d --build
 ```
 
-### 4. Installer les dépendances PHP avec Composer
+### 3. Installer les dépendances PHP avec Composer
 
 ```bash
 docker exec -it laravel-app composer install
@@ -64,7 +57,7 @@ docker exec -it laravel-app php artisan key:generate
 ### 7. Lancer les migrations
 
 ```bash
-docker exec -it laravel-app php artisan migrate
+docker exec -it laravel-app php artisan migrate --seed
 
 ```
 

@@ -26,9 +26,7 @@ WORKDIR /var/www
 
 COPY . .
 
-RUN composer install
+# Copie .env.example si .env n'existe pas
+RUN cp -n .env.local .env || true
 
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 775 /var/www/storage \
-    && chmod -R 775 /var/www/bootstrap/cache \
-    && chmod -R o+rx /var/www
+RUN composer install
