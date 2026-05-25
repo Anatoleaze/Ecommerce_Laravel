@@ -26,7 +26,4 @@ WORKDIR /var/www
 
 COPY . .
 
-# Copie .env.example si .env n'existe pas
-RUN cp -n .env.local .env || true
-
 RUN composer install
