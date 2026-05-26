@@ -37,10 +37,11 @@
             @endif
         </h2>
            
-        <filter-component
-			:products="{{ json_encode($products) }}"
-			:is-authenticated="{{ json_encode(Auth::check()) }}"
-		/>
+         <filter-component
+            :products="{{ json_encode($products) }}"
+            :is-authenticated="{{ json_encode(Auth::check()) }}"
+            :paginated="true"
+        />
         
     </div>
 </div>

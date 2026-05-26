@@ -13,13 +13,11 @@ class ProductSeeder extends Seeder
 
     public function run(): void
     {
-        $types = ['homme', 'femme', 'chaussures', 'sacs', 'montres'];
-
-        $perType = 10; // 50 produits → 10 par type
-
+        $types = ['hommes', 'femmes', 'chaussures', 'sacs', 'montres'];
+ 
         foreach ($types as $type) {
             Product::factory()
-                ->count($perType)
+                ->count(5)
                 ->state(['type' => $type])
                 ->create();
         }
