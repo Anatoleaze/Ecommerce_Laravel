@@ -26,10 +26,15 @@ class HomeController extends Controller
      */
     public function index()
     {   
-        $query = Product::query();
+        $types = ['hommes', 'femmes', 'chaussures', 'sacs', 'montres'];
+        $limitPerType = 8; // max par tag
+        $products = collect();
 
-        // Use Pagination 
-        $products = $query->paginate(8); // 8 pproduct by page
+        foreach ($types as $type) {
+            $products = $products->merge(
+                Product::where('type', $type)->latest()->limit($limitPerType)->get()
+            );
+        }
         
         $link = config('app.url');
         
