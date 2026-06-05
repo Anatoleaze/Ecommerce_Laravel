@@ -18,6 +18,7 @@
 		:admin-products="'{{ route('products_list_admin') }}'"
 		:logout="'{{ route('logout') }}'"
 		:logo-close="'{{ asset('images/icons/icon-close2.png') }}'"
+        :csrfToken="'{{ csrf_token() }}'"
 	/>
 </div>
 

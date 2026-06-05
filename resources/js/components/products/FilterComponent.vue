@@ -3,14 +3,19 @@
     <div class="flex-w flex-sb-m p-b-52">
       <div class="flex-w flex-l-m filter-tope-group m-tb-10">
         <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" @click="filterProducts('*')">Tous</button>
-        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" @click="filterProducts('.hommes')">Hommes</button>
-        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" @click="filterProducts('.femmes')">Femmes</button>
-        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" @click="filterProducts('.chaussures')">Chaussures</button>
+        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5"
+          @click="filterProducts('.hommes')">Hommes</button>
+        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5"
+          @click="filterProducts('.femmes')">Femmes</button>
+        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5"
+          @click="filterProducts('.chaussures')">Chaussures</button>
         <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" @click="filterProducts('.sacs')">Sacs</button>
-        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" @click="filterProducts('.montres')">Montres</button>
+        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5"
+          @click="filterProducts('.montres')">Montres</button>
 
         <div class="flex-w flex-c-m m-tb-10">
-          <div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter" @click="toggleFilterPanel">
+          <div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter"
+            @click="toggleFilterPanel">
             <i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
             <i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
             Filtre
@@ -22,22 +27,33 @@
             <div class="filter-col1 p-r-15 p-b-27">
               <div class="mtext-102 cl2 p-b-15">Trier Par</div>
               <ul>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04" @click.prevent="sortProducts('default')">Tous les produits</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04" @click.prevent="sortProducts('popularity')">Popularité</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04" @click.prevent="sortProducts('new')">Nouveauté</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04" @click.prevent="sortProducts('price-asc')">Prix : Croissant</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04" @click.prevent="sortProducts('price-desc')">Prix : Décroissant</a></li>
+                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
+                    @click.prevent="sortProducts('default')">Tous les produits</a></li>
+                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
+                    @click.prevent="sortProducts('popularity')">Popularité</a></li>
+                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
+                    @click.prevent="sortProducts('new')">Nouveauté</a></li>
+                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
+                    @click.prevent="sortProducts('price-asc')">Prix : Croissant</a></li>
+                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
+                    @click.prevent="sortProducts('price-desc')">Prix : Décroissant</a></li>
               </ul>
             </div>
             <div class="filter-col2 p-r-15 p-b-27">
               <div class="mtext-102 cl2 p-b-15">Prix</div>
               <ul>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04 filter-link-active" @click.prevent="filterProducts('*')">Tous</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04" @click.prevent="filterProducts('.price-0-50')">$0.00 - $50.00</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04" @click.prevent="filterProducts('.price-50-100')">$50.00 - $100.00</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04" @click.prevent="filterProducts('.price-100-150')">$100.00 - $150.00</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04" @click.prevent="filterProducts('.price-150-200')">$150.00 - $200.00</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04" @click.prevent="filterProducts('.price-200-plus')">$200.00+</a></li>
+                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04 filter-link-active"
+                    @click.prevent="filterProducts('*')">Tous</a></li>
+                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
+                    @click.prevent="filterProducts('.price-0-50')">$0.00 - $50.00</a></li>
+                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
+                    @click.prevent="filterProducts('.price-50-100')">$50.00 - $100.00</a></li>
+                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
+                    @click.prevent="filterProducts('.price-100-150')">$100.00 - $150.00</a></li>
+                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
+                    @click.prevent="filterProducts('.price-150-200')">$150.00 - $200.00</a></li>
+                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
+                    @click.prevent="filterProducts('.price-200-plus')">$200.00+</a></li>
               </ul>
             </div>
           </div>
@@ -46,15 +62,18 @@
     </div>
 
     <div ref="productGrid" class="row isotope-grid">
-      <div v-for="product in sortedProducts" :key="product.id" :class="`col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item ${product.type} ${getPriceClass(product.price)}`">
+      <div v-for="product in sortedProducts" :key="product.id"
+        :class="`col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item ${product.type} ${getPriceClass(product.price)}`">
         <div class="block2">
           <div class="block2-pic hov-img0">
             <img class="img-product" :src="product.image_name" alt="IMG-PRODUCT">
-            <a href="#" @click="openModal(product)" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">Voir</a>
+            <a href="#" @click="openModal(product)"
+              class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">Voir</a>
           </div>
           <div class="block2-txt flex-w flex-t p-t-14">
             <div class="block2-txt-child1 flex-col-l ">
-              <a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">{{ product.name }}</a>
+              <a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">{{ product.name
+                }}</a>
               <span class="stext-105 cl3">{{ product.price }} €</span>
             </div>
           </div>
@@ -76,7 +95,8 @@
                     <div class="item-slick3">
                       <div class="wrap-pic-w pos-relative">
                         <img class="img-product-modal" :src="selectedProduct.image_name" alt="IMG-PRODUCT">
-                        <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" :href="selectedProduct.image_name">
+                        <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
+                          :href="selectedProduct.image_name">
                           <i class="fa fa-expand"></i>
                         </a>
                       </div>
@@ -91,19 +111,26 @@
                 <span class="mtext-106 cl2">{{ selectedProduct.price }} €</span>
                 <p class="stext-102 cl3 p-t-23">{{ selectedProduct.description }}</p>
                 <div class="flex-w flex-m p-l-100 p-t-40 respon7">
-                  <a href="#" @click="shareOnFacebook" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100 share-button-facebook" data-tooltip="Facebook">
+                  <a href="#" @click="shareOnFacebook"
+                    class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100 share-button-facebook"
+                    data-tooltip="Facebook">
                     <i class="fa fa-facebook"></i>
                   </a>
-                  <a href="#" @click="shareOnTwitter(selectedProduct)" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100 share-button-twitter" data-tooltip="Twitter">
+                  <a href="#" @click="shareOnTwitter(selectedProduct)"
+                    class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100 share-button-twitter"
+                    data-tooltip="Twitter">
                     <i class="fa fa-twitter"></i>
                   </a>
-                  <a href="#" @click="shareOnGmail(selectedProduct)" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100 share-button-google" data-tooltip="Google Plus">
+                  <a href="#" @click="shareOnGmail(selectedProduct)"
+                    class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100 share-button-google"
+                    data-tooltip="Google Plus">
                     <i class="fa fa-google-plus"></i>
                   </a>
                 </div>
                 <div class="flex-w flex-r-m p-b-10">
                   <template v-if="!isAuthenticated">
-                    <div class="alert alert-danger alert-danger-no-cart" role="alert">Vous devez être connecté pour ajouter un article à votre panier !</div>
+                    <div class="alert alert-danger alert-danger-no-cart" role="alert">Vous devez être connecté pour
+                      ajouter un article à votre panier !</div>
                   </template>
                   <template v-else>
                     <div class="size-204 flex-w flex-m respon6-next">
@@ -111,13 +138,16 @@
                         <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" @click="decreaseQuantity">
                           <i class="fs-16 zmdi zmdi-minus"></i>
                         </div>
-                        <input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" v-model="quantity" min="1">
+                        <input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product"
+                          v-model="quantity" min="1">
                         <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m" @click="increaseQuantity">
                           <i class="fs-16 zmdi zmdi-plus"></i>
                         </div>
                       </div>
-                      <div v-if="alertMessage!=''" :class="['alert', alertType]" role="alert">{{ alertMessage }}</div>
-                      <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail btn-cart" @click="() => addToCart(selectedProduct.id,selectedProduct.price)">Ajouter au panier</button>
+                      <div v-if="alertMessage != ''" :class="['alert', alertType]" role="alert">{{ alertMessage }}</div>
+                      <button
+                        class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail btn-cart"
+                        @click="() => addToCart(selectedProduct.id, selectedProduct.price)">Ajouter au panier</button>
                     </div>
                   </template>
                 </div>
@@ -137,13 +167,17 @@ import Isotope from 'isotope-layout';
 export default {
   props: {
     products: {
-      type: Array,
+      type: [Array, Object],
       required: true
     },
     isAuthenticated: {
       type: Object,
       required: true
     },
+    paginated: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -159,29 +193,20 @@ export default {
   },
   computed: {
     sortedProducts() {
-      console.log("In sorted product computed"); // Ajout d'un log pour le débogage
-      let sorted = [...this.products.data];
-      console.log(sorted); // Ajout d'un log pour le débogage
+      let data = this.paginated ? this.products.data : this.products;
+      let sorted = [...data]; // ← ici tu as encore this.products.data au lieu de data
       switch (this.sortOption) {
         case 'popularity':
-          console.log("Popularity");
           sorted.sort((a, b) => b.popularity - a.popularity);
-          console.log(sorted);
           break;
         case 'new':
-          console.log("New");
           sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
-          console.log(sorted);
           break;
         case 'price-asc':
-          console.log("Price-asc");
           sorted.sort((a, b) => a.price - b.price);
-          console.log(sorted);
           break;
         case 'price-desc':
-          console.log("Price-desc");
           sorted.sort((a, b) => b.price - a.price);
-          console.log(sorted);
           break;
         default:
           break;
@@ -191,7 +216,12 @@ export default {
   },
   methods: {
     filterProducts(filter) {
-      this.isotope.arrange({ filter: filter });
+      if (this.paginated) {
+        const type = filter.replace('.', '');
+        window.location.href = `/products?search=${type === '*' ? '' : type}`;
+      } else {
+        this.isotope.arrange({ filter: filter });
+      }
     },
     getPriceClass(price) {
       if (price >= 0 && price < 50) return 'price-0-50';
@@ -235,21 +265,21 @@ export default {
         quantity: this.quantity || 1,
         price: productPrice * (this.quantity || 1)
       })
-      .then(response => {
-        if (response.status === 200) {
-          this.alertMessage = response.data.message;
-          this.alertType = 'alert-success';
-          this.$store.dispatch('fetchCartCount');
-        } else {
+        .then(response => {
+          if (response.status === 200) {
+            this.alertMessage = response.data.message;
+            this.alertType = 'alert-success';
+            this.$store.dispatch('fetchCartCount');
+          } else {
+            this.alertMessage = 'Une erreur est survenue.';
+            this.alertType = 'alert-danger';
+          }
+        })
+        .catch(error => {
+          console.error("Erreur lors de l'ajout au panier:", error);
           this.alertMessage = 'Une erreur est survenue.';
           this.alertType = 'alert-danger';
-        }
-      })
-      .catch(error => {
-        console.error("Erreur lors de l'ajout au panier:", error);
-        this.alertMessage = 'Une erreur est survenue.';
-        this.alertType = 'alert-danger';
-      });
+        });
     },
     shareOnGmail(product) {
       const subject = encodeURIComponent(`Découvrez ${product.name}`);
@@ -387,12 +417,14 @@ export default {
 
 /* Ajout de marges pour éviter la superposition avec le footer */
 .row.isotope-grid {
-  margin-bottom: 50px; /* Ajustez cette valeur selon vos besoins */
+  margin-bottom: 50px;
+  /* Ajustez cette valeur selon vos besoins */
 }
 
 /* Ajout de styles pour le footer */
 footer {
-  margin-top: 20px; /* Ajustez cette valeur selon vos besoins */
+  margin-top: 20px;
+  /* Ajustez cette valeur selon vos besoins */
   padding-top: 20px;
   background-color: #f8f9fa;
   border-top: 1px solid #e9ecef;

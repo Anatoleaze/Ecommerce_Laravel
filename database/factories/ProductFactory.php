@@ -14,13 +14,13 @@ class ProductFactory extends Factory
         $price = fake()->randomFloat(2, 10, 500);
         $sale = $price - fake()->randomFloat(2, 1, 50);
 
-        $type = fake()->randomElement([
+        /*$type = fake()->randomElement([
             'homme',
             'femme',
             'chaussures',
             'sacs',
             'montres'
-        ]);
+        ]); */
 
         // 🔥 image unique garantie via seed basé sur le nom
         $imageSeed = md5($name . microtime(true) . rand());
@@ -32,7 +32,7 @@ class ProductFactory extends Factory
             'image_name' => "https://picsum.photos/seed/{$imageSeed}/640/480",
             'price' => $price,
             'sale_price' => max($sale, 0),
-            'type' => $type,
+            //'type' => $type,
         ];
     }
 }
