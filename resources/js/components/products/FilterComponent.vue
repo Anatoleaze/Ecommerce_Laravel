@@ -117,11 +117,6 @@
                     data-tooltip="Twitter">
                     <i class="fa fa-twitter"></i>
                   </a>
-                  <a href="#" @click="shareOnGmail(selectedProduct)"
-                    class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100 share-button-google"
-                    data-tooltip="Google Plus">
-                    <i class="fa fa-google-plus"></i>
-                  </a>
                 </div>
                 <div class="flex-w flex-r-m p-b-10">
                   <template v-if="!isAuthenticated">
@@ -281,12 +276,6 @@ export default {
           this.alertMessage = 'Une erreur est survenue.';
           this.alertType = 'alert-danger';
         });
-    },
-    shareOnGmail(product) {
-      const subject = encodeURIComponent(`Découvrez ${product.name}`);
-      const body = encodeURIComponent(`Je voulais partager cet article avec vous : ${window.location.href}`);
-      const mailtoLink = `https://mail.google.com/mail/?view=cm&fs=1&to=&su=${subject}&body=${body}`;
-      window.open(mailtoLink, '_blank');
     },
     shareOnFacebook() {
       const url = encodeURIComponent(window.location.href);
