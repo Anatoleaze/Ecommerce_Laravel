@@ -17,23 +17,50 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $search = $request->input('search');
+{
+    $search = $request->input('search');
+    $price = $request->input('price');
 
-        $query = Product::query();
+    $query = Product::query();
 
-        if ($search) {
-            $query->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('type', 'like', '%' . $search . '%');
-        }
-
-        // Utiliser paginate() pour la pagination
-        $products = $query->paginate(20)->withQueryString(); // 20 produits par page (4 colonnes x 5 lignes)
- 
-        $link = config('app.url');
-
-        return view('products_list', ['products' => $products, 'search' => $search, 'link' => $link]);
+    // Filtre par type ou recherche par nom
+    if ($search) {
+        $query->where(function($q) use ($search) {
+            $q->where('type', $search)
+              ->orWhere('name', 'like', '%' . $search . '%');
+        });
     }
+
+    // Filtre par prix
+    if ($price) {
+        switch ($price) {
+            case 'price-0-50':
+                $query->where('price', '<', 50);
+                break;
+            case 'price-50-100':
+                $query->whereBetween('price', [50, 100]);
+                break;
+            case 'price-100-200':
+                $query->whereBetween('price', [100, 200]);
+                break;
+            case 'price-200-500':
+                $query->whereBetween('price', [200, 500]);
+                break;
+            case 'price-500-plus':
+                $query->where('price', '>=', 500);
+                break;
+        }
+    }
+
+    $products = $query->paginate(20)->withQueryString();
+    $link = config('app.url');
+
+    return view('products_list', [
+        'products' => $products,
+        'search' => $search,
+        'link' => $link
+    ]);
+}
 
     /**
      * List all products

@@ -30,13 +30,9 @@
                 <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
                     @click.prevent="sortProducts('default')">Tous les produits</a></li>
                 <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="sortProducts('popularity')">Popularité</a></li>
+                    @click.prevent="sortProducts('price-asc')">Prix Croissant</a></li>
                 <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="sortProducts('new')">Nouveauté</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="sortProducts('price-asc')">Prix : Croissant</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="sortProducts('price-desc')">Prix : Décroissant</a></li>
+                    @click.prevent="sortProducts('price-desc')">Prix Décroissant</a></li>
               </ul>
             </div>
             <div class="filter-col2 p-r-15 p-b-27">
@@ -45,15 +41,15 @@
                 <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04 filter-link-active"
                     @click.prevent="filterProducts('*')">Tous</a></li>
                 <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="filterProducts('.price-0-50')">$0.00 - $50.00</a></li>
+                    @click.prevent="filterProducts('.price-0-50')">0 € - 50 €</a></li>
                 <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="filterProducts('.price-50-100')">$50.00 - $100.00</a></li>
+                    @click.prevent="filterProducts('.price-50-100')">50 € - 100 €</a></li>
                 <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="filterProducts('.price-100-150')">$100.00 - $150.00</a></li>
+                    @click.prevent="filterProducts('.price-100-200')">100 € - 200 €</a></li>
                 <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="filterProducts('.price-150-200')">$150.00 - $200.00</a></li>
+                    @click.prevent="filterProducts('.price-200-500')">200 € - 500 €</a></li>
                 <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="filterProducts('.price-200-plus')">$200.00+</a></li>
+                    @click.prevent="filterProducts('.price-500-plus')">+ 500 €</a></li>
               </ul>
             </div>
           </div>
@@ -188,20 +184,14 @@ export default {
       quantity: 1,
       isotope: null,
       showFilterPanel: false,
-      sortOption: 'default', // Ajout de cette propriété
+      sortOption: 'default',
     };
   },
   computed: {
     sortedProducts() {
       let data = this.paginated ? this.products.data : this.products;
-      let sorted = [...data]; // ← ici tu as encore this.products.data au lieu de data
+      let sorted = [...data];
       switch (this.sortOption) {
-        case 'popularity':
-          sorted.sort((a, b) => b.popularity - a.popularity);
-          break;
-        case 'new':
-          sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
-          break;
         case 'price-asc':
           sorted.sort((a, b) => a.price - b.price);
           break;
@@ -216,7 +206,17 @@ export default {
   },
   methods: {
     filterProducts(filter) {
-      if (this.paginated) {
+      if (filter.startsWith('.price')) {
+        if (this.paginated) {
+          // Redirige vers page 1 avec le filtre prix en paramètre
+          const currentUrl = new URL(window.location.href);
+          currentUrl.searchParams.set('page', '1');
+          currentUrl.searchParams.set('price', filter.replace('.', ''));
+          window.location.href = currentUrl.toString();
+        } else {
+          this.isotope.arrange({ filter: filter });
+        }
+      } else if (this.paginated) {
         const type = filter.replace('.', '');
         window.location.href = `/products?search=${type === '*' ? '' : type}`;
       } else {
@@ -226,9 +226,10 @@ export default {
     getPriceClass(price) {
       if (price >= 0 && price < 50) return 'price-0-50';
       if (price >= 50 && price < 100) return 'price-50-100';
-      if (price >= 100 && price < 150) return 'price-100-150';
-      if (price >= 150 && price < 200) return 'price-150-200';
-      if (price >= 200) return 'price-200-plus';
+
+      if (price >= 100 && price < 200) return 'price-100-200';
+      if (price >= 200 && price < 500) return 'price-200-500';
+      if (price >= 500) return 'price-500-plus';
       return '';
     },
     sortProducts(option) {
