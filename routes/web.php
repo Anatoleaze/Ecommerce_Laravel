@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PromoController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ShareController;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -18,6 +19,12 @@ Auth::routes();
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Share URL for social previews (provides OG meta tags per product)
+Route::get('/share/product/{id}', [ShareController::class, 'productShare'])->name('share_product');
+
+// Public product detail page (used after social share redirect)
+Route::get('/product/show/{id}', [ProductController::class, 'show'])->name('product_show');
 
 Route::get('/products/{search?}', [ProductController::class, 'index'])->name('products_list');
 

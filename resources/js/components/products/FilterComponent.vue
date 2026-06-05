@@ -63,7 +63,7 @@
         <div class="block2">
           <div class="block2-pic hov-img0">
             <img class="img-product" :src="product.image_name" alt="IMG-PRODUCT">
-            <a href="#" @click="openModal(product)"
+            <a href="#" @click.prevent="openModal(product)"
               class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">Voir</a>
           </div>
           <div class="block2-txt flex-w flex-t p-t-14">
@@ -107,12 +107,12 @@
                 <span class="mtext-106 cl2">{{ selectedProduct.price }} €</span>
                 <p class="stext-102 cl3 p-t-23">{{ selectedProduct.description }}</p>
                 <div class="flex-w flex-m p-l-100 p-t-40 respon7">
-                  <a href="#" @click="shareOnFacebook"
+                  <a href="#" @click.prevent="shareOnFacebook(selectedProduct)"
                     class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100 share-button-facebook"
                     data-tooltip="Facebook">
                     <i class="fa fa-facebook"></i>
                   </a>
-                  <a href="#" @click="shareOnTwitter(selectedProduct)"
+                  <a href="#" @click.prevent="shareOnTwitter(selectedProduct)"
                     class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100 share-button-twitter"
                     data-tooltip="Twitter">
                     <i class="fa fa-twitter"></i>
@@ -277,14 +277,17 @@ export default {
           this.alertType = 'alert-danger';
         });
     },
-    shareOnFacebook() {
-      const url = encodeURIComponent(window.location.href);
-      const facebookShareLink = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-      window.open(facebookShareLink, '_blank');
+    shareOnFacebook(product) {
+      const shareUrl = `${window.location.origin}/share/product/${product.id}`;
+      const url = encodeURIComponent(shareUrl);
+      const quote = encodeURIComponent(`${product.name} - ${product.description?.split(/[.?!]/)[0] || 'Découvrez ce produit !'}`);
+      const facebookShareLink = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${quote}`;
+      window.open(facebookShareLink, '_blank', 'width=600,height=400');
     },
     shareOnTwitter(product) {
-      const url = encodeURIComponent(window.location.href);
-      const text = encodeURIComponent(`Découvrez ce produit : ${product.name} !`);
+      const shareUrl = `${window.location.origin}/share/product/${product.id}`;
+      const url = encodeURIComponent(shareUrl);
+      const text = encodeURIComponent(`Découvrez ce produit : ${product.name}`);
       const twitterShareLink = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
       window.open(twitterShareLink, '_blank', 'width=600,height=400');
     }

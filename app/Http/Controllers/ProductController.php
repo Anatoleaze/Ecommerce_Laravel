@@ -161,6 +161,17 @@ class ProductController extends Controller
     }
 
     /**
+     * Public product detail page used for sharing redirects
+     */
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+        $link = config('app.url');
+
+        return view('product_show', compact('product', 'link'));
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
