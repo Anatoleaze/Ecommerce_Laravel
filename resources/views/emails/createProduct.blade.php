@@ -1,23 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Découvrez les dernières nouveautés dans notre boutique !</title>    
-</head>
-<body>
-    <h1>Bonjour {{$contactData['nom'] }} {{$contactData['prenom']}}, </h1>
-    <p> Nous avons de bonnes nouvelles ! De nouveaux produits viennent de faire leur entrée dans notre boutique. Vous allez adorer découvrir ces ajouts récents qui enrichissent notre sélection.</p>
-    <br>
-    <p>✨ Découvrez nos Nouveaux Produits ! ✨</p>
-    <br>
-    <p> Nous avons élargi notre gamme avec des articles qui, nous en sommes sûrs, seront un ajout parfait à votre collection. Explorez les derniers produits disponibles et trouvez ceux qui vous correspondent.</p>
-    <p>Pour découvrir tous nos nouveaux produits, cliquez sur le lien ci-dessous :
-        <a href="{{$contactData['link']}}">Voir les nouveaux produits</a>
-    </p>
-    <p>Nous espérons que ces nouveautés répondront à vos attentes. Comme toujours, notre équipe est là pour vous aider si vous avez des questions ou besoin de plus d'informations.</p>
-    <br>
-    <p> Merci de votre confiance et de votre fidélité et à bientôt dans notre boutique !</p>
-    <br>
-    <p>Cordialement,</p>
-    <p>L'équipe de {{$contactData['site']}}</p>
-</body>
-</html>
+@extends('emails.layout')
+
+@section('title', 'Nouveautés dans notre boutique')
+
+@section('content')
+    <h2 style="margin-top:0; font-size:22px;">Bonjour {{ $contactData['nom'] }} {{ $contactData['prenom'] }},</h2>
+    <p>Nous avons le plaisir de vous annoncer l'arrivée de nouveaux produits dans notre boutique.</p>
+    <p>Découvrez les derniers ajouts qui enrichissent notre sélection et offrent de nouvelles possibilités pour vos achats.</p>
+    <div style="margin:24px 0; text-align:center;">
+        <a href="{{ $contactData['link'] }}" style="display:inline-block; background-color:#2f64e9; color:#ffffff; text-decoration:none; padding:12px 24px; border-radius:8px; font-weight:600;">Voir les nouveautés</a>
+    </div>
+    <p>Nous espérons que ces nouveautés vous plairont. Notre équipe reste à votre disposition si vous avez des questions.</p>
+@endsection
