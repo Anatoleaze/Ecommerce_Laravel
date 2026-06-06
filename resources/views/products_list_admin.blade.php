@@ -56,9 +56,9 @@
 
                             @foreach ($products as $product)
                                 <tr class="table_row">
-                                    <td class="column-1">
-                                        <div class="how-itemcart1">
-                                            <img src="{{ asset($product->image_name)}}" alt="IMG">
+                                    <td class="column-2">
+                                        <div>
+                                            <img src="{{ asset($product->image_name)}}" style="width: 80%; border-radius: 20px;" alt="IMG-{{$product->name}}">
                                         </div>
                                     </td>
                                     <td class="column-2">{{$product->name}}</td>
@@ -67,7 +67,7 @@
                                     <td class="column-5"> 
                                         <form action="{{ route('edit', $product->id) }}" method="GET">
                                             @csrf
-                                            <button type="submit" class="btn btn-info">  
+                                            <button type="submit" style="width: inherit;" class="btn btn-info">  
                                                 <i class="zmdi zmdi-hc-2x zmdi-edit"></i>
                                             </button>
                                         </form>
@@ -77,7 +77,7 @@
                                         <form action="{{ route('delete_product', $product->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">  
+                                            <button type="submit" style="width: inherit;" class="btn btn-danger">  
                                                 <i class="zmdi zmdi-hc-2x zmdi-delete"></i>
                                             </button>
                                         </form>

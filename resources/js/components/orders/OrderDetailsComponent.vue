@@ -14,13 +14,11 @@
                                 </tr>
 
                                 <tr v-for="row in order" :key="row.id" class="table_row">
-                                    <td class="column-1">
-                                        <div>
-                                            <img class="img-item" :src="'/' + row.product_image" alt="IMG" />
-                                        </div>
+                                    <td>
+                                        <img :src="row.product_image" style="width: 75%;border-radius: 20px;margin: 15px;margin-left: 50px;" alt="IMG"/>
                                     </td>
-                                    <td class="column-2"> {{ row.product_name }} </td>
-                                    <td class="column-4 text-center"> {{ row.quantity }} </td>
+                                    <td class="text-center"> {{ row.product_name }} </td>
+                                    <td class="text-center"> {{ row.quantity }} </td>
                                 </tr>
 
                             </table>

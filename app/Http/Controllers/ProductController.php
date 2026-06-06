@@ -90,45 +90,64 @@ class ProductController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'required|string',
+        'price' => 'required|numeric|min:0',
+        'sale_price' => 'nullable|numeric|min:0|lt:price',
+        'type' => 'required|string|max:255',
+        'image_name' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'sale_price' => 'nullable|numeric|min:0|lt:price',
-            'type' => 'required|string|max:255',
-            'image_name' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+    // =========================
+    // IMAGE UPLOAD SAFE
+    // =========================
+    $path = null;
 
-        // Image Upload
-        $path="";
+    if ($request->hasFile('image_name')) {
 
-        if ($request->hasFile('image_name')) {
-            try {
-                
-                $request->file('image_name')->move(public_path('images'), $request->file('image_name')->getClientOriginalName());
-                $path .= 'images/' . $request->file('image_name')->getClientOriginalName();
+        $file = $request->file('image_name');
 
-            } catch (\Exception $e) {
-                return redirect()->route('create_product')->with('error', $e);
-            }
+        // nom unique pour éviter écrasement
+        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+        $destination = public_path('images');
+
+        // sécurité : créer le dossier si besoin
+        if (!file_exists($destination)) {
+            mkdir($destination, 0755, true);
         }
 
-        $product = new Product();
-        $product->name = $request->name;
-        $product->slug = str_replace('-','_',str_replace(' ','_', strtolower($request->name)));
-        $product->description = $request->description;
-        $product->type = $request->type;
-        $product->price = strval(str_replace(' ','',str_replace('€','',str_replace(',','.',$request->price))));
-        $product->sale_price = strval(str_replace(' ','',str_replace('€','',str_replace(',','.',$request->sale_price))));
-        $product->image_name = $path; 
-        
-        $product->save();
+        $file->move($destination, $filename);
 
+        $path = 'images/' . $filename;
+    }
+
+    // =========================
+    // CREATE PRODUCT
+    // =========================
+    $product = new Product();
+    $product->name = $validated['name'];
+    $product->slug = str_replace(' ', '_', strtolower($validated['name']));
+    $product->description = $validated['description'];
+    $product->type = $validated['type'];
+
+    $product->price = str_replace([' ', '€'], '', $validated['price']);
+    $product->sale_price = $validated['sale_price']
+        ? str_replace([' ', '€'], '', $validated['sale_price'])
+        : null;
+
+    $product->image_name = $path;
+    $product->save();
+
+    // =========================
+    // EMAIL (SAFE VERSION)
+    // =========================
+    try {
         $users = User::all();
 
-        foreach($users as $user){
+        foreach ($users as $user) {
             $contactData = [
                 'nom' => $user->name,
                 'prenom' => $user->first_name,
@@ -138,13 +157,26 @@ class ProductController extends Controller
             ];
 
             Mail::to($user->email)->send(new CreateProductMail($contactData));
-               
         }
-
-        $link = config('app.url');
-
-        return redirect()->route('create_product', ['link' => $link])->with('success', 'Produit créé avec succès.');
+    } catch (\Exception $e) {
+        // on évite le 500 si email crash
+        \Log::error('Mail error: ' . $e->getMessage());
     }
+
+    // =========================
+    // RESPONSE
+    // =========================
+    if ($request->expectsJson()) {
+        return response()->json([
+            'message' => 'Produit créé avec succès.',
+            'product' => $product
+        ]);
+    }
+
+    return redirect()
+        ->route('create_product')
+        ->with('success', 'Produit créé avec succès.');
+}
 
  
 
@@ -217,8 +249,16 @@ class ProductController extends Controller
         // Save Modification
         $product->save();
 
-        $link = config('app.url');
+        // Return JSON response for AJAX requests
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Produit mis à jour avec succès.',
+                'product' => $product
+            ]);
+        }
 
+        // Regular redirect for form submissions
+        $link = config('app.url');
         return redirect()->route('edit', ['id' => $product->id, 'link' => $link])->with('success', 'Produit mis à jour avec succès.');
     }
 
