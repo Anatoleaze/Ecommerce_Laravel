@@ -35,14 +35,15 @@
 <div class="bg0 m-t-23 p-b-140">
     <div class="container">
            
-        <div class="flex-w flex-sb-m p-b-52">
-            <profil-component
-            name="{{ Auth::user()->name }} "
-            first_name="{{ Auth::user()->first_name }} "
-            mail="{{ Auth::user()->email }} "
-            link="{{ route('updateProfils') }}"
-            /> 
-                         
+        <div class="row justify-content-center p-b-52">
+            <div class="col-12 d-flex justify-content-center">
+                <profil-component
+                    name="{{ Auth::user()->name }}"
+                    first_name="{{ Auth::user()->first_name }}"
+                    mail="{{ Auth::user()->email }}"
+                    :user-data='@json(["name" => Auth::user()->name, "first_name" => Auth::user()->first_name, "email" => Auth::user()->email])'
+                ></profil-component>
+            </div>
         </div>
 
     </div>

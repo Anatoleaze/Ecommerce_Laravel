@@ -31,12 +31,9 @@ class UserController extends Controller
             'name' => $user->name,
             'first_name' => $user->first_name,
             'email' => $user->email,
-
         ];
 
-        $link = config('app.url');
-
-        return view('update_profil',['user' =>$data, 'link'=>$link]);
+        return view('update_profil',['user' =>$data]);
     }
 
     /**
@@ -49,7 +46,11 @@ class UserController extends Controller
             'name' => 'nullable|string|max:255',
             'first_name' => 'nullable|string|max:255',
             'email' => 'nullable|string|email|max:255|unique:users,email,' . auth()->id(),
-            'password' => 'nullable|string|min:8',
+            'password' => 'nullable|string|min:8|confirmed',
+        ], [
+            'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
+            'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
+            'password.string' => 'Le mot de passe doit être une chaîne de caractères.',
         ]);
 
         
@@ -71,17 +72,7 @@ class UserController extends Controller
             $user->email = $request->email;
         }
         if ($request->filled('password')) {
-         
-            if ($request->filled('password') == $request->filled('confirm')){
-         
-                $user->password = Hash::make($request->password);
-         
-            }else{
-
-                return response()->json(['message' => 'Votre mot de passe est différent du mot de passe de confirmation'], 200);
-        
-            }
-        
+            $user->password = Hash::make($request->password);
         }
        
         $user->save();
