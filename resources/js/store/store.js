@@ -6,11 +6,15 @@ export default createStore({
     cart: [],
     cartCount: 0,
     isCartOpen: false,
+    user: null,
   },
   mutations: {
     SET_CART(state, cart) {
       state.cart = cart;
       state.cartCount = cart.reduce((total, item) => total + (item.quantity || 0), 0);
+    },
+    SET_USER(state, user) {
+      state.user = user;
     },
 
     SET_CART_COUNT(state, count) {

@@ -69,19 +69,19 @@
                                         </template>
 										<template v-else>
                                             <li class="nav-item dropdown">
-                                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                                {{ user.name }} <span class="caret"></span>
+                                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" @click.prevent="toggleUserDropdown" :aria-expanded="isUserDropdownOpen.toString()">
+                                                {{ headerUser.name }} <span class="caret"></span>
                                             </a>
 
-                                            <div class="dropdown-menu dropdown-menu-right">
+                                            <div :class="['dropdown-menu dropdown-menu-right', { show: isUserDropdownOpen }]">
                                                 <a class="dropdown-item" :href="profile">Mon profil</a>
-                                                <a v-if="user.role != 'admin'" class="dropdown-item" :href="orders">Mes commandes</a>
+                                                <a v-if="headerUser.role != 'admin'" class="dropdown-item" :href="orders">Mes commandes</a>
 
 
-                                                <a v-if="user.role == 'admin'" class="dropdown-item" :href="adminProducts">
+                                                <a v-if="headerUser.role == 'admin'" class="dropdown-item" :href="adminProducts">
                                                 Liste des produits
                                                 </a>
-                                                <a v-if="user.role == 'admin'" class="dropdown-item" :href="adminOrderShow">
+                                                <a v-if="headerUser.role == 'admin'" class="dropdown-item" :href="adminOrderShow">
                                                 Liste des commandes
                                                 </a>
 
@@ -167,19 +167,19 @@
                 </template>
                 <template v-else>
                     <li class="nav-item dropdown">
-                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                        {{ user.name }} <span class="caret"></span>
+                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" @click.prevent="toggleUserDropdown" :aria-expanded="isUserDropdownOpen.toString()">
+                        {{ headerUser.name }} <span class="caret"></span>
                     </a>
 
-                    <div class="dropdown-menu dropdown-menu-right">
+                    <div :class="['dropdown-menu dropdown-menu-right', { show: isUserDropdownOpen }]">
                         <a class="dropdown-item" :href="profile">Mon profil</a>
                         <a class="dropdown-item" :href="orders">Mes commandes</a>
 
-                        <a v-if="user.role = 'admin'" class="dropdown-item" :href="adminProducts">
+                        <a v-if="headerUser.role === 'admin'" class="dropdown-item" :href="adminProducts">
                         Liste des produits
                         </a>
 
-                        <a v-if="user.role = 'admin'" class="dropdown-item" :href="adminOrderShow">
+                        <a v-if="headerUser.role === 'admin'" class="dropdown-item" :href="adminOrderShow">
                         Liste des commandes
                         </a>
 
@@ -223,7 +223,8 @@
     data() {
         return {
             isSearchModalVisible: false,
-            searchQuery: ""
+            searchQuery: "",
+            isUserDropdownOpen: false,
         };
     },
 
@@ -259,13 +260,14 @@
         },
 
         isAuthenticated: {
-            type: Boolean,
-            required: true
+            type: [Boolean, Object],
+            default: false
         },
 
         user: {
             type: Object,
-            required: true
+            required: false,
+            default: () => ({})
         },
 
         login: {
@@ -275,7 +277,8 @@
 
         register: {
             type: String,
-            required: true
+            required: false,
+            default: ''
         },
         
         profile: {
@@ -305,7 +308,8 @@
 
         csrfToken: {
             type: String,
-            required: true
+            required: false,
+            default: ''
         },
 
     }, 
@@ -313,6 +317,9 @@
     computed: {
         cartItemCount() {
             return this.$store.getters.cartItemCount;
+        },
+        headerUser() {
+            return this.$store.state.user || this.user || {};
         }
     },
 
@@ -332,9 +339,14 @@
         showSearchModal() {
             this.isSearchModalVisible = true;  
         },
+
+        toggleUserDropdown() {
+            this.isUserDropdownOpen = !this.isUserDropdownOpen;
+        },
     
         hideSearchModal() {
             this.isSearchModalVisible = false;
+            this.isUserDropdownOpen = false;
         },
 
         ...mapActions(['fetchCartCount', 'fetchCart']), // Load cart in starting state
@@ -347,8 +359,10 @@
             this.fetchCartCount();
             this.fetchCart();
         }
-        
-         
+
+        if (this.isAuthenticated && this.user && Object.keys(this.user).length) {
+            this.$store.commit('SET_USER', this.user);
+        }
     }
 
   };

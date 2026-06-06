@@ -162,8 +162,8 @@ export default {
       required: true
     },
     isAuthenticated: {
-      type: Object,
-      required: true
+      type: [Boolean, Object],
+      default: false
     },
     paginated: {
       type: Boolean,
