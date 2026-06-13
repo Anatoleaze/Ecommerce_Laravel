@@ -14,7 +14,7 @@
             </div>
 
             <div class="row justify-content-center mb-4">
-                <button type="button" class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04 me-3" @click="openForm('profile')">
+                <button type="button" class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04 m-r-35" @click="openForm('profile')">
                     Modifier le profil
                 </button>
                 <button type="button" class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04" @click="openForm('password')">

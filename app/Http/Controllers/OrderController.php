@@ -91,7 +91,7 @@ class OrderController extends Controller
      */
     public function adminShow(Request $request)
     {
-        $orders = Order::where('statut', 'en attente')->get();
+        $orders = Order::where('statut', 'pending')->get();
 
         return view('order', [ 'title' => 'Les Commandes reçuent', 'data' => $orders]);
     }

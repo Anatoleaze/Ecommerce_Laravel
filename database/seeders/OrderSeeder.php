@@ -26,7 +26,7 @@ class OrderSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ],
             [
-                'order_number' => strtoupper(Str::random(10)),
+                'numero_commande' => $this->generateOrderNumber(),
                 'user_id' => 1,
                 'total' => 6212.89,
                 'statut' => 'pending',

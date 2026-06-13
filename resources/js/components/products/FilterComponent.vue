@@ -62,7 +62,8 @@
         :class="`col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item ${product.type} ${getPriceClass(product.price)}`">
         <div class="block2">
           <div class="block2-pic hov-img0">
-            <img class="img-product" :src="product.image_name" alt="IMG-PRODUCT">
+            <img class="img-product" :src="product.image_name" alt="IMG-PRODUCT"
+              @click.prevent="openImageModal(product.image_name)" style="cursor:pointer;">
             <a href="#" @click.prevent="openModal(product)"
               class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">Voir</a>
           </div>
@@ -149,6 +150,14 @@
       </div>
     </div>
   </div>
+
+  <!-- Modale Image -->
+<div v-if="showImageModal" class="image-modal" @click.self="closeImageModal">
+    <div class="image-modal-content">
+        <span class="image-modal-close" @click="closeImageModal">&times;</span>
+        <img :src="imageModalSrc" alt="IMG-PRODUCT" class="image-modal-img">
+    </div>
+</div>
 </template>
 
 <script>
@@ -180,6 +189,8 @@ export default {
       isotope: null,
       showFilterPanel: false,
       sortOption: 'default',
+      showImageModal: false,
+      imageModalSrc: '',
     };
   },
   computed: {
@@ -290,7 +301,15 @@ export default {
       const text = encodeURIComponent(`Découvrez ce produit : ${product.name}`);
       const twitterShareLink = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
       window.open(twitterShareLink, '_blank', 'width=600,height=400');
-    }
+    },
+    openImageModal(src) {
+      this.imageModalSrc = src;
+      this.showImageModal = true;
+    },
+    closeImageModal() {
+      this.showImageModal = false;
+      this.imageModalSrc = '';
+    },
   },
   async mounted() {
     this.$nextTick(() => {
@@ -412,6 +431,51 @@ export default {
 .row.isotope-grid {
   margin-bottom: 50px;
   /* Ajustez cette valeur selon vos besoins */
+}
+
+.image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    cursor: pointer;
+}
+
+.image-modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90vh;
+}
+
+.image-modal-img {
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 4px;
+    object-fit: contain;
+    cursor: default;
+}
+
+.image-modal-close {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    width: 32px;
+    height: 32px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    text-align: center;
 }
 
 /* Ajout de styles pour le footer */
