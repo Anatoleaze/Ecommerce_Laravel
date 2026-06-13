@@ -28,12 +28,14 @@ class PromoController extends Controller
 
     // Check active code
     $today = Carbon::now()->toDateString();
-    if ($promo->started_at > $today || $promo->expired_at < $today) {
-        return response()->json(['error' => 'Ce code promo n’est plus valable'], 400);
-    }
 
     if ($promo->started_at > $today) {
-        return response()->json(['error' => 'Ce code promo n’existe pas 2'], 400);
+        return response()->json(['error' => 'Ce code promo n\'est pas encore valable'], 400);
+    }
+
+    // Vérifie si le code est expiré
+    if ($promo->expired_at < $today) {
+        return response()->json(['error' => 'Ce code promo est expiré'], 400);
     }
 
     // Check if cart > min cart 
@@ -42,13 +44,14 @@ class PromoController extends Controller
     }
 
     // Reduction Apply
-    $discount = ($request->total * $promo->remise) / 100;
-    $newTotal = $request->total - $discount;
+    $discount = round($request->total * ($promo->remise / 100), 2);
+    $newTotal = round($request->total - $discount, 2);
 
     return response()->json([
         'success' => 'Réduction appliquée avec succès !',
         'discount' => $discount,
-        'newTotal' => $newTotal
+        'newTotal' => $newTotal,
+        'pourcentage' => $promo->remise,
     ]);
 }
 

@@ -1,163 +1,161 @@
 <template>
   <div class="container">
-    <div class="flex-w flex-sb-m p-b-52">
-      <div class="flex-w flex-l-m filter-tope-group m-tb-10">
-        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" @click="filterProducts('*')">Tous</button>
-        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5"
-          @click="filterProducts('.hommes')">Hommes</button>
-        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5"
-          @click="filterProducts('.femmes')">Femmes</button>
-        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5"
-          @click="filterProducts('.chaussures')">Chaussures</button>
-        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" @click="filterProducts('.sacs')">Sacs</button>
-        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5"
-          @click="filterProducts('.montres')">Montres</button>
 
-        <div class="flex-w flex-c-m m-tb-10">
-          <div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter"
-            @click="toggleFilterPanel">
-            <i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
-            <i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-            Filtre
-          </div>
-        </div>
-
-        <div :class="['panel-filter', 'w-full', 'p-t-10', { 'show-filter': showFilterPanel }]">
-          <div class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm">
-            <div class="filter-col1 p-r-15 p-b-27">
-              <div class="mtext-102 cl2 p-b-15">Trier Par</div>
-              <ul>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="sortProducts('default')">Tous les produits</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="sortProducts('price-asc')">Prix Croissant</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="sortProducts('price-desc')">Prix Décroissant</a></li>
-              </ul>
-            </div>
-            <div class="filter-col2 p-r-15 p-b-27">
-              <div class="mtext-102 cl2 p-b-15">Prix</div>
-              <ul>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04 filter-link-active"
-                    @click.prevent="filterProducts('*')">Tous</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="filterProducts('.price-0-50')">0 € - 50 €</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="filterProducts('.price-50-100')">50 € - 100 €</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="filterProducts('.price-100-200')">100 € - 200 €</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="filterProducts('.price-200-500')">200 € - 500 €</a></li>
-                <li class="p-b-6"><a href="#" class="filter-link stext-106 trans-04"
-                    @click.prevent="filterProducts('.price-500-plus')">+ 500 €</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
+    <!-- Barre de filtres -->
+    <div class="filter-bar">
+      
+      <!-- Catégories -->
+      <div class="filter-categories">
+        <button
+          v-for="cat in categories" :key="cat.value"
+          @click="filterByCategory(cat.value)"
+          :class="['cat-btn', { active: activeCategory === cat.value }]">
+          {{ cat.label }}
+        </button>
       </div>
+
+      <!-- Filtres avancés -->
+      <button class="advanced-btn" @click="toggleFilterPanel">
+        <i class="zmdi zmdi-filter-list"></i>
+        Filtres
+        <i :class="['zmdi', showFilterPanel ? 'zmdi-chevron-up' : 'zmdi-chevron-down']"></i>
+      </button>
     </div>
 
+    <!-- Panel filtres avancés -->
+    <transition name="slide-down">
+      <div v-if="showFilterPanel" class="filter-panel">
+        
+        <!-- Trier par -->
+        <div class="filter-section">
+          <p class="filter-section-title">📊 Trier par</p>
+          <div class="filter-options">
+            <button
+              v-for="sort in sortOptions" :key="sort.value"
+              @click="sortProducts(sort.value)"
+              :class="['filter-option-btn', { active: sortOption === sort.value }]">
+              {{ sort.label }}
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-divider"></div>
+
+        <!-- Prix -->
+        <div class="filter-section">
+          <p class="filter-section-title">💰 Prix</p>
+          <div class="filter-options">
+            <button
+              v-for="price in priceRanges" :key="price.value"
+              @click="filterByPrice(price.value)"
+              :class="['filter-option-btn', { active: activePrice === price.value }]">
+              {{ price.label }}
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </transition>
+
+    <!-- Grille produits -->
     <div ref="productGrid" class="row isotope-grid">
-      <div v-for="product in sortedProducts" :key="product.id"
+      <div
+        v-for="product in sortedProducts" :key="product.id"
         :class="`col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item ${product.type} ${getPriceClass(product.price)}`">
-        <div class="block2">
-          <div class="block2-pic hov-img0">
-            <img class="img-product" :src="product.image_name" alt="IMG-PRODUCT"
-              @click.prevent="openImageModal(product.image_name)" style="cursor:pointer;">
-            <a href="#" @click.prevent="openModal(product)"
-              class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">Voir</a>
-          </div>
-          <div class="block2-txt flex-w flex-t p-t-14">
-            <div class="block2-txt-child1 flex-col-l ">
-              <a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">{{ product.name
-                }}</a>
-              <span class="stext-105 cl3">{{ product.price }} €</span>
+        <div class="product-card">
+          
+          <!-- Image -->
+          <div class="product-img-wrapper">
+            <img :src="product.image_name" :alt="product.name" class="product-img">
+            <div class="product-img-overlay">
+              <button @click.prevent="openModal(product)" class="product-view-btn">
+                👁️ Voir le produit
+              </button>
             </div>
           </div>
+
+          <!-- Infos -->
+          <div class="product-info">
+            <h3 class="product-name">{{ product.name }}</h3>
+            <div class="product-price-row">
+              <span v-if="product.sale_price > 0" class="product-old-price">
+                {{ parseFloat(product.price).toFixed(2) }} €
+              </span>
+              <span class="product-price">
+                {{ product.sale_price > 0 ? parseFloat(product.sale_price).toFixed(2) : parseFloat(product.price).toFixed(2) }} €
+              </span>
+              <span v-if="product.sale_price > 0" class="product-badge">Promo</span>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
 
-    <div v-if="showModal" class="modal wrap-modal1 js-modal1 p-t-60 p-b-20 show-modal1">
-      <div class="container">
-        <div class="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent">
-          <span class="close" @click="closeModal">&times;</span>
-          <div class="row">
-            <div class="col-md-6 col-lg-7 p-b-30">
-              <div class="p-l-25 p-r-30 p-lr-0-lg">
-                <div class="wrap-slick3 flex-sb flex-w">
-                  <div class="wrap-slick3-dots"></div>
-                  <div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
-                  <div class="slick3 gallery-lb">
-                    <div class="item-slick3">
-                      <div class="wrap-pic-w pos-relative">
-                        <img class="img-product-modal" :src="selectedProduct.image_name" alt="IMG-PRODUCT">
-                        <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                          :href="selectedProduct.image_name">
-                          <i class="fa fa-expand"></i>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-5 p-b-30">
-              <div class="p-r-50 p-t-5 p-lr-0-lg">
-                <h4 class="mtext-105 cl2 js-name-detail p-b-14">{{ selectedProduct.name }}</h4>
-                <span class="mtext-106 cl2">{{ selectedProduct.price }} €</span>
-                <p class="stext-102 cl3 p-t-23">{{ selectedProduct.description }}</p>
-                <div class="flex-w flex-m p-l-100 p-t-40 respon7">
-                  <a href="#" @click.prevent="shareOnFacebook(selectedProduct)"
-                    class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100 share-button-facebook"
-                    data-tooltip="Facebook">
-                    <i class="fa fa-facebook"></i>
-                  </a>
-                  <a href="#" @click.prevent="shareOnTwitter(selectedProduct)"
-                    class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100 share-button-twitter"
-                    data-tooltip="Twitter">
-                    <i class="fa fa-twitter"></i>
-                  </a>
-                </div>
-                <div class="flex-w flex-r-m p-b-10">
-                  <template v-if="!isAuthenticated">
-                    <div class="alert alert-danger alert-danger-no-cart" role="alert">Vous devez être connecté pour
-                      ajouter un article à votre panier !</div>
-                  </template>
-                  <template v-else>
-                    <div class="size-204 flex-w flex-m respon6-next">
-                      <div class="wrap-num-product flex-w m-r-20 m-tb-10">
-                        <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" @click="decreaseQuantity">
-                          <i class="fs-16 zmdi zmdi-minus"></i>
-                        </div>
-                        <input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product"
-                          v-model="quantity" min="1">
-                        <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m" @click="increaseQuantity">
-                          <i class="fs-16 zmdi zmdi-plus"></i>
-                        </div>
-                      </div>
-                      <div v-if="alertMessage != ''" :class="['alert', alertType]" role="alert">{{ alertMessage }}</div>
-                      <button
-                        class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail btn-cart"
-                        @click="() => addToCart(selectedProduct.id, selectedProduct.price)">Ajouter au panier</button>
-                    </div>
-                  </template>
-                </div>
-              </div>
-            </div>
+    <!-- Modale produit -->
+    <div v-if="showModal" class="product-modal" @click.self="closeModal">
+      <div class="product-modal-content">
+        <button class="modal-close-btn" @click="closeModal">&times;</button>
+        <div class="modal-body">
+
+          <!-- Image -->
+          <div class="modal-img-side">
+            <img :src="selectedProduct.image_name" :alt="selectedProduct.name" class="modal-img">
           </div>
+
+          <!-- Infos -->
+          <div class="modal-info-side">
+            <span class="modal-tag">{{ selectedProduct.type }}</span>
+            <h2 class="modal-title">{{ selectedProduct.name }}</h2>
+            <div class="modal-price-row">
+              <span v-if="selectedProduct.sale_price > 0" class="modal-old-price">
+                {{ parseFloat(selectedProduct.price).toFixed(2) }} €
+              </span>
+              <span class="modal-price">
+                {{ selectedProduct.sale_price > 0 ? parseFloat(selectedProduct.sale_price).toFixed(2) : parseFloat(selectedProduct.price).toFixed(2) }} €
+              </span>
+            </div>
+            <p class="modal-description">{{ selectedProduct.description }}</p>
+
+            <!-- Partage -->
+            <div class="modal-share">
+              <span style="font-size:13px; color:#aaa;">Partager :</span>
+              <button @click.prevent="shareOnFacebook(selectedProduct)" class="share-btn facebook">
+                <i class="fa fa-facebook"></i>
+              </button>
+              <button @click.prevent="shareOnTwitter(selectedProduct)" class="share-btn twitter">
+                <i class="fa fa-twitter"></i>
+              </button>
+            </div>
+
+            <!-- Ajouter au panier -->
+            <template v-if="!isAuthenticated">
+              <div class="alert alert-danger" style="border-radius:8px; font-size:14px;">
+                🔒 Connectez-vous pour ajouter au panier
+              </div>
+            </template>
+            <template v-else>
+              <div class="modal-cart-section">
+                <div class="quantity-control">
+                  <button @click="decreaseQuantity" class="qty-btn">−</button>
+                  <input type="number" v-model="quantity" min="1" class="qty-input">
+                  <button @click="increaseQuantity" class="qty-btn">+</button>
+                </div>
+                <div v-if="alertMessage" :class="['alert', alertType]" style="border-radius:8px; font-size:14px; margin:10px 0;">
+                  {{ alertMessage }}
+                </div>
+                <button class="add-to-cart-btn" @click="addToCart(selectedProduct.id, selectedProduct.price)">
+                  🛒 Ajouter au panier
+                </button>
+              </div>
+            </template>
+          </div>
+
         </div>
       </div>
     </div>
+
   </div>
-
-  <!-- Modale Image -->
-<div v-if="showImageModal" class="image-modal" @click.self="closeImageModal">
-    <div class="image-modal-content">
-        <span class="image-modal-close" @click="closeImageModal">&times;</span>
-        <img :src="imageModalSrc" alt="IMG-PRODUCT" class="image-modal-img">
-    </div>
-</div>
 </template>
 
 <script>
@@ -179,6 +177,7 @@ export default {
       default: false
     }
   },
+
   data() {
     return {
       showModal: false,
@@ -189,10 +188,33 @@ export default {
       isotope: null,
       showFilterPanel: false,
       sortOption: 'default',
-      showImageModal: false,
-      imageModalSrc: '',
+      activeCategory: '*',
+      activePrice: '*',
+      currentFilter: '*',
+      categories: [
+        { label: 'Tous', value: '*' },
+        { label: 'Hommes', value: '.hommes' },
+        { label: 'Femmes', value: '.femmes' },
+        { label: 'Chaussures', value: '.chaussures' },
+        { label: 'Sacs', value: '.sacs' },
+        { label: 'Montres', value: '.montres' },
+      ],
+      sortOptions: [
+        { label: 'Par défaut', value: 'default' },
+        { label: 'Prix croissant ↑', value: 'price-asc' },
+        { label: 'Prix décroissant ↓', value: 'price-desc' },
+      ],
+      priceRanges: [
+        { label: 'Tous les prix', value: '*' },
+        { label: '0 € - 50 €', value: '.price-0-50' },
+        { label: '50 € - 100 €', value: '.price-50-100' },
+        { label: '100 € - 200 €', value: '.price-100-200' },
+        { label: '200 € - 500 €', value: '.price-200-500' },
+        { label: '+ 500 €', value: '.price-500-plus' },
+      ],
     };
   },
+
   computed: {
     sortedProducts() {
       let data = this.paginated ? this.products.data : this.products;
@@ -210,112 +232,107 @@ export default {
       return sorted;
     }
   },
+
   methods: {
-    filterProducts(filter) {
-      if (filter.startsWith('.price')) {
-        if (this.paginated) {
-          // Redirige vers page 1 avec le filtre prix en paramètre
-          const currentUrl = new URL(window.location.href);
-          currentUrl.searchParams.set('page', '1');
-          currentUrl.searchParams.set('price', filter.replace('.', ''));
-          window.location.href = currentUrl.toString();
-        } else {
-          this.isotope.arrange({ filter: filter });
+    // Filtre par catégorie — toujours Isotope, jamais de redirection
+    filterByCategory(filter) {
+      this.activeCategory = filter;
+      this.activePrice = '*'; // reset prix
+      this.$nextTick(() => {
+        if (this.isotope) {
+          this.isotope.arrange({ filter: filter === '*' ? '*' : filter });
         }
-      } else if (this.paginated) {
-        const type = filter.replace('.', '');
-        window.location.href = `/products?search=${type === '*' ? '' : type}`;
-      } else {
-        this.isotope.arrange({ filter: filter });
-      }
+      });
     },
+
+    // Filtre par prix — toujours Isotope
+    filterByPrice(filter) {
+      this.activePrice = filter;
+      this.activeCategory = '*'; // reset catégorie
+      this.$nextTick(() => {
+        if (this.isotope) {
+          this.isotope.arrange({ filter: filter === '*' ? '*' : filter });
+        }
+      });
+    },
+
     getPriceClass(price) {
       if (price >= 0 && price < 50) return 'price-0-50';
       if (price >= 50 && price < 100) return 'price-50-100';
-
       if (price >= 100 && price < 200) return 'price-100-200';
       if (price >= 200 && price < 500) return 'price-200-500';
       if (price >= 500) return 'price-500-plus';
       return '';
     },
+
     sortProducts(option) {
-      console.log("Sorting products by:", option); // Ajout d'un log pour le débogage
       this.sortOption = option;
+      this.$nextTick(() => {
+        if (this.isotope) {
+          this.isotope.reloadItems();
+          this.isotope.arrange();
+        }
+      });
     },
-    openModal(product) {
-      this.selectedProduct = product;
-      this.showModal = true;
-      this.alertMessage = "";
-      this.alertType = "";
-      this.quantity = 1;
-    },
-    closeModal() {
-      this.showModal = false;
-    },
-    increaseQuantity() {
-      this.quantity++;
-    },
-    decreaseQuantity() {
-      if (this.quantity > 1) {
-        this.quantity--;
-      }
-    },
+
     toggleFilterPanel() {
       this.showFilterPanel = !this.showFilterPanel;
     },
-    ...mapActions({
-      addToCartAction: 'addToCart'
-    }),
+
+    openModal(product) {
+      this.selectedProduct = product;
+      this.showModal = true;
+      this.alertMessage = '';
+      this.alertType = '';
+      this.quantity = 1;
+    },
+
+    closeModal() {
+      this.showModal = false;
+    },
+
+    increaseQuantity() { this.quantity++; },
+    decreaseQuantity() { if (this.quantity > 1) this.quantity--; },
+
+    ...mapActions({ addToCartAction: 'addToCart' }),
+
     addToCart(productId, productPrice) {
       this.addToCartAction({
         product_id: productId,
         quantity: this.quantity || 1,
         price: productPrice * (this.quantity || 1)
-      })
-        .then(response => {
-          if (response.status === 200) {
-            this.alertMessage = response.data.message;
-            this.alertType = 'alert-success';
-            this.$store.dispatch('fetchCartCount');
-          } else {
-            this.alertMessage = 'Une erreur est survenue.';
-            this.alertType = 'alert-danger';
-          }
-        })
-        .catch(error => {
-          console.error("Erreur lors de l'ajout au panier:", error);
+      }).then(response => {
+        if (response.status === 200) {
+          this.alertMessage = response.data.message;
+          this.alertType = 'alert-success';
+          this.$store.dispatch('fetchCartCount');
+        } else {
           this.alertMessage = 'Une erreur est survenue.';
           this.alertType = 'alert-danger';
-        });
+        }
+      }).catch(() => {
+        this.alertMessage = 'Une erreur est survenue.';
+        this.alertType = 'alert-danger';
+      });
     },
+
     shareOnFacebook(product) {
-      const shareUrl = `${window.location.origin}/share/product/${product.id}`;
-      const url = encodeURIComponent(shareUrl);
-      const quote = encodeURIComponent(`${product.name} - ${product.description?.split(/[.?!]/)[0] || 'Découvrez ce produit !'}`);
-      const facebookShareLink = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${quote}`;
-      window.open(facebookShareLink, '_blank', 'width=600,height=400');
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
     },
+
     shareOnTwitter(product) {
-      const shareUrl = `${window.location.origin}/share/product/${product.id}`;
-      const url = encodeURIComponent(shareUrl);
+      const url = encodeURIComponent(window.location.href);
       const text = encodeURIComponent(`Découvrez ce produit : ${product.name}`);
-      const twitterShareLink = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
-      window.open(twitterShareLink, '_blank', 'width=600,height=400');
-    },
-    openImageModal(src) {
-      this.imageModalSrc = src;
-      this.showImageModal = true;
-    },
-    closeImageModal() {
-      this.showImageModal = false;
-      this.imageModalSrc = '';
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
     },
   },
+
   async mounted() {
     this.$nextTick(() => {
       this.isotope = new Isotope(this.$refs.productGrid, {
-        itemSelector: ".isotope-item",
-        layoutMode: "fitRows",
+        itemSelector: '.isotope-item',
+        layoutMode: 'fitRows',
       });
     });
   },
@@ -323,31 +340,409 @@ export default {
 </script>
 
 <style scoped>
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
+/* ===== BARRE DE FILTRES ===== */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.filter-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cat-btn {
+  padding: 8px 20px;
+  border-radius: 25px;
+  border: 2px solid #ddd;
+  background: white;
+  color: #555;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cat-btn:hover, .cat-btn.active {
+  background: #333;
+  border-color: #333;
+  color: white;
+}
+
+.advanced-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 25px;
+  border: 2px solid #ddd;
+  background: white;
+  color: #555;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.advanced-btn:hover {
+  border-color: #333;
+  color: #333;
+}
+
+/* ===== PANEL FILTRES ===== */
+.filter-panel {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.filter-section-title {
+  font-weight: 700;
+  color: #333;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-option-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 2px solid #ddd;
+  background: white;
+  color: #555;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-option-btn:hover, .filter-option-btn.active {
+  background: #6c63ff;
+  border-color: #6c63ff;
+  color: white;
+}
+
+.filter-divider {
+  width: 1px;
+  background: #ddd;
+  align-self: stretch;
+}
+
+/* Transition panel */
+.slide-down-enter-active, .slide-down-leave-active {
+  transition: all 0.3s ease;
+}
+.slide-down-enter-from, .slide-down-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* ===== CARTE PRODUIT ===== */
+.product-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.product-img-wrapper {
+  position: relative;
+  overflow: hidden;
+  height: 280px;
+}
+
+.product-img {
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+  object-fit: cover;
+  transition: transform 0.4s;
 }
 
-.alert {
-  margin-left: -15%;
+.product-card:hover .product-img {
+  transform: scale(1.05);
 }
 
-.close {
+.product-img-overlay {
   position: absolute;
-  top: 10px;
-  right: 20px;
-  cursor: pointer;
-  font-size: 20px;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
+.product-card:hover .product-img-overlay {
+  opacity: 1;
+}
+
+.product-view-btn {
+  background: white;
+  color: #333;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.product-view-btn:hover {
+  background: #333;
+  color: white;
+}
+
+.product-info {
+  padding: 14px 16px;
+}
+
+.product-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-price-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.product-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+}
+
+.product-old-price {
+  font-size: 13px;
+  color: #aaa;
+  text-decoration: line-through;
+}
+
+.product-badge {
+  background: #e74c3c;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+}
+
+/* ===== MODALE PRODUIT ===== */
+.product-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.product-modal-content {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 850px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #f5f5f5;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-body {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.modal-img-side {
+  flex: 1;
+  min-width: 280px;
+  max-height: 500px;
+  overflow: hidden;
+  border-radius: 16px 0 0 16px;
+}
+
+.modal-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-info-side {
+  flex: 1;
+  min-width: 280px;
+  padding: 30px;
+}
+
+.modal-tag {
+  display: inline-block;
+  background: #f0f0f0;
+  color: #666;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.modal-price-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.modal-price {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+}
+
+.modal-old-price {
+  font-size: 16px;
+  color: #aaa;
+  text-decoration: line-through;
+}
+
+.modal-description {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.modal-share {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.share-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+}
+
+.share-btn.facebook { background: #1877F2; }
+.share-btn.twitter { background: #1DA1F2; }
+
+.modal-cart-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 2px solid #eee;
+  border-radius: 10px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.qty-btn {
+  background: #f5f5f5;
+  border: none;
+  width: 38px;
+  height: 38px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.qty-btn:hover { background: #eee; }
+
+.qty-input {
+  width: 50px;
+  text-align: center;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.add-to-cart-btn {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+}
+
+.add-to-cart-btn:hover { background: #555; }
+
+/* ===== ISOTOPE ===== */
 .isotope-grid {
   position: relative;
   height: inherit !important;
@@ -359,131 +754,7 @@ export default {
   position: inherit !important;
 }
 
-.alert-danger-no-cart {
-  margin: auto;
-  text-align: center;
-  margin-top: 15px;
-}
-
-.alert {
-  margin-left: -30px;
-}
-
-.btn-cart {
-  margin-left: -15px;
-}
-
-.share-button-facebook {
-  background-color: #1877F2;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-left: 12px;
-}
-
-.share-button-google {
-  background-color: #D93025;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.share-button-twitter {
-  display: flex;
-  align-items: center;
-  background-color: #1DA1F2;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  font-size: 14px;
-  font-weight: bold;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s ease-in-out;
-  text-decoration: none;
-}
-
-.img-product {
-  height: 350px;
-}
-
-.item-slick3 img {
-  margin-right: 45px;
-}
-
-.modal .container {
-  width: 60%;
-}
-
-.panel-filter {
-  display: none;
-}
-
-.show-filter {
-  display: block;
-}
-
-/* Ajout de marges pour éviter la superposition avec le footer */
 .row.isotope-grid {
   margin-bottom: 50px;
-  /* Ajustez cette valeur selon vos besoins */
-}
-
-.image-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.85);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    cursor: pointer;
-}
-
-.image-modal-content {
-    position: relative;
-    max-width: 90%;
-    max-height: 90vh;
-}
-
-.image-modal-img {
-    max-width: 100%;
-    max-height: 85vh;
-    border-radius: 4px;
-    object-fit: contain;
-    cursor: default;
-}
-
-.image-modal-close {
-    position: absolute;
-    top: -15px;
-    right: -15px;
-    width: 32px;
-    height: 32px;
-    background: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    cursor: pointer;
-    line-height: 1;
-    text-align: center;
-}
-
-/* Ajout de styles pour le footer */
-footer {
-  margin-top: 20px;
-  /* Ajustez cette valeur selon vos besoins */
-  padding-top: 20px;
-  background-color: #f8f9fa;
-  border-top: 1px solid #e9ecef;
 }
 </style>

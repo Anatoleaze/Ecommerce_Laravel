@@ -1,217 +1,139 @@
 <template>
-   <header class="header-v2">
-		<!-- Header desktop -->
-		<div class="container-menu-desktop trans-03">
-			<div class="wrap-menu-desktop">
-				<nav class="limiter-menu-desktop p-l-45">
-					
-					<!-- Logo desktop -->		
-					<a :href=homeLink class="logo">
-						<img :src=logo alt="IMG-LOGO">
-					</a>
+  <header class="header-v2">
 
-					<!-- Menu desktop -->
-					<div class="menu-desktop">
-						<ul class="main-menu">
-							<li class="active-menu">
-								<a :href="homeLink">Accueil</a>
-							</li>
+    <!-- Header Desktop -->
+    <div class="header-desktop">
+      <div class="header-inner">
 
-							<li>
-								<a :href="catalogLink">Catalogue</a>
-							</li>
+        <!-- Logo -->
+        <a :href="homeLink" class="header-logo">
+          <img :src="logo" alt="Logo">
+        </a>
 
-							<li>
-								<a :href="contactLink">A propos</a>
-							</li>
-						</ul>
-					</div>	
+        <!-- Navigation -->
+        <nav class="header-nav">
+          <a :href="homeLink" class="nav-link-item">Accueil</a>
+          <a :href="catalogLink" class="nav-link-item">Catalogue</a>
+          <a :href="contactLink" class="nav-link-item">À propos</a>
+        </nav>
 
-					<!-- Icon header -->
-					<div class="wrap-icon-header flex-w flex-r-m h-full">
-						<div class="flex-c-m h-full p-r-24">
-							<div class="icon-header-item cl2 hov-cl1 trans-04 p-lr-11 js-show-modal-search" @click="showSearchModal">
-								<i class="zmdi zmdi-search"></i>
-							</div>
-						</div>
-							
-						<div class="flex-c-m h-full p-l-18 p-r-25 bor5">
-                            <a :href="cartLink">
-                                <div v-if="cartItemCount > 0" class="icon-header-item cl2 hov-cl1 trans-04 p-lr-11 icon-header-noti js-show-cart" :data-notify="cartItemCount">
-                                    <i class="zmdi zmdi-shopping-cart"></i>
-                                </div>	
-                                <div v-else class="icon-header-item cl2 hov-cl1 trans-04 p-lr-11">
-                                    <i class="zmdi zmdi-shopping-cart"></i>
-                                </div>
-                            </a>
-						</div>
+        <!-- Actions -->
+        <div class="header-actions">
 
-						<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-							<div class="container">
-								
-								<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-									<span class="navbar-toggler-icon"></span>
-								</button>
-				
-								<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			
-									<!-- Right Side Of Navbar -->
-									<ul class="navbar-nav ml-auto">
-										<!-- Authentication Links -->
-										<template v-if="!isAuthenticated">
-                                            <li>
-                                               <a class="nav-link" :href="login">Connexion</a>
-                                            </li>
+          <!-- Recherche -->
+          <button class="action-btn" @click="showSearchModal" title="Rechercher">
+            <i class="zmdi zmdi-search"></i>
+          </button>
 
-                                            <li v-if="register">
-                                                <a class="nav-link" :href="register">Inscription</a>
-                                            </li>
-                                        </template>
-										<template v-else>
-                                            <li class="nav-item dropdown">
-                                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" @click.prevent="toggleUserDropdown" :aria-expanded="isUserDropdownOpen.toString()">
-                                                {{ headerUser.name }} <span class="caret"></span>
-                                            </a>
+          <!-- Panier -->
+          <a :href="cartLink" class="action-btn cart-btn">
+            <i class="zmdi zmdi-shopping-cart"></i>
+            <span v-if="cartItemCount > 0" class="cart-badge">{{ cartItemCount }}</span>
+          </a>
 
-                                            <div :class="['dropdown-menu dropdown-menu-right', { show: isUserDropdownOpen }]">
-                                                <a class="dropdown-item" :href="profile">Mon profil</a>
-                                                <a v-if="headerUser.role != 'admin'" class="dropdown-item" :href="orders">Mes commandes</a>
+          <!-- Utilisateur non connecté -->
+          <template v-if="!isAuthenticated">
+            <a :href="login" class="btn-auth btn-login">Connexion</a>
+            <a v-if="register" :href="register" class="btn-auth btn-register">Inscription</a>
+          </template>
 
+          <!-- Utilisateur connecté -->
+          <template v-else>
+            <div class="user-dropdown">
+              <button class="user-btn" @click.prevent="toggleUserDropdown">
+                <div class="user-avatar">{{ headerUser.name ? headerUser.name[0].toUpperCase() : '?' }}</div>
+                <span class="user-name">{{ headerUser.name }}</span>
+                <i :class="['zmdi', isUserDropdownOpen ? 'zmdi-chevron-up' : 'zmdi-chevron-down']"></i>
+              </button>
 
-                                                <a v-if="headerUser.role == 'admin'" class="dropdown-item" :href="adminProducts">
-                                                Liste des produits
-                                                </a>
-                                                <a v-if="headerUser.role == 'admin'" class="dropdown-item" :href="adminOrderShow">
-                                                Liste des commandes
-                                                </a>
-
-                                                <a class="dropdown-item" href="#" @click.prevent="logoutUser">
-                                                Déconnexion
-                                                </a>
-
-                                            </div>
-                                            </li>
-                                        </template>
-									</ul>
-								</div>
-							</div>
-						</nav>
-					
-					</div>
-				</nav>
-			</div>	
-		</div>
-
-		<!-- Header Mobile -->
-		<div class="wrap-header-mobile">
-			<!-- Logo moblie -->		
-			<div class="logo-mobile">
-				<a :href=homeLink><img :src=logo alt="IMG-LOGO"></a>
-			</div>
-
-			<!-- Icon header -->
-			<div class="wrap-icon-header flex-w flex-r-m h-full m-r-15">
-				<div class="flex-c-m h-full p-r-10">
-					<div class="icon-header-item cl2 hov-cl1 trans-04 p-lr-11 js-show-modal-search" @click="showSearchModal">
-						<i class="zmdi zmdi-search"></i>
-					</div>
-				</div>
-
-				<div class="flex-c-m h-full p-l-18 p-r-25 bor5">
-                    <a :href="cartLink">
-                        <div v-if="cartItemCount > 0" class="icon-header-item cl2 hov-cl1 trans-04 p-lr-11 icon-header-noti js-show-cart" :data-notify="cartItemCount">
-                            <i class="zmdi zmdi-shopping-cart"></i>
-                        </div>	
-                        
-                        <div v-else class="icon-header-item cl2 hov-cl1 trans-04 p-lr-11">
-                            <i class="zmdi zmdi-shopping-cart"></i>
-                        </div>
-                    </a>
-
-				</div>
-
-			</div>
-
-			<!-- Button show menu -->
-			<div class="btn-show-menu-mobile hamburger hamburger--squeeze">
-				<span class="hamburger-box">
-					<span class="hamburger-inner"></span>
-				</span>
-			</div>
-		</div>
-
-
-		<!-- Menu Mobile -->
-		<div class="menu-mobile">
-			<ul class="main-menu-m">
-
-				<li>
-					<a :href=homeLink>Accueil</a>
-				</li>
-
-				<li>
-					<a :href=catalogLink>Catalogue</a>
-				</li>
-
-				<li>
-					<a :href=contactLink >A propos</a>
-				</li>
-
-                <template v-if="!isAuthenticated">
-                    <li class="nav-item" style="border-right: 1px solid black;">
-                        <a class="nav-link" :href="login">Connexion</a>
-                    </li>
-                    <li v-if="register" class="nav-item">
-                        <a class="nav-link" :href="register">Inscription</a>
-                    </li>
+              <div v-if="isUserDropdownOpen" class="dropdown-menu-custom">
+                <a class="dropdown-item-custom" :href="profile">
+                  <i class="zmdi zmdi-account"></i> Mon profil
+                </a>
+                <a v-if="headerUser.role != 'admin'" class="dropdown-item-custom" :href="orders">
+                  <i class="zmdi zmdi-receipt"></i> Mes commandes
+                </a>
+                <template v-if="headerUser.role == 'admin'">
+                  <div class="dropdown-divider-custom"></div>
+                  <span class="dropdown-label">Administration</span>
+                  <a class="dropdown-item-custom" :href="adminProducts">
+                    <i class="zmdi zmdi-collection-item"></i> Liste des produits
+                  </a>
+                  <a class="dropdown-item-custom" :href="adminOrderShow">
+                    <i class="zmdi zmdi-assignment"></i> Liste des commandes
+                  </a>
                 </template>
-                <template v-else>
-                    <li class="nav-item dropdown">
-                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" @click.prevent="toggleUserDropdown" :aria-expanded="isUserDropdownOpen.toString()">
-                        {{ headerUser.name }} <span class="caret"></span>
-                    </a>
-
-                    <div :class="['dropdown-menu dropdown-menu-right', { show: isUserDropdownOpen }]">
-                        <a class="dropdown-item" :href="profile">Mon profil</a>
-                        <a class="dropdown-item" :href="orders">Mes commandes</a>
-
-                        <a v-if="headerUser.role === 'admin'" class="dropdown-item" :href="adminProducts">
-                        Liste des produits
-                        </a>
-
-                        <a v-if="headerUser.role === 'admin'" class="dropdown-item" :href="adminOrderShow">
-                        Liste des commandes
-                        </a>
-
-                        <a class="dropdown-item" href="#" @click.prevent="logoutUser">
-                        Déconnexion
-                        </a>
-
-                    </div>
-                    </li>
-                </template>
-			</ul>
-        </div>
-
-		<!-- Modal Search -->
-		<div v-if="isSearchModalVisible" class="modal-search-header flex-c-m trans-04">
-            <div class="container-search-header">
-                <button class="flex-c-m btn-hide-modal-search trans-04 btn-close" @click="hideSearchModal">
-                    <img :src="logoClose" alt="CLOSE">
-                </button>
-
-                <form class="wrap-search-header flex-w p-l-15" method="GET" :action="catalogLink">
-                    <input class="plh3" type="text" name="search" placeholder="Recherche..." v-model="searchQuery">
-                    <button class="flex-c-m trans-04">
-                        <i class="zmdi zmdi-search"></i>
-                    </button>
-                </form>
+                <div class="dropdown-divider-custom"></div>
+                <a class="dropdown-item-custom logout-item" href="#" @click.prevent="logoutUser">
+                  <i class="zmdi zmdi-power"></i> Déconnexion
+                </a>
+              </div>
             </div>
+          </template>
+
         </div>
+      </div>
+    </div>
 
-	</header>
+    <!-- Header Mobile -->
+    <div class="header-mobile">
+      <a :href="homeLink" class="header-logo">
+        <img :src="logo" alt="Logo">
+      </a>
 
-  </template>
+      <div class="mobile-actions">
+        <button class="action-btn" @click="showSearchModal">
+          <i class="zmdi zmdi-search"></i>
+        </button>
+        <a :href="cartLink" class="action-btn cart-btn">
+          <i class="zmdi zmdi-shopping-cart"></i>
+          <span v-if="cartItemCount > 0" class="cart-badge">{{ cartItemCount }}</span>
+        </a>
+        <button class="action-btn hamburger-btn" @click="toggleMobileMenu">
+          <i :class="['zmdi', isMobileMenuOpen ? 'zmdi-close' : 'zmdi-menu']"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Menu Mobile -->
+    <div v-if="isMobileMenuOpen" class="mobile-menu">
+      <a :href="homeLink" class="mobile-menu-item">🏠 Accueil</a>
+      <a :href="catalogLink" class="mobile-menu-item">🛍️ Catalogue</a>
+      <a :href="contactLink" class="mobile-menu-item">📞 À propos</a>
+
+      <div class="mobile-menu-divider"></div>
+
+      <template v-if="!isAuthenticated">
+        <a :href="login" class="mobile-menu-item">🔑 Connexion</a>
+        <a v-if="register" :href="register" class="mobile-menu-item">📝 Inscription</a>
+      </template>
+      <template v-else>
+        <a :href="profile" class="mobile-menu-item">👤 Mon profil</a>
+        <a v-if="headerUser.role != 'admin'" :href="orders" class="mobile-menu-item">📦 Mes commandes</a>
+        <template v-if="headerUser.role == 'admin'">
+          <a :href="adminProducts" class="mobile-menu-item">🗂️ Liste des produits</a>
+          <a :href="adminOrderShow" class="mobile-menu-item">📋 Liste des commandes</a>
+        </template>
+        <a href="#" class="mobile-menu-item logout-mobile" @click.prevent="logoutUser">🚪 Déconnexion</a>
+      </template>
+    </div>
+
+    <!-- Modal Recherche -->
+    <div v-if="isSearchModalVisible" class="search-modal" @click.self="hideSearchModal">
+      <div class="search-modal-content">
+        <button class="search-close-btn" @click="hideSearchModal">
+          <i class="zmdi zmdi-close"></i>
+        </button>
+        <form class="search-form" method="GET" :action="catalogLink">
+          <i class="zmdi zmdi-search search-icon"></i>
+          <input type="text" name="search" placeholder="Rechercher un produit..." v-model="searchQuery" autofocus>
+          <button type="submit" class="search-submit-btn">Rechercher</button>
+        </form>
+      </div>
+    </div>
+
+  </header>
+</template>
   
   <script>
   import { mapGetters, mapActions } from 'vuex';
@@ -225,6 +147,7 @@
             isSearchModalVisible: false,
             searchQuery: "",
             isUserDropdownOpen: false,
+        isMobileMenuOpen: false,
         };
     },
 
@@ -348,6 +271,10 @@
             this.isSearchModalVisible = false;
             this.isUserDropdownOpen = false;
         },
+  
+        toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+},
 
         ...mapActions(['fetchCartCount', 'fetchCart']), // Load cart in starting state
             
@@ -368,69 +295,362 @@
   };
   </script>
   
-  <style scoped>
-  .modal-search-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8); 
+ <style scoped>
+/* ===== HEADER DESKTOP ===== */
+.header-desktop {
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  height: 70px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header-logo img {
+  height: 40px;
+  object-fit: contain;
+}
+
+.header-nav {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-link-item {
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 5px 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.nav-link-item:hover {
+  color: #6c63ff;
+  border-bottom-color: #6c63ff;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  color: #333;
+  font-size: 20px;
+  transition: all 0.2s;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.action-btn:hover {
+  background: #f5f5f5;
+  color: #6c63ff;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.btn-auth {
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-login {
+  border: 2px solid #333;
+  color: #333;
+  background: white;
+}
+
+.btn-login:hover {
+  background: #333;
+  color: white;
+}
+
+.btn-register {
+  background: #333;
+  color: white;
+  border: 2px solid #333;
+}
+
+.btn-register:hover {
+  background: #555;
+}
+
+/* ===== DROPDOWN USER ===== */
+.user-dropdown {
+  position: relative;
+}
+
+.user-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 2px solid #eee;
+  border-radius: 25px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #333;
+}
+
+.user-btn:hover {
+  border-color: #333;
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  background: #333;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.dropdown-menu-custom {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  padding: 8px;
+  min-width: 200px;
+  z-index: 9999;
+}
+
+.dropdown-item-custom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+
+.dropdown-item-custom:hover {
+  background: #f5f5f5;
+  color: #6c63ff;
+}
+
+.dropdown-divider-custom {
+  height: 1px;
+  background: #eee;
+  margin: 6px 0;
+}
+
+.dropdown-label {
+  font-size: 11px;
+  color: #aaa;
+  padding: 4px 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: block;
+}
+
+.logout-item {
+  color: #e74c3c !important;
+}
+
+.logout-item:hover {
+  background: #fef0f0 !important;
+}
+
+/* ===== HEADER MOBILE ===== */
+.header-mobile {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 60px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.mobile-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mobile-menu {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  z-index: 999;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.mobile-menu-item {
+  display: block;
+  padding: 14px 16px;
+  color: #333;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.mobile-menu-item:hover {
+  background: #f5f5f5;
+}
+
+.mobile-menu-divider {
+  height: 1px;
+  background: #eee;
+  margin: 10px 0;
+}
+
+.logout-mobile {
+  color: #e74c3c;
+}
+
+/* ===== MODAL RECHERCHE ===== */
+.search-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  width: 90%;
+  max-width: 550px;
+  position: relative;
+}
+
+.search-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 2px solid #eee;
+  border-radius: 12px;
+  padding: 10px 15px;
+  margin-top: 10px;
+}
+
+.search-icon {
+  font-size: 20px;
+  color: #aaa;
+}
+
+.search-form input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  color: #333;
+}
+
+.search-submit-btn {
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.search-submit-btn:hover {
+  background: #555;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .header-desktop {
+    display: none;
+  }
+  .header-mobile {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 1;
-    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-    z-index: 9999; 
+  }
 }
-
-
-
-.container-search-header {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 500px;
-}
-
-.modal-search-header[style*="display: none"] {
-    display: flex !important;
-}
-
-.btn-close{
-    background-color: white;
-    border-radius: 7px;
-    padding: 9px;
-}
-
-.wrap-search-header{
-    height: 80px;
-}
-
-.wrap-search-header button{
-    font-size: 40px;
-    margin: auto;
-}
-
-.plh3{
-    font-size: 25px;
-}
-
-.icon-header-noti::after {
-    font-size: 14px;  
-    height: 24px;     
-    line-height: 24px; 
-    top: -8px;        
-    right: -8px;      
-    border-radius: 15px;
-    background: red;
-}
-
-.zmdi-shopping-cart, .zmdi-search{
-    font-size:30px;
-}
-
-
-  </style>
-  
+</style>
