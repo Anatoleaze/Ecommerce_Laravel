@@ -47,7 +47,6 @@
 </div>
 
 
-<!-- Pagination-->
 <!-- Pagination -->
 <div class="m-t-50 m-b-75" style="display: flex; justify-content: center;">
     @if ($products->lastPage() > 1)

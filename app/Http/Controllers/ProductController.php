@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 
-
+ 
 class ProductController extends Controller
 {
     /**
@@ -68,7 +68,7 @@ class ProductController extends Controller
     public function list(){
       
         // Use Pagination 
-        $products = Product::paginate(50); // 50 pproduct by page
+        $products = Product::paginate(10); // 10 products by page
 
         $link = config('app.url');
 

@@ -58,7 +58,7 @@
                                 <tr class="table_row">
                                     <td class="column-2">
                                         <div>
-                                            <img src="{{ asset($product->image_name)}}" style="width: 80%; border-radius: 20px;" alt="IMG-{{$product->name}}">
+                                            <img src="{{ asset($product->image_name)}}"  style="width: 80%; border-radius: 20px; cursor:pointer;"  alt="IMG-{{$product->name}}" onclick="openImageModal('{{ asset($product->image_name) }}')">
                                         </div>
                                     </td>
                                     <td class="column-2">{{$product->name}}</td>
@@ -91,12 +91,74 @@
             </div>
         </div>
     </div>
-    <!-- Pagination-->
-    <div class="pagination m-t-50 m-b-75 text-center">
-        {{ $products->links() }}
+    
+    
+    <!-- Pagination -->
+    <div class="m-t-50 m-b-75" style="display: flex; justify-content: center;">
+        @if ($products->lastPage() > 1)
+        <nav>
+            <ul style="list-style:none; display:flex; gap:6px; padding:0; margin:0; align-items:center;">
+                
+                {{-- Bouton précédent --}}
+                <li>
+                    <a href="{{ $products->currentPage() > 1 ? $products->url($products->currentPage() - 1) : '#' }}"
+                    style="display:flex; align-items:center; justify-content:center; width:36px; height:36px; border:1px solid #ccc; border-radius:4px; color:#555; text-decoration:none; font-size:14px; {{ $products->currentPage() == 1 ? 'opacity:0.4; pointer-events:none;' : '' }}">
+                        &lt;
+                    </a>
+                </li>
+
+                {{-- Pages glissantes 4 par 4 --}}
+                @php
+                    $current = $products->currentPage();
+                    $last = $products->lastPage();
+                    $start = max(1, $current - 1);
+                    $end = min($last, $start + 3);
+                    if ($end - $start < 3) {
+                        $start = max(1, $end - 3);
+                    }
+                @endphp
+
+                @for ($i = $start; $i <= $end; $i++)
+                <li>
+                    <a href="{{ $products->url($i) }}"
+                    style="display:flex; align-items:center; justify-content:center; width:36px; height:36px; border:1px solid {{ $i == $current ? '#6c63ff' : '#ccc' }}; border-radius:4px; background:{{ $i == $current ? '#6c63ff' : '#fff' }}; color:{{ $i == $current ? '#fff' : '#555' }}; text-decoration:none; font-size:14px;">
+                        {{ $i }}
+                    </a>
+                </li>
+                @endfor
+
+                {{-- Bouton suivant --}}
+                <li>
+                    <a href="{{ $products->currentPage() < $products->lastPage() ? $products->nextPageUrl() : '#' }}"
+                    style="display:flex; align-items:center; justify-content:center; width:36px; height:36px; border:1px solid #ccc; border-radius:4px; color:#555; text-decoration:none; font-size:14px; {{ $products->currentPage() == $products->lastPage() ? 'opacity:0.4; pointer-events:none;' : '' }}">
+                        &gt;
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+        @endif
     </div>
 </div>
     
+<!-- Modale Image -->
+<div id="image-modal" onclick="closeImageModal()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:2000; justify-content:center; align-items:center; cursor:pointer;">
+    <div style="position:relative; max-width:90%; max-height:90vh;" onclick="event.stopPropagation()">
+        <span onclick="closeImageModal()" style="position:absolute; top:-15px; right:-15px; width:32px; height:32px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; cursor:pointer; line-height:1; text-align:center;">&times;</span>
+        <img id="image-modal-img" src="" alt="IMG" style="max-width:100%; max-height:85vh; border-radius:4px; object-fit:contain;">
+    </div>
+</div>	 
 	
-	
+<script>
+function openImageModal(src) {
+    document.getElementById('image-modal-img').src = src;
+    document.getElementById('image-modal').style.display = 'flex';
+}
+function closeImageModal() {
+    document.getElementById('image-modal').style.display = 'none';
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeImageModal();
+});
+</script>
 @endsection

@@ -10,8 +10,7 @@ use App\Mail\ModifyUserDataMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
-class UserController extends Controller
-{
+class UserController extends Controller {
     //
 
     public function index(){
@@ -24,8 +23,7 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit()
-    {
+    public function edit(){
         $user = auth()->user();
         $data = [
             'name' => $user->name,
@@ -91,37 +89,29 @@ class UserController extends Controller
     /**
      * Add User in newletters
      */
-    public function addNewsLetter(Request $request){
-        
-        $link = config('app.url');
-
-        // Check email 
+    public function addNewsLetter(Request $request) {
+   
         $data = $request->validate([
             'email' => 'required|email|max:255',
         ]);
 
-        
         $email = $data['email'];
-        
-        // Check if email exist
-        $existingUser = User::where('email', $email)->first();
-        
-        if ($existingUser) {
 
-            return redirect()->route('home', ['link'=>$link])->with('message', 'Cet email est déjà utilisé.');
+        $existingUser = User::where('email', $email)->first();
+
+        if ($existingUser) {
+            return back()->with('message', 'Cet email est déjà utilisé.');
         }
 
-        // Creation of User
         $user = new User();
         $user->name = "";
         $user->first_name = "";
         $user->email = $email;
         $user->password = Hash::make("password");
-        
-        // Save User 
+
         $user->save();
 
-        return redirect()->route('home',['link'=>$link])->with('message', 'Vous avez été ajouté à la newsletter !');
+        return back()->with('message', 'Vous avez été ajouté à la newsletter !');
     }
 
 }
