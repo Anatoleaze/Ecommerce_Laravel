@@ -19,7 +19,7 @@
                                                             
                                 <td class="column-1">
                                     <div class="how-itemcart1" @click="removeProduct(row.product_id)">
-                                        <img :src="'/' + row.product.image_name" alt="IMG" />
+                                       <img :src="row.product.image_name.startsWith('http') ? row.product.image_name : '/' + row.product.image_name" alt="IMG" />
                                     </div>
                                 </td>
                                 <td class="column-2"> {{ row.product.name }} </td>
