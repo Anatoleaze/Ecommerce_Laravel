@@ -35,152 +35,184 @@
 	</div>
 	
 
-    <!-- Footer -->
-	<footer class="bg3 p-t-75 p-b-32">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-6 col-lg-4 p-b-50">
-					<h4 class="stext-301 cl0 p-b-30">
-						Categories
-					</h4>
+	<!-- Footer -->
+<footer style="background: #1a1a2e; padding: 60px 0 0 0; margin-top: 60px;">
+    <div class="container">
+        <div class="row" style="padding-bottom: 40px;">
 
-					<ul>
-						<li class="p-b-10">
-							<a href="{{ route('products_list', [], false) }}?search=femmes" class="stext-107 cl7 hov-cl1 trans-04">
-									
-								Femmes
-							</a>
-						</li>
+            <!-- Catégories -->
+            <div class="col-sm-6 col-lg-3" style="margin-bottom: 40px;">
+                <h5 style="color: white; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px;">
+                    🏷️ Catégories
+                </h5>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    @foreach([
+                        ['label' => '👗 Femmes', 'search' => 'femmes'],
+                        ['label' => '👔 Hommes', 'search' => 'hommes'],
+                        ['label' => '👟 Chaussures', 'search' => 'chaussures'],
+                        ['label' => '👜 Sacs', 'search' => 'sacs'],
+                        ['label' => '⌚ Montres', 'search' => 'montres'],
+                    ] as $cat)
+                    <li style="margin-bottom: 12px;">
+                        <a href="{{ route('products_list', [], false) }}?search={{ $cat['search'] }}"
+                           style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; transition: color 0.2s;"
+                           onmouseover="this.style.color='white'"
+                           onmouseout="this.style.color='rgba(255,255,255,0.6)'">
+                            {{ $cat['label'] }}
+                        </a>
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
 
-						<li class="p-b-10">
-							<a href="{{ route('products_list', [], false) }}?search=hommes" class="stext-107 cl7 hov-cl1 trans-04">
-								Hommes
-							</a>
-						</li>
+            <!-- Mon compte -->
+            <div class="col-sm-6 col-lg-3" style="margin-bottom: 40px;">
+                <h5 style="color: white; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px;">
+                    👤 Mon Compte
+                </h5>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li style="margin-bottom: 12px;">
+                        <a href="{{ route('profils') }}"
+                           style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;"
+                           onmouseover="this.style.color='white'"
+                           onmouseout="this.style.color='rgba(255,255,255,0.6)'">
+                            📋 Mon profil
+                        </a>
+                    </li>
+                    <li style="margin-bottom: 12px;">
+                        <a href="{{ route('order') }}"
+                           style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;"
+                           onmouseover="this.style.color='white'"
+                           onmouseout="this.style.color='rgba(255,255,255,0.6)'">
+                            📦 Mes commandes
+                        </a>
+                    </li>
+                    @auth
+                        @if(Auth::user()->isAdmin())
+                        <li style="margin-bottom: 12px;">
+                            <a href="{{ route('products_list_admin') }}"
+                               style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;"
+                               onmouseover="this.style.color='white'"
+                               onmouseout="this.style.color='rgba(255,255,255,0.6)'">
+                                🗂️ Liste des produits
+                            </a>
+                        </li>
+                        @endif
+                    @endauth
+                </ul>
+            </div>
 
-						<li class="p-b-10">
-							<a href="{{ route('products_list', [], false) }}?search=chaussures" class="stext-107 cl7 hov-cl1 trans-04">
-								Chaussures
-							</a>
-						</li>
-                        
-                        <li class="p-b-10">
-							<a href="{{ route('products_list', [], false) }}?search=sacs" class="stext-107 cl7 hov-cl1 trans-04">
-								Sacs
-							</a>
-						</li>
+            <!-- Infos -->
+            <div class="col-sm-6 col-lg-3" style="margin-bottom: 40px;">
+                <h5 style="color: white; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px;">
+                    ℹ️ Informations
+                </h5>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li style="margin-bottom: 12px;">
+                        <a href="{{ route('home') }}"
+                           style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;"
+                           onmouseover="this.style.color='white'"
+                           onmouseout="this.style.color='rgba(255,255,255,0.6)'">
+                            🏠 Accueil
+                        </a>
+                    </li>
+                    <li style="margin-bottom: 12px;">
+                        <a href="{{ route('contact') }}"
+                           style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;"
+                           onmouseover="this.style.color='white'"
+                           onmouseout="this.style.color='rgba(255,255,255,0.6)'">
+                            📞 Contact
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
-						<li class="p-b-10">
-							<a href="{{ route('products_list', [], false) }}?search=montes" class="stext-107 cl7 hov-cl1 trans-04">
-								Montres
-							</a>
-						</li>
-					</ul>
-				</div>
+            <!-- Newsletter -->
+            <div class="col-sm-6 col-lg-3" style="margin-bottom: 40px;">
+                <h5 style="color: white; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px;">
+                    ✉️ Newsletter
+                </h5>
 
-				<div class="col-sm-6 col-lg-4 p-b-50">
-					<h4 class="stext-301 cl0 p-b-30">
-						Mon compte
-					</h4>
+                @if(session('message'))
+                    <div class="alert {{ session('message') == 'Vous avez été ajouté à la newsletter !' ? 'alert-success' : 'alert-danger' }}"
+                         style="border-radius: 8px; font-size: 13px; margin-bottom: 16px;">
+                        {{ session('message') }}
+                    </div>
+                @endif
 
-					<ul>
-						<li class="p-b-10">
-							<a href="{{ route('profils') }}" class="stext-107 cl7 hov-cl1 trans-04">
-								Mon profils
-							</a>
-						</li>
+                <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 16px; line-height: 1.6;">
+                    Recevez nos dernières offres et nouveautés directement dans votre boîte mail.
+                </p>
 
-						<li class="p-b-10">
-							<a href="{{route('order')}}" class="stext-107 cl7 hov-cl1 trans-04">
-								Mes Commandes 
-							</a>
-						</li>
-						@guest
-						@else 
-							@if(Auth::user()->isAdmin())
-								<a class="stext-107 cl7 hov-cl1 trans-04" href="{{ route('products_list_admin') }}">
-									Liste des produits
-								</a>
-							@endif
-						@endguest
-						
+                <form method="GET" action="{{ route('addNewsLetter') }}">
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <input type="email" name="email" placeholder="votre@email.com"
+                               style="padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: white; font-size: 14px; outline: none; width: 100%;">
+                        <button type="submit"
+                                style="padding: 12px; border-radius: 8px; background: white; color: #1a1a2e; border: none; font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.2s;"
+                                onmouseover="this.style.background='#eee'"
+                                onmouseout="this.style.background='white'">
+                            S'abonner →
+                        </button>
+                    </div>
+                </form>
+            </div>
 
-					</ul>
-				</div>
+        </div>
 
-				<div class="col-sm-6 col-lg-4 p-b-50">
-					<h4 class="stext-301 cl0 p-b-30">
-						Newsletter
-					</h4>
-					
-					@if (session('message'))
-						@if (session('message') == 'Vous avez été ajouté à la newsletter !')
-							<div class="alert alert-success">{{ session('message') }}</div>
-						@else
-							<div class="alert alert-danger">{{ session('message') }}</div>
-						@endif
-								
-					@endif
-					
-					<form method='GET' action={{route('addNewsLetter')}}>
-						<div class="wrap-input1 w-full p-b-4">
-							<input class="input1 bg-none plh1 stext-107 cl7" type="text" name="email" placeholder="email@example.com">
-							<div class="focus-input1 trans-04"></div>
-						</div>
+        <!-- Séparateur -->
+        <div style="border-top: 1px solid rgba(255,255,255,0.1); padding: 30px 0;">
 
-						<div class="p-t-18">
-							<button class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04">
-								S'abonner
-							</button>
-						</div>
-					</form>
-				</div>
-			</div>
+            <!-- Icônes paiement -->
+            <div style="display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 24px;">
+                <span style="color: rgba(255,255,255,0.4); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-right: 8px;">
+                    Paiement sécurisé
+                </span>
+                @foreach(['icon-pay-01.png', 'icon-pay-02.png', 'icon-pay-03.png', 'icon-pay-04.png', 'icon-pay-05.png'] as $icon)
+                <a href="#">
+                    <img src="{{ asset('images/icons/' . $icon) }}" alt="Paiement"
+                         style="height: 28px; opacity: 0.7; transition: opacity 0.2s;"
+                         onmouseover="this.style.opacity='1'"
+                         onmouseout="this.style.opacity='0.7'">
+                </a>
+                @endforeach
+            </div>
 
-			<div class="p-t-40">
-				<div class="flex-c-m flex-w p-b-18">
-					<a href="#" class="m-all-1">
-						<img src="{{ asset('images/icons/icon-pay-01.png')}}" alt="ICON-PAY">
-					</a>
+            <!-- Copyright -->
+            <p style="text-align: center; color: rgba(255,255,255,0.35); font-size: 13px; margin: 0;">
+                © <span id="footer-year"></span> Tous droits réservés —
+                @isset($link)
+                    <a href="{{ $link }}" target="_blank" style="color: rgba(255,255,255,0.5); text-decoration: none;">
+                        {{ config('app.name', 'Laravel') }}
+                    </a>
+                @else
+                    <a href="#" style="color: rgba(255,255,255,0.5); text-decoration: none;">
+                        {{ config('app.name', 'Laravel') }}
+                    </a>
+                @endisset
+            </p>
+        </div>
+    </div>
+</footer>
 
-					<a href="#" class="m-all-1">
-						<img src="{{ asset('images/icons/icon-pay-02.png')}}" alt="ICON-PAY">
-					</a>
+<!-- Bouton retour en haut -->
+<div id="myBtn" style="position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); opacity: 0; transition: all 0.3s; z-index: 999;"
+     onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+     onmouseover="this.style.background='#555'"
+     onmouseout="this.style.background='#333'">
+    <i class="zmdi zmdi-chevron-up" style="color: white; font-size: 20px;"></i>
+</div>
 
-					<a href="#" class="m-all-1">
-						<img src="{{ asset('images/icons/icon-pay-03.png')}}" alt="ICON-PAY">
-					</a>
+<script>
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
 
-					<a href="#" class="m-all-1">
-						<img src="{{ asset('images/icons/icon-pay-04.png')}}" alt="ICON-PAY">
-					</a>
-
-					<a href="#" class="m-all-1">
-						<img src="{{ asset('images/icons/icon-pay-05.png')}}" alt="ICON-PAY">
-					</a>
-				</div>
-
-				<p class="stext-107 cl6 txt-center">
-			Copyright &copy;<script>document.write(new Date().getFullYear());</script> Tous droits réservés | Réalisé par 
-		
-			@isset($link)
-				<a href="{{$link}}" target="_blank">{{ config('app.name', 'Laravel') }}</a>
-			@else
-				<a href="#" target="_blank">{{ config('app.name', 'Laravel') }}</a>	
-			@endif
-			
-			</p>
-			</div>
-		</div>
-	</footer>
-
-
-	<!-- Back to top -->
-	<div class="btn-back-to-top" id="myBtn">
-		<span class="symbol-btn-back-to-top">
-			<i class="zmdi zmdi-chevron-up"></i>
-		</span>
-	</div>
+    // Affiche le bouton retour en haut
+    window.addEventListener('scroll', function() {
+        const btn = document.getElementById('myBtn');
+        btn.style.opacity = window.scrollY > 300 ? '1' : '0';
+        btn.style.pointerEvents = window.scrollY > 300 ? 'auto' : 'none';
+    });
+</script>
 
 
 

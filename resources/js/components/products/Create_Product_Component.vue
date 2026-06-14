@@ -143,9 +143,6 @@ export default {
 
             } catch (error) {
                 console.error(error);
-                console.log(error.response?.data?.message);
-                console.log(error.response?.data?.errors);
-                console.log(error.response);
                 
                 if (error.response?.data?.errors) {
                     this.message = Object.values(error.response.data.errors).flat().join("\n");

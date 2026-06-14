@@ -1,193 +1,149 @@
 <template>
+  <div style="padding: 40px 0; background: #f8f9fa; min-height: 100vh;">
+    <div class="container">
 
-    <form class="bg0 p-t-75 p-b-85">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
-                    <div class="m-l-25 m-r--38 m-lr-0-xl">
-                        <div class="wrap-table-shopping-cart">
-                            <table class="table-shopping-cart">
-                                <tr class="table_head">
-                                    <th class="column-1 text-center">Produits</th>
-                                    <th class="column-2"></th>
-                                    <th class="column-4 text-center">Quantité</th>
-                                </tr>
+      <!-- Titre -->
+      <div style="margin-bottom: 32px;">
+        <span style="display:inline-block; background:#f0f0ff; color:#6c63ff; padding:5px 14px; border-radius:20px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">
+          Commande #{{ order[0].num }}
+        </span>
+        <h2 style="font-size:28px; font-weight:800; color:#1a1a2e; margin:0;">
+          Détails de la commande
+        </h2>
+      </div>
 
-                                <tr v-for="row in order" :key="row.id" class="table_row">
-                                    <td>
-                                        <img :src="row.product_image" style="width: 75%;border-radius: 20px;margin: 15px;margin-left: 50px;" alt="IMG"/>
-                                    </td>
-                                    <td class="text-center"> {{ row.product_name }} </td>
-                                    <td class="text-center"> {{ row.quantity }} </td>
-                                </tr>
+      <div class="row" style="gap: 30px 0;">
 
-                            </table>
-                        </div>
+        <!-- Liste des produits -->
+        <div class="col-lg-7">
+          <div style="background:white; border-radius:16px; padding:24px; box-shadow:0 4px 15px rgba(0,0,0,0.06);">
+            <h5 style="font-size:16px; font-weight:700; color:#333; margin-bottom:20px;">🛍️ Produits commandés</h5>
 
-                    </div>
-                </div>
+            <div v-for="row in order" :key="row.id"
+              style="display:flex; align-items:center; gap:16px; padding:16px 0; border-bottom:1px solid #f0f0f0;">
 
-                <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
-                    <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-                        <h4 class="mtext-109 cl2 p-b-30">
-                            Récapitulatif
-                        </h4>
+              <!-- Image -->
+              <div style="flex-shrink:0; width:80px; height:80px; border-radius:10px; overflow:hidden; background:#f8f9fa;">
+                <img :src="row.product_image" :alt="row.product_name"
+                  style="width:100%; height:100%; object-fit:cover;">
+              </div>
 
-
-                        <div class="flex-w flex-t bor12 p-b-13 m-b-15">
-                            <div class="size-208">
-                                <span class="stext-110 cl2">
-                                    Statue :
-                                </span>
-                            </div>
-
-                            <div class="size-209">
-
-                                <span class="alert alert-info">
-                                    {{ orderLocal.statut }}
-                                </span>
-                            </div>
-
-
-                        </div>
-                        <div class="flex-w flex-t bor12 p-b-13">
-                            <div class="size-228">
-                                <span class="stext-110 cl2 m-r-5">
-                                    Numéro de suivi :  
-                                </span>
-                                
-                            </div>
-                                <span class="stext-110 cl2">
-                                    {{ order[0].num }}
-                                </span>    
-                        </div>
-
-
-                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                            <div class="w-full-ssm p-r-15">
-
-                                <span class="stext-110 cl2">
-                                    Livraison :
-                                </span>
-
-                                <div class="rs1-select2 rs2-select2 m-b-12 m-t-9">
-                                    <p>{{ order[0].livraison }}</p>
-                                </div>
-
-                                
-                            </div>
-                        </div>
-
-
-                        <div class="flex-w flex-t p-t-27 p-b-33">
-                            <div class="size-208">
-                                <span class="mtext-101 cl2">
-                                    Total :
-                                </span>
-                            </div>
-
-                            <div class="size-209 p-t-1">
-                                <span class="mtext-110 cl2">
-                                    {{ order[0].total }} €
-                                </span>
-                            </div>
-
-                        </div>
-
-                        <div v-if="user.role = 'admin' && orderLocal.statut === 'en attente'" class="size-228">
-                                <span class="mtext-101 cl2">
-                                    Changer le status :
-                                </span>
-                        </div>
-                        <div v-if="user.role = 'admin' && orderLocal.statut === 'en attente'" @click="changeStatus(order[0].order_id)" class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
-                            En cours de Livraison
-                        </div>
-                    </div>
-                </div>
+              <!-- Infos -->
+              <div style="flex:1;">
+                <p style="font-weight:600; color:#333; margin:0 0 4px; font-size:15px;">{{ row.product_name }}</p>
+                <p style="color:#aaa; font-size:13px; margin:0;">Quantité : {{ row.quantity }}</p>
+              </div>
 
             </div>
+          </div>
         </div>
-    </form>
 
+        <!-- Récapitulatif -->
+        <div class="col-lg-5">
+          <div style="background:white; border-radius:16px; padding:24px; box-shadow:0 4px 15px rgba(0,0,0,0.06);">
+            <h5 style="font-size:16px; font-weight:700; color:#333; margin-bottom:20px;">📋 Récapitulatif</h5>
+
+            <!-- Statut -->
+            <div style="margin-bottom:16px; padding:14px; background:#f8f9fa; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:13px; color:#888; font-weight:600;">Statut</span>
+              <span :style="`
+                padding: 5px 14px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 700;
+                background: ${getStatusColor(orderLocal.statut).bg};
+                color: ${getStatusColor(orderLocal.statut).text};
+              `">
+                {{ orderLocal.statut }}
+              </span>
+            </div>
+
+            <!-- Numéro de suivi -->
+            <div style="margin-bottom:16px; padding:14px; background:#f8f9fa; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:13px; color:#888; font-weight:600;">N° de suivi</span>
+              <span style="font-size:13px; font-weight:700; color:#333; font-family:monospace;">{{ order[0].num }}</span>
+            </div>
+
+            <!-- Livraison -->
+            <div style="margin-bottom:16px; padding:14px; background:#f8f9fa; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:13px; color:#888; font-weight:600;">🚚 Livraison</span>
+              <span style="font-size:13px; font-weight:600; color:#333;">{{ order[0].livraison }}</span>
+            </div>
+
+            <!-- Total -->
+            <div style="background:linear-gradient(135deg, #1a1a2e, #333); border-radius:10px; padding:16px; display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+              <span style="color:white; font-size:14px; font-weight:600;">Total TTC</span>
+              <span style="color:#f1c40f; font-size:20px; font-weight:800;">{{ order[0].total }} €</span>
+            </div>
+
+            <!-- Bouton changer statut (admin) -->
+            <template v-if="user.role === 'admin' && orderLocal.statut === 'en attente'">
+              <div style="border-top:1px solid #f0f0f0; padding-top:16px;">
+                <p style="font-size:13px; font-weight:600; color:#555; margin-bottom:10px;">⚙️ Action admin</p>
+                <button @click="changeStatus(order[0].order_id)"
+                  style="width:100%; padding:12px; background:#6c63ff; color:white; border:none; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; transition:background 0.2s;"
+                  onmouseover="this.style.background='#5a52d5'"
+                  onmouseout="this.style.background='#6c63ff'">
+                  🚚 Marquer "En cours de livraison"
+                </button>
+              </div>
+            </template>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import axios from 'axios';
+
 export default {
-    name: "OrderDetailComponent",
+  name: 'OrderDetailsComponent',
 
-    props: {
-        order: {
-            type: Array,
-            required: true
-        },
+  props: {
+    order: { type: Array, required: true },
+    user: { type: Object, required: true },
+  },
 
-        user: {
-            type: Object,
-            required: true
-        },
+  data() {
+    return {
+      orderLocal: { ...this.order[0] },
+    };
+  },
+
+  methods: {
+    getStatusColor(statut) {
+      const map = {
+        'en attente':          { bg: '#fff8e1', text: '#f39c12' },
+        'encours de livraison': { bg: '#e8f4fd', text: '#2980b9' },
+        'En cours de livraison': { bg: '#e8f4fd', text: '#2980b9' },
+        'livré':               { bg: '#eafaf1', text: '#27ae60' },
+        'annulé':              { bg: '#fef0f0', text: '#e74c3c' },
+      };
+      return map[statut] || { bg: '#f0f0f0', text: '#555' };
     },
 
-    data() {
-        return {
-            orderLocal: { ...this.order[0] },
-        };
+    async changeStatus(order_id) {
+      try {
+        const response = await axios.patch(`/commande/${order_id}/status`, {
+          statut: 'encours de livraison',
+        });
+        if (response.data.success) {
+          this.orderLocal.statut = 'En cours de livraison';
+        } else {
+          console.error('Erreur :', response.data.message);
+        }
+      } catch (error) {
+        console.error('Erreur :', error);
+      }
     },
+  },
 
-
-    methods: {
-        formatDate(date) {
-            return new Intl.DateTimeFormat("fr-FR", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-            }).format(new Date(date));
-        },
-
-        async changeStatus(order_id){
-            console.log("changeStatus");
-            console.log("order_id", order_id);
-            try {
-                const response = await axios.patch(`/commande/${order_id}/status`, {
-                statut: "encours de livraison",
-                });
-
-                if (response.data.success) {
-                this.orderLocal.statut = "En cours de livraison"; 
-                } else {
-                    onsole.error("Erreur lors de la mise à jour du statut :", response.data.message);
-                }
-            } catch (error) {
-                console.error("Erreur lors de la mise à jour du statut :", error);
-            }
-
-            /*axios.patch(`/commande/${order_id}/status`)
-            .then(response => {
-                if (response.data.success) {
-                   order_statu = response.data.status;  
-                 //this.$emit('order-status-updated', this.order.id, response.data.status);
-                } else {
-                    alert(response.data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Erreur lors de la mise à jour du statut :', error);
-            });*/
-        },
-    },
-
-    mounted() {
-        console.log("OrderDetailComponent is mounted");
-        console.log(this.order);
-    }
-
-}
+  mounted() {
+    console.log('OrderDetailsComponent mounted', this.order);
+  },
+};
 </script>
-
-<style scoped>
-.img-item{
-    width: 60px !important;
-    position: relative !important;
-    margin-right: 20px !important;
-}
-</style>

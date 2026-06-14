@@ -301,14 +301,11 @@ export default {
             this.couponSuccess = '';
 
             try {
-                console.log("Request check-promo");
-                console.log('Total :', this.totalCartPrice);
+
                 const response = await axios.post('/check-promo', {
                     code: this.couponCode,
                     total: this.totalCartPrice
                 });
-
-                console.log('Réponse du serveur :', response.data);
 
                 this.discount = response.data.discount;
                 this.couponSuccess = response.data.success;
@@ -351,10 +348,6 @@ export default {
         async updateTotal() {
             await this.fetchDeliveryFees();
             this.newTotal = parseFloat((parseFloat(this.totalCartPrice) + parseFloat(this.deliveryFees) - this.discount).toFixed(2));
-            console.log("Update Total");
-            console.log('Total du panier :', this.totalCartPrice);
-            console.log('Nouveau total mis à jour :', this.newTotal);
-
         },
 
         // Click on button "Mettre à jour le total"
