@@ -15,7 +15,7 @@ class PromoSeeder extends Seeder
     {
         $promos = [
             [
-                'code' => 'WELCOME2024',
+                'code' => 'WELCOME',
                 'remise' => 10,
                 'min_achat' => 50,
                 'started_at' => Carbon::now()->toDateString(),
