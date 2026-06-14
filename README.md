@@ -46,7 +46,37 @@ cd Ecommerce_Laravel
 
 ---
 
-## 2. Démarrer les containers Docker
+## 2. Configuration de Stripe
+
+Après avoir cloné le projet, vous devez configurer Stripe afin de permettre le fonctionnement des paiements.
+
+### 2.1 Créer un compte Stripe
+
+Rendez-vous sur https://dashboard.stripe.com et créez un compte (ou connectez-vous si vous en avez déjà un).
+
+Ensuite, récupérez vos clés API dans le tableau de bord Stripe :
+- Clé publique (Publishable key)
+- Clé secrète (Secret key)
+
+### 2.2 Configuration des variables d’environnement
+
+Créez ou modifiez le fichier `.env.local` (côté front-end Vue.js) et ajoutez :
+
+```env
+VITE_STRIPE_KEY=pk_test_votre_cle_publique
+STRIPE_KEY=pk_test_votre_cle_publique
+STRIPE_SECRET=sk_test_votre_cle_secrete
+```
+
+### 2.3 Important
+
+- VITE_STRIPE_KEY et STRIPE_KEY correspondent à la même clé publique Stripe
+- STRIPE_SECRET correspond à la clé secrète Stripe
+- Ne jamais exposer la clé secrète côté front-end
+
+---
+
+## 3. Démarrer les containers Docker
 
 ```bash
 docker compose up -d --build
@@ -54,7 +84,7 @@ docker compose up -d --build
 
 ---
 
-## 3. Générer la clé Laravel
+## 4. Générer la clé Laravel
 
 ```bash
 docker exec -it laravel-app php artisan key:generate
@@ -62,7 +92,7 @@ docker exec -it laravel-app php artisan key:generate
 
 ---
 
-## 4. Lancer les migrations et les seeders
+## 5. Lancer les migrations et les seeders
 
 ```bash
 docker exec -it laravel-app php artisan migrate --seed
@@ -70,7 +100,7 @@ docker exec -it laravel-app php artisan migrate --seed
 
 ---
 
-## 5. Accéder à l’application
+## 6. Accéder à l’application
 
 Ouvrez votre navigateur à l’adresse suivante :
 
