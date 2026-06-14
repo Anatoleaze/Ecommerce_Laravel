@@ -26,16 +26,14 @@
 
 <!-- HERO -->
 <section style="
-    min-height: 30vh;
-    background: linear-gradient(135deg, rgba(26,26,46,0.95), rgba(51,51,51,0.95)),
+    background: linear-gradient(135deg, rgba(26,26,46,0.92), rgba(51,51,51,0.92)),
                 url('/images/bg-01.jpg');
     background-size: cover;
     background-position: center;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:60px 20px;
+    padding:70px 20px;
+    text-align:center;
 ">
+
 
     <div style="text-align:center; max-width:800px;">
 
