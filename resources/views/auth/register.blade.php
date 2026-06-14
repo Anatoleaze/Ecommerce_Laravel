@@ -2,114 +2,205 @@
 
 @section('content')
 
-<!-- Header -->
+<!-- Header Vue inchangé -->
 <div>
-	<header-component
-		:home-link="'{{ route('home') }}'"
-		:logo="'{{ asset('images/icons/logo-01.png') }}'"
-		:catalog-link="'{{ route('products_list') }}'"
-		:cart-link="'{{ route('cart_show') }}'"
-		:contact-link="'{{ route('contact') }}'"
-		:admin-order-show="'{{ route('adminOrderShow') }}'"
-		:is-authenticated="{{ json_encode(Auth::check()) }}"
-		:user="{{ json_encode(Auth::user()) }}"
-		:login="'{{ route('login') }}'"
-		:register="'{{ route('register') }}'"
-		:profile="'{{ route('profils') }}'"
-		:orders="'{{ route('order') }}'"
-		:admin-products="'{{ route('products_list_admin') }}'"
-		:logout="'{{ route('logout') }}'"
-		:logo-close="'{{ asset('images/icons/icon-close2.png') }}'"
-		:csrfToken="'{{ csrf_token() }}'"
-		
-	/>
+    <header-component
+        :home-link="'{{ route('home') }}'"
+        :logo="'{{ asset('images/icons/logo-01.png') }}'"
+        :catalog-link="'{{ route('products_list') }}'"
+        :cart-link="'{{ route('cart_show') }}'"
+        :contact-link="'{{ route('contact') }}'"
+        :admin-order-show="'{{ route('adminOrderShow') }}'"
+        :is-authenticated="{{ json_encode(Auth::check()) }}"
+        :user="{{ json_encode(Auth::user()) }}"
+        :login="'{{ route('login') }}'"
+        :register="'{{ route('register') }}'"
+        :profile="'{{ route('profils') }}'"
+        :orders="'{{ route('order') }}'"
+        :admin-products="'{{ route('products_list_admin') }}'"
+        :logout="'{{ route('logout') }}'"
+        :logo-close="'{{ asset('images/icons/icon-close2.png') }}'"
+        :csrfToken="'{{ csrf_token() }}'"
+    />
 </div>
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8" style="margin:100px;">
-            <div class="card">
-                <div class="card-header text-center">Inscription</div>
+<section style="min-height: 90vh; background: linear-gradient(135deg, rgb(26, 26, 46) 0%, rgb(51, 51, 51) 100%); display: flex; align-items: center; justify-content: center; padding: 40px 20px;">
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
+    <div style="width: 100%; max-width: 520px;">
 
-                        <div class="row mb-3">
-                            <label for="name" class="col-md-4 col-form-label text-md-end">Nom</label>
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 32px;">
 
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="first_name" class="col-md-4 col-form-label text-md-end">Prénom</label>
-
-                            <div class="col-md-6">
-                                <input id="first_name" type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name') }}" required autocomplete="first_name" autofocus>
-
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">Adresse Mail</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">Mot de passe</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">Confirmer le mot de passe</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
-                        </div>
-
-                        <div class="col-3 mb-0" style="margin: auto;">
-                            <div class="col-md-12 offset-md-4" style="margin: auto;">
-                                <button type="submit" class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04">
-                                    Inscription
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+            <div style="
+                width: 70px;
+                height: 70px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 16px;
+                font-size: 30px;
+                backdrop-filter: blur(4px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            ">
+                🧾
             </div>
+
+            <h1 style="color: white; font-size: 26px; font-weight: 800; margin: 0 0 8px;">
+                Créer un compte
+            </h1>
+
+            <p style="color: rgba(255, 255, 255, 0.6); font-size: 14px; margin: 0;">
+                Rejoignez-nous en quelques secondes
+            </p>
+
         </div>
+
+        <!-- Card -->
+        <div style="background: white; border-radius: 20px; padding: 36px; box-shadow: rgba(0, 0, 0, 0.3) 0px 20px 60px;">
+
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
+
+                <!-- Nom -->
+                <div style="margin-bottom: 16px;">
+                    <label style="display:block; font-size:13px; font-weight:700; color:#444; margin-bottom:8px;">
+                        👤 Nom
+                    </label>
+
+                    <input id="name"
+                           type="text"
+                           name="name"
+                           value="{{ old('name') }}"
+                           required
+                           autocomplete="name"
+                           autofocus
+                           placeholder="Votre nom"
+                           style="width:100%; padding:12px 16px; border:2px solid #eee; border-radius:10px; font-size:14px; outline:none; transition:0.2s;"
+                           onfocus="this.style.borderColor='#6c63ff'"
+                           onblur="this.style.borderColor='#eee'">
+
+                    @error('name')
+                        <div style="color:#e74c3c; font-size:12px; margin-top:6px;">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Prénom -->
+                <div style="margin-bottom: 16px;">
+                    <label style="display:block; font-size:13px; font-weight:700; color:#444; margin-bottom:8px;">
+                        👤 Prénom
+                    </label>
+
+                    <input id="first_name"
+                           type="text"
+                           name="first_name"
+                           value="{{ old('first_name') }}"
+                           required
+                           autocomplete="first_name"
+                           placeholder="Votre prénom"
+                           style="width:100%; padding:12px 16px; border:2px solid #eee; border-radius:10px; font-size:14px; outline:none; transition:0.2s;"
+                           onfocus="this.style.borderColor='#6c63ff'"
+                           onblur="this.style.borderColor='#eee'">
+
+                    @error('first_name')
+                        <div style="color:#e74c3c; font-size:12px; margin-top:6px;">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Email -->
+                <div style="margin-bottom: 16px;">
+                    <label style="display:block; font-size:13px; font-weight:700; color:#444; margin-bottom:8px;">
+                        ✉️ Email
+                    </label>
+
+                    <input id="email"
+                           type="email"
+                           name="email"
+                           value="{{ old('email') }}"
+                           required
+                           autocomplete="email"
+                           placeholder="votre@email.com"
+                           style="width:100%; padding:12px 16px; border:2px solid #eee; border-radius:10px; font-size:14px; outline:none; transition:0.2s;"
+                           onfocus="this.style.borderColor='#6c63ff'"
+                           onblur="this.style.borderColor='#eee'">
+
+                    @error('email')
+                        <div style="color:#e74c3c; font-size:12px; margin-top:6px;">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Password -->
+                <div style="margin-bottom: 16px;">
+                    <label style="display:block; font-size:13px; font-weight:700; color:#444; margin-bottom:8px;">
+                        🔒 Mot de passe
+                    </label>
+
+                    <input id="password"
+                           type="password"
+                           name="password"
+                           required
+                           autocomplete="new-password"
+                           placeholder="Mot de passe"
+                           style="width:100%; padding:12px 16px; border:2px solid #eee; border-radius:10px; font-size:14px; outline:none; transition:0.2s;"
+                           onfocus="this.style.borderColor='#6c63ff'"
+                           onblur="this.style.borderColor='#eee'">
+
+                    @error('password')
+                        <div style="color:#e74c3c; font-size:12px; margin-top:6px;">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Confirm password -->
+                <div style="margin-bottom: 22px;">
+                    <label style="display:block; font-size:13px; font-weight:700; color:#444; margin-bottom:8px;">
+                        🔒 Confirmation
+                    </label>
+
+                    <input id="password-confirm"
+                           type="password"
+                           name="password_confirmation"
+                           required
+                           autocomplete="new-password"
+                           placeholder="Confirmez le mot de passe"
+                           style="width:100%; padding:12px 16px; border:2px solid #eee; border-radius:10px; font-size:14px; outline:none; transition:0.2s;"
+                           onfocus="this.style.borderColor='#6c63ff'"
+                           onblur="this.style.borderColor='#eee'">
+                </div>
+
+                <!-- Button -->
+                <button type="submit"
+                        style="
+                            width:100%;
+                            padding:14px;
+                            background: linear-gradient(135deg, rgb(26, 26, 46), rgb(51, 51, 51));
+                            color:white;
+                            border:none;
+                            border-radius:10px;
+                            font-size:15px;
+                            font-weight:700;
+                            cursor:pointer;
+                            transition:0.3s;
+                        "
+                        onmouseover="this.style.transform='translateY(-1px)'"
+                        onmouseout="this.style.transform='translateY(0)'">
+
+                    🚀 Créer mon compte
+                </button>
+
+            </form>
+        </div>
+
+        <!-- Login link -->
+        <div style="text-align:center; margin-top:18px;">
+            <a href="{{ route('login') }}"
+               style="color:rgba(255,255,255,0.6); font-size:13px; text-decoration:none;">
+                ← Déjà un compte ? Se connecter
+            </a>
+        </div>
+
     </div>
-</div>
+
+</section>
+
 @endsection

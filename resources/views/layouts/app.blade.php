@@ -36,7 +36,7 @@
 	
 
 	<!-- Footer -->
-<footer style="background: #1a1a2e; padding: 60px 0 0 0; margin-top: 60px;">
+<footer style="background: #1a1a2e; padding: 60px 0 0 0;">
     <div class="container">
         <div class="row" style="padding-bottom: 40px;">
 
