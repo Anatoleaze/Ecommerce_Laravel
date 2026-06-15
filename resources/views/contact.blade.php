@@ -187,14 +187,16 @@
                 </div>
             </div>
 
-        </div>
+      </div>
     </div>
 </section>
 
+@endsection
+
+@section('scripts')
 <script>
     window.Laravel = {
         userEmail: "{{ auth()->check() ? auth()->user()->email : '' }}"
     };
 </script>
-
 @endsection

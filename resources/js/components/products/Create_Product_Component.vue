@@ -2,17 +2,7 @@
   <div style="min-height:100vh; background:#f6f7fb; padding:60px 0;">
 
     <div style="max-width:700px; margin:0 auto;">
-
-      <!-- HEADER -->
-      <div style="margin-bottom:30px;">
-        <h2 style="font-size:28px; font-weight:800; color:#1a1a2e; margin:0;">
-          Produit
-        </h2>
-        <p style="color:#777; font-size:13px; margin-top:6px;">
-          Créer ou modifier un produit
-        </p>
-      </div>
-
+      
       <!-- CARD -->
       <div style="
         background:white;

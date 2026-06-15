@@ -24,74 +24,33 @@
     />
 </div>
 
-<!-- HERO -->
-<section style="
-    background: linear-gradient(135deg, rgba(26,26,46,0.92), rgba(51,51,51,0.92)),
-                url('/images/bg-01.jpg');
-    background-size: cover;
-    background-position: center;
-    padding:70px 20px;
-    text-align:center;
-">
-
-
-    <div style="text-align:center; max-width:800px;">
-
-        <div style="
-            width:60px;
-            height:60px;
-            margin:0 auto 16px;
-            border-radius:16px;
-            background:rgba(255,255,255,0.1);
-            border:1px solid rgba(255,255,255,0.2);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:26px;
-            backdrop-filter: blur(4px);
-        ">
+<!-- Hero -->
+<section style="position:relative; background-image:url('{{ asset('images/bg-01.jpg') }}'); background-size:cover; background-position:center; padding:70px 20px; text-align:center;">
+    <div style="position:absolute; inset:0; background:rgba(0,0,0,0.55);"></div>
+    <div style="position:relative; z-index:1;">
+        <div style="width:70px; height:70px; background:rgba(255,255,255,0.1); border-radius:20px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:32px; backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,0.2);">
             📦
         </div>
-
-        <h1 style="
-            color:white;
-            font-size:30px;
-            font-weight:800;
-            margin:0 0 8px;
-            letter-spacing:1px;
-        ">
-            {{ $title }}
-        </h1>
-
+        <span style="display:inline-block; background:rgba(255,255,255,0.15); color:white; padding:6px 18px; border-radius:25px; font-size:13px; font-weight:600; letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,0.3);">
+            Commandes
+        </span>
+        <h1 style="color:white; font-size:36px; font-weight:800; margin:0 0 8px;">{{ $title }}</h1>
         <p style="color:rgba(255,255,255,0.6); font-size:14px; margin:0;">
             Suivi et gestion de vos commandes
         </p>
-
     </div>
-
 </section>
 
-<!-- CONTENT -->
-<section style="background:#f6f7fb; padding:40px 20px; min-height:60vh;">
-
-    <div style="max-width:1200px; margin:0 auto;">
-
-        <div style="
-            background:white;
-            border-radius:18px;
-            padding:20px;
-            box-shadow:0 15px 40px rgba(0,0,0,0.06);
-        ">
-
+<!-- Contenu -->
+<section style="padding:50px 0; background:#f8f9fa; min-height:60vh;">
+    <div class="container">
+        <div style="background:white; border-radius:16px; padding:28px; box-shadow:0 4px 15px rgba(0,0,0,0.06);">
             <order-component
                 :orders="{{ json_encode($data) }}"
                 :user="{{ json_encode(Auth::user()) }}"
             />
-
         </div>
-
     </div>
-
 </section>
 
 @endsection

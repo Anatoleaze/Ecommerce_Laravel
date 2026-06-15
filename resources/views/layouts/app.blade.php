@@ -322,6 +322,8 @@
 
 	<script src="{{ asset('js/main.js')}}"></script>
 
+    @yield('scripts')
+    
 	<!-- JS Script Vue -->
 	@vite([ 'resources/js/app.js'])
 

@@ -1,12 +1,10 @@
 <template>
-
-<div style="min-height: 100vh; background:#f6f7fb; padding:60px 0;">
-
-  <div class="container" style="max-width:1100px;">
+<div style="padding:10px 0;">
+  <div style="width:100%;">
 
     <!-- HEADER -->
-    <div style="margin-bottom:30px;">
-      <h2 style="font-size:28px; font-weight:800; color:#1a1a2e; margin:0;">
+    <div style="margin-bottom:24px;">
+      <h2 style="font-size:24px; font-weight:800; color:#1a1a2e; margin:0;">
         Mes commandes
       </h2>
       <p style="color:#777; font-size:13px; margin-top:6px;">
@@ -15,25 +13,20 @@
     </div>
 
     <!-- TABLE CARD -->
-    <div style="
-      background:white;
-      border-radius:18px;
-      box-shadow:0 15px 40px rgba(0,0,0,0.06);
-      overflow:hidden;
-    ">
+    <div style="background:white; border-radius:16px; box-shadow:0 4px 15px rgba(0,0,0,0.06); overflow:hidden;">
 
       <!-- HEADER ROW -->
-      <div style="
+      <div :style="`
         display:grid;
-        grid-template-columns: 1.2fr 1.4fr 1fr 1fr 1fr;
-        padding:16px 20px;
+        grid-template-columns: ${user.role != 'admin' ? '1fr 2fr 1fr 1.5fr 1fr' : '1fr 2fr 1.5fr 1fr'};
+        padding:16px 24px;
         background:#1a1a2e;
         color:white;
         font-size:12px;
         font-weight:800;
         text-transform:uppercase;
         letter-spacing:1px;
-      ">
+      `">
         <div>Date</div>
         <div>Tracking</div>
         <div v-if="user.role != 'admin'">Montant</div>
@@ -41,17 +34,23 @@
         <div>Détail</div>
       </div>
 
+      <!-- Message si aucune commande -->
+      <div v-if="orders.length === 0"
+           style="padding:40px; text-align:center; color:#aaa; font-size:14px;">
+        📦 Aucune commande pour le moment
+      </div>
+
       <!-- ROWS -->
       <div v-for="order in orders"
            :key="order.id"
-           style="
+           :style="`
              display:grid;
-             grid-template-columns: 1.2fr 1.4fr 1fr 1fr 1fr;
-             padding:16px 20px;
+             grid-template-columns: ${user.role != 'admin' ? '1fr 2fr 1fr 1.5fr 1fr' : '1fr 2fr 1.5fr 1fr'};
+             padding:16px 24px;
              align-items:center;
              border-bottom:1px solid #f3f4f6;
-             transition:0.2s;
-           "
+             transition:background 0.2s;
+           `"
            onmouseover="this.style.background='#fafafa'"
            onmouseout="this.style.background='white'">
 
@@ -61,13 +60,13 @@
         </div>
 
         <!-- TRACKING -->
-        <div style="font-size:13px; color:#1a1a2e; font-family:monospace; font-weight:700;">
+        <div style="font-size:12px; color:#1a1a2e; font-family:monospace; font-weight:700; word-break:break-all;">
           {{ order.numero_commande }}
         </div>
 
         <!-- AMOUNT -->
         <div v-if="user.role != 'admin'"
-             style="font-size:13px; font-weight:700; color:#333;">
+             style="font-size:14px; font-weight:800; color:#1a1a2e;">
           {{ order.total }} €
         </div>
 
@@ -89,20 +88,10 @@
         <!-- ACTION -->
         <div>
           <a :href="`/commandes/details/${order.id}`"
-             style="
-               display:inline-block;
-               padding:8px 14px;
-               background:linear-gradient(135deg,#1a1a2e,#333);
-               color:white;
-               border-radius:10px;
-               font-size:12px;
-               font-weight:800;
-               text-decoration:none;
-               transition:0.2s;
-             "
-             onmouseover="this.style.transform='translateY(-1px)'"
-             onmouseout="this.style.transform='translateY(0)'">
-            Voir
+             style="display:inline-flex; align-items:center; gap:6px; padding:8px 16px; background:#1a1a2e; color:white; border-radius:8px; font-size:12px; font-weight:700; text-decoration:none; transition:all 0.2s;"
+             onmouseover="this.style.background='#333'"
+             onmouseout="this.style.background='#1a1a2e'">
+            👁️ Voir
           </a>
         </div>
 
@@ -111,9 +100,7 @@
     </div>
 
   </div>
-
 </div>
-
 </template>
 
 <script>
