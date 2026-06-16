@@ -46,16 +46,22 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
+        $orders = Order::with('user')
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get();
 
-        $orders = Order::with('user')->get();
-        
-        return view('order', [ 'title' => 'Mes Commandes', 'data' => $orders]);
+        return view('order', [
+            'title' => 'Mes Commandes',
+            'data' => $orders
+        ]);
     }
 
     /**
      * Show details of a order
      */
-    public function details($order_id){
+    public function details($order_id)
+    {
 
         $order_details = OrderDetails::where('order_id', $order_id)->get();
         $data = [];
@@ -63,10 +69,10 @@ class OrderController extends Controller
         $order = Order::where(['id' => $order_id])->first();
 
         foreach ($order_details as $key => $value) {
-            
+
             $product = Product::where('id', $value->product_id)->first();
 
-            $data[]=array(
+            $data[] = array(
                 'order_id' => $order->id,
                 'quantity' => $value->quantity,
                 'product_price' => $product->price,
@@ -79,11 +85,10 @@ class OrderController extends Controller
 
             );
         }
-       
-        $date = Carbon::parse($order_details[0]['created_at'])->format('d/m/Y');
-        
-        return view('order_details', ['date'=> $date, 'order' => $data]);
 
+        $date = Carbon::parse($order_details[0]['created_at'])->format('d/m/Y');
+
+        return view('order_details', ['date' => $date, 'order' => $data]);
     }
 
     /**
@@ -93,7 +98,7 @@ class OrderController extends Controller
     {
         $orders = Order::where('statut', 'pending')->get();
 
-        return view('order', [ 'title' => 'Les Commandes reçuent', 'data' => $orders]);
+        return view('order', ['title' => 'Les Commandes reçuent', 'data' => $orders]);
     }
 
 
@@ -106,9 +111,9 @@ class OrderController extends Controller
         if ($order->statut === 'en attente') {
             $order->statut = 'en cours de livraison';
             $order->save();
-            
+
             $user = auth()->user();
-            
+
             Mail::to($user->email)->send(new OrderStatusUpdated($order));
 
             return response()->json([
@@ -123,5 +128,4 @@ class OrderController extends Controller
             'message' => 'Le statut de la commande ne peut pas être mis à jour.'
         ]);
     }
-
 }

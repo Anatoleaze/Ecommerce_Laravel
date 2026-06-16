@@ -2,7 +2,7 @@
   <div style="min-height:100vh; background:#f6f7fb; padding:60px 0;">
 
     <div style="max-width:700px; margin:0 auto;">
-      
+
       <!-- CARD -->
       <div style="
         background:white;
@@ -26,6 +26,17 @@
           {{ message }}
         </div>
 
+        <!-- Info -->
+        <p style="
+          color:#999;
+          font-size:13px;
+          margin-bottom:25px;
+          text-align:right;
+        ">
+          <span style="color:#dc3545; font-weight:700;">*</span>
+          Champs obligatoires
+        </p>
+
         <form @submit.prevent="submitForm" enctype="multipart/form-data">
 
           <input type="hidden" :value="csrfToken" name="_token">
@@ -36,7 +47,8 @@
             <!-- NAME -->
             <div style="grid-column: span 2;">
               <label style="font-size:12px; font-weight:800; color:#555; text-transform:uppercase; letter-spacing:1px;">
-                Nom
+                Nom du produit
+                <span style="color:#dc3545;">*</span>
               </label>
 
               <input v-model="form.name"
@@ -60,6 +72,7 @@
             <div>
               <label style="font-size:12px; font-weight:800; color:#555;">
                 Catégorie
+                <span style="color:#dc3545;">*</span>
               </label>
 
               <select v-model="form.type"
@@ -77,6 +90,7 @@
                       onfocus="this.style.borderColor='#1a1a2e'"
                       onblur="this.style.borderColor='#eee'">
 
+                <option value="">Sélectionnez une catégorie</option>
                 <option value="femmes">Femmes</option>
                 <option value="hommes">Hommes</option>
                 <option value="montres">Montres</option>
@@ -89,6 +103,7 @@
             <div>
               <label style="font-size:12px; font-weight:800; color:#555;">
                 Prix
+                <span style="color:#dc3545;">*</span>
               </label>
 
               <input v-model="form.price"
@@ -117,6 +132,7 @@
               <input v-model="form.sale_price"
                      type="number"
                      step="0.01"
+                     placeholder="Optionnel"
                      style="
                        width:100%;
                        margin-top:6px;
@@ -134,6 +150,7 @@
             <div style="grid-column: span 2;">
               <label style="font-size:12px; font-weight:800; color:#555;">
                 Description
+                <span style="color:#dc3545;">*</span>
               </label>
 
               <textarea v-model="form.description"
@@ -156,7 +173,8 @@
             <!-- IMAGE -->
             <div style="grid-column: span 2;">
               <label style="font-size:12px; font-weight:800; color:#555;">
-                Image
+                Image du produit
+                <span style="color:#dc3545;">*</span>
               </label>
 
               <input type="file"
@@ -169,6 +187,14 @@
                        border-radius:10px;
                        background:#fafafa;
                      ">
+
+              <p style="
+                margin-top:8px;
+                color:#999;
+                font-size:12px;
+              ">
+                Formats recommandés : JPG, PNG ou WEBP.
+              </p>
             </div>
 
           </div>
@@ -201,7 +227,6 @@
 
   </div>
 </template>
-
 <script>
 import axios from "axios";
 

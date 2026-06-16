@@ -78,18 +78,19 @@
     <div style="max-width:1200px; margin:auto;">
 
         <!-- FILTER COMPONENT -->
-        <div style="
-            background:white;
-            border-radius:18px;
-            padding:20px;
-            box-shadow:0 10px 30px rgba(0,0,0,0.05);
-        ">
-            <filter-component
-                :products="{{ json_encode($products) }}"
-                :is-authenticated="{{ json_encode(Auth::check()) }}"
-                :paginated="true"
-            />
-        </div>
+<div style="
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.05);
+">
+    <!-- On ajoute un écouteur d'événement inline qui va masquer/afficher la pagination -->
+    <filter-component
+        :products="{{ json_encode($products) }}"
+        :is-authenticated="{{ json_encode(Auth::check()) }}"
+        :paginated="true"
+    />
+</div>
 
     </div>
 
@@ -97,7 +98,8 @@
 
 <!-- PAGINATION -->
 @if ($products->lastPage() > 1)
-<div style="
+
+<div id="laravel-pagination" style="
     display:flex;
     justify-content:center;
     padding:30px 0 60px;

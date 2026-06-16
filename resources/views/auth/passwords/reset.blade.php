@@ -50,26 +50,7 @@
                 <input type="hidden" name="token" value="{{ $token }}">
 
                 <!-- Email -->
-                <div style="margin-bottom:20px;">
-                    <label style="display:block; font-size:13px; font-weight:700; color:#444; margin-bottom:8px;">
-                        ✉️ Adresse email
-                    </label>
-                    <input
-                        type="email"
-                        name="email"
-                        value="{{ $email ?? old('email') }}"
-                        required
-                        autocomplete="email"
-                        autofocus
-                        placeholder="votre@email.com"
-                        style="width:100%; padding:12px 16px; border:2px solid {{ $errors->has('email') ? '#e74c3c' : '#eee' }}; border-radius:10px; font-size:14px; color:#333; outline:none; box-sizing:border-box;"
-                        onfocus="this.style.borderColor='#6c63ff'"
-                        onblur="this.style.borderColor='#eee'">
-                    @error('email')
-                    <p style="color:#e74c3c; font-size:12px; margin:6px 0 0;">{{ $message }}</p>
-                    @enderror
-                </div>
-
+             
                 <!-- Nouveau mot de passe -->
                 <div style="margin-bottom:20px;">
                     <label style="display:block; font-size:13px; font-weight:700; color:#444; margin-bottom:8px;">

@@ -1,7 +1,6 @@
 <template>
   <div>
 
-    <!-- Alerte -->
     <transition name="fade">
       <div v-if="message" :class="['update-alert', messageType]">
         <span>{{ messageType === 'alert-success' ? '✅' : messageType === 'alert-danger' ? '❌' : 'ℹ️' }}</span>
@@ -10,12 +9,13 @@
     </transition>
 
     <form @submit.prevent="updateUser">
+      
+      <p class="form-notice"><span class="required">*</span> Champs obligatoires</p>
 
-      <!-- Mode profil -->
       <template v-if="isProfileMode">
 
         <div class="field-group">
-          <label class="field-label">👤 Nom</label>
+          <label class="field-label">👤 Nom <span class="required">*</span></label>
           <input
             type="text"
             v-model="user.name"
@@ -27,7 +27,7 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label">✏️ Prénom</label>
+          <label class="field-label">✏️ Prénom <span class="required">*</span></label>
           <input
             type="text"
             v-model="user.first_name"
@@ -39,7 +39,7 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label">✉️ Email</label>
+          <label class="field-label">✉️ Email <span class="required">*</span></label>
           <input
             type="email"
             v-model="user.email"
@@ -52,25 +52,24 @@
 
       </template>
 
-      <!-- Mode mot de passe -->
       <template v-else>
 
         <div class="field-group">
-          <label class="field-label">🔒 Nouveau mot de passe</label>
+          <label class="field-label">🔒 Nouveau mot de passe <span class="required">*</span></label>
           <div class="password-wrapper">
-    <input
-        :type="showPassword ? 'text' : 'password'"
-        v-model="form.password"
-        name="password"
-        placeholder="Minimum 8 caractères"
-        class="field-input"
-        autocomplete="new-password"
-        onfocus="this.style.borderColor='#6c63ff'"
-        onblur="this.style.borderColor='#eee'">
-    <button type="button" class="password-toggle" @click="showPassword = !showPassword">
-        {{ showPassword ? '🙈' : '👁️' }}
-    </button>
-</div>
+            <input
+                :type="showPassword ? 'text' : 'password'"
+                v-model="form.password"
+                name="password"
+                placeholder="Minimum 8 caractères"
+                class="field-input"
+                autocomplete="new-password"
+                onfocus="this.style.borderColor='#6c63ff'"
+                onblur="this.style.borderColor='#eee'">
+            <button type="button" class="password-toggle" @click="showPassword = !showPassword">
+                {{ showPassword ? '🙈' : '👁️' }}
+            </button>
+          </div>
           <div v-if="form.password" class="password-strength">
             <div class="strength-bar">
               <div :class="['strength-fill', strengthClass]" :style="{ width: strengthWidth }"></div>
@@ -80,7 +79,7 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label">🔒 Confirmer le mot de passe</label>
+          <label class="field-label">🔒 Confirmer le mot de passe <span class="required">*</span></label>
           <input
             :type="showPassword ? 'text' : 'password'"
             v-model="form.confirmPass"
@@ -102,7 +101,6 @@
 
       </template>
 
-      <!-- Bouton submit -->
       <button type="submit" :disabled="loading" class="submit-btn">
         <span v-if="loading" class="btn-spinner"></span>
         {{ loading ? 'Enregistrement...' : (isProfileMode ? '💾 Enregistrer le profil' : '🔒 Enregistrer le mot de passe') }}
@@ -432,4 +430,16 @@ export default {
 /* Transition */
 .fade-enter-active, .fade-leave-active { transition: opacity 0.3s; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
+
+.required {
+  color: #e74c3c;
+  margin-left: 4px;
+}
+
+.form-notice {
+  font-size: 13px;
+  color: #666; 
+  margin-bottom: 20px;
+  font-style: italic;
+}
 </style>

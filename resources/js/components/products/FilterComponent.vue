@@ -236,25 +236,39 @@ export default {
   methods: {
     // Filtre par catégorie — toujours Isotope, jamais de redirection
     filterByCategory(filter) {
-      this.activeCategory = filter;
-      this.activePrice = '*'; // reset prix
-      this.$nextTick(() => {
-        if (this.isotope) {
-          this.isotope.arrange({ filter: filter === '*' ? '*' : filter });
-        }
-      });
-    },
+    this.activeCategory = filter;
+    this.activePrice = '*'; // reset prix
+    
+    // Gestion propre de la pagination Laravel
+    const paginationEl = document.getElementById('laravel-pagination');
+    if (paginationEl) {
+      paginationEl.style.display = filter === '*' ? 'flex' : 'none';
+    }
+
+    this.$nextTick(() => {
+      if (this.isotope) {
+        this.isotope.arrange({ filter: filter === '*' ? '*' : filter });
+      }
+    });
+  },
 
     // Filtre par prix — toujours Isotope
     filterByPrice(filter) {
-      this.activePrice = filter;
-      this.activeCategory = '*'; // reset catégorie
-      this.$nextTick(() => {
-        if (this.isotope) {
-          this.isotope.arrange({ filter: filter === '*' ? '*' : filter });
-        }
-      });
-    },
+    this.activePrice = filter;
+    this.activeCategory = '*'; // reset catégorie
+    
+    // Gestion propre de la pagination Laravel
+    const paginationEl = document.getElementById('laravel-pagination');
+    if (paginationEl) {
+      paginationEl.style.display = filter === '*' ? 'flex' : 'none';
+    }
+
+    this.$nextTick(() => {
+      if (this.isotope) {
+        this.isotope.arrange({ filter: filter === '*' ? '*' : filter });
+      }
+    });
+  },
 
     getPriceClass(price) {
       if (price >= 0 && price < 50) return 'price-0-50';

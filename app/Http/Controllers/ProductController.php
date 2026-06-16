@@ -134,10 +134,9 @@ class ProductController extends Controller
         $product->type = $validated['type'];
 
         $product->price = str_replace([' ', '€'], '', $validated['price']);
-        $product->sale_price = $validated['sale_price']
+        $product->sale_price = !empty($validated['sale_price'])
             ? str_replace([' ', '€'], '', $validated['sale_price'])
             : null;
-
         $product->image_name = $path;
         $product->save();
 
@@ -160,7 +159,7 @@ class ProductController extends Controller
             }
         } catch (\Exception $e) {
             // on évite le 500 si email crash
-            \Log::error('Mail error: ' . $e->getMessage());
+            Log::error('Mail error: ' . $e->getMessage());
         }
 
         // =========================
@@ -210,9 +209,9 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required|numeric',
-            'sale_price' => 'nullable|numeric',
-            'type' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'sale_price' => 'nullable|numeric|min:0|lt:price',
+            'type' => 'required|string|max:255',
             'image_name' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -222,7 +221,9 @@ class ProductController extends Controller
         $product->name = $request->input('name');
         $product->description = $request->input('description');
         $product->price = $request->input('price');
-        $product->sale_price = $request->input('sale_price');
+        $product->sale_price  = $request->filled('sale_price')
+            ? $request->sale_price
+            : null;
         $product->type = $request->input('type');
 
         // Image
