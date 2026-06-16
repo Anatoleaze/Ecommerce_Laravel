@@ -250,7 +250,7 @@ export default {
               clearInterval(timer);
               this.$emit('payment-success');
               this.closeModal();
-              window.location.href = '/';
+              window.location.href = '/order';
             }
           }, 1000);
         } else {

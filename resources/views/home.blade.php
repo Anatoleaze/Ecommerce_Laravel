@@ -41,7 +41,7 @@
 					image="images/banner-01.jpg" 
 					title="Femmes" 
 					subtitle="Collection" 
-					link={{ route('products_list', [], false) }}?search=femmes
+					link={{ route('products_list', [], false) }}
 				/>
 			</div>
 
@@ -50,7 +50,7 @@
 					image="images/banner-02.jpg" 
 					title="Hommes" 
 					subtitle="Collection" 
-					link={{ route('products_list', [], false) }}?search=hommes
+					link={{ route('products_list', [], false) }}
 				/>
 			</div>
 			
@@ -59,7 +59,7 @@
 					image="images/banner-03.jpg"
 					title="Accessories"
 					subtitle="Collection"
-					link = {{ route('products_list', [], false) }}?search=montres
+					link = {{ route('products_list', [], false) }}
 				/>
 			</div>
 				
