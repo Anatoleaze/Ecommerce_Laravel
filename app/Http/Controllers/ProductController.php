@@ -65,15 +65,30 @@ class ProductController extends Controller
     /**
      * List all products
      */
-    public function list()
+    /**
+     * List all products (Admin)
+     */
+    /**
+     * List all products (Admin)
+     */
+    public function list(Request $request)
     {
+        $query = Product::query();
 
-        // Use Pagination 
-        $products = Product::paginate(10); // 10 products by page
+        // Si le champ de recherche contient un mot
+        if ($request->filled('search')) {
+            $query->where('name', 'LIKE', '%' . $request->search . '%');
+        }
+
+        // Dans ton ProductController.php, modifie la méthode list :
+        $products = $query->orderBy('created_at', 'desc')->paginate(10);
 
         $link = config('app.url');
 
-        return view('products_list_admin', ['products' => $products, 'link' => $link]);
+        return view('products_list_admin', [
+            'products' => $products, 
+            'link' => $link
+        ]);
     }
 
 
