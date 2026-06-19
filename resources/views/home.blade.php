@@ -76,11 +76,11 @@
 		</h3>
 	</div>
 	
-	<!-- Filter -->
 	<filter-component
-		:products="{{ json_encode($products) }}"
-		:is-authenticated="{{ json_encode(Auth::check()) }}"
-	/>
+    :products="{{ json_encode($products) }}"
+    :is-authenticated="{{ json_encode(Auth::check()) }}"
+    :disable-pagination="true"
+/>
 			
 </div>
 

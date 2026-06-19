@@ -1,20 +1,14 @@
 <template>
   <div class="container">
 
-    <!-- Barre de filtres -->
     <div class="filter-bar">
-      
-      <!-- Catégories -->
       <div class="filter-categories">
-        <button
-          v-for="cat in categories" :key="cat.value"
-          @click="filterByCategory(cat.value)"
+        <button v-for="cat in categories" :key="cat.value" @click="filterByCategory(cat.value)"
           :class="['cat-btn', { active: activeCategory === cat.value }]">
           {{ cat.label }}
         </button>
       </div>
 
-      <!-- Filtres avancés -->
       <button class="advanced-btn" @click="toggleFilterPanel">
         <i class="zmdi zmdi-filter-list"></i>
         Filtres
@@ -22,17 +16,12 @@
       </button>
     </div>
 
-    <!-- Panel filtres avancés -->
     <transition name="slide-down">
       <div v-if="showFilterPanel" class="filter-panel">
-        
-        <!-- Trier par -->
         <div class="filter-section">
           <p class="filter-section-title">📊 Trier par</p>
           <div class="filter-options">
-            <button
-              v-for="sort in sortOptions" :key="sort.value"
-              @click="sortProducts(sort.value)"
+            <button v-for="sort in sortOptions" :key="sort.value" @click="sortProducts(sort.value)"
               :class="['filter-option-btn', { active: sortOption === sort.value }]">
               {{ sort.label }}
             </button>
@@ -41,30 +30,26 @@
 
         <div class="filter-divider"></div>
 
-        <!-- Prix -->
         <div class="filter-section">
           <p class="filter-section-title">💰 Prix</p>
           <div class="filter-options">
-            <button
-              v-for="price in priceRanges" :key="price.value"
-              @click="filterByPrice(price.value)"
+            <button v-for="price in priceRanges" :key="price.value" @click="filterByPrice(price.value)"
               :class="['filter-option-btn', { active: activePrice === price.value }]">
               {{ price.label }}
             </button>
           </div>
         </div>
-
       </div>
     </transition>
 
-    <!-- Grille produits -->
-    <div ref="productGrid" class="row isotope-grid">
-      <div
-        v-for="product in sortedProducts" :key="product.id"
-        :class="`col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item ${product.type} ${getPriceClass(product.price)}`">
+    <div v-if="filteredProducts.length === 0" class="no-products-alert">
+      🔍 Aucun produit ne correspond à ces critères de recherche.
+    </div>
+
+    <div class="row style-grid">
+      <div v-for="product in paginatedProducts" :key="product.id"
+        class="col-sm-6 col-md-4 col-lg-3 p-b-35 product-item-container">
         <div class="product-card">
-          
-          <!-- Image -->
           <div class="product-img-wrapper">
             <img :src="product.image_name" :alt="product.name" class="product-img">
             <div class="product-img-overlay">
@@ -74,7 +59,6 @@
             </div>
           </div>
 
-          <!-- Infos -->
           <div class="product-info">
             <h3 class="product-name">{{ product.name }}</h3>
             <div class="product-price-row">
@@ -82,75 +66,79 @@
                 {{ parseFloat(product.price).toFixed(2) }} €
               </span>
               <span class="product-price">
-                {{ product.sale_price > 0 ? parseFloat(product.sale_price).toFixed(2) : parseFloat(product.price).toFixed(2) }} €
+                {{ product.sale_price > 0 ? parseFloat(product.sale_price).toFixed(2) :
+                  parseFloat(product.price).toFixed(2) }} €
               </span>
               <span v-if="product.sale_price > 0" class="product-badge">Promo</span>
             </div>
           </div>
-
         </div>
       </div>
     </div>
 
-    <!-- Modale produit -->
+    <div v-if="!disablePagination && totalPages > 1" class="vue-pagination-container">
+      <nav class="custom-blade-pagination">
+        <ul style="display:flex; gap:6px; list-style:none; padding:0; margin:0; flex-wrap: nowrap;">
+          <li>
+            <button @click="changePage(currentPage - 1)" class="page-btn-link" :disabled="currentPage === 1"
+              :class="{ 'disabled-btn': currentPage === 1 }">
+              ‹
+            </button>
+          </li>
+
+          <li v-for="page in totalPages" :key="page">
+            <button @click="changePage(page)" class="page-btn-link" :class="{ 'active-page': page === currentPage }">
+              {{ page }}
+            </button>
+          </li>
+
+          <li>
+            <button @click="changePage(currentPage + 1)" class="page-btn-link" :disabled="currentPage === totalPages"
+              :class="{ 'disabled-btn': currentPage === totalPages }">
+              ›
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
     <div v-if="showModal" class="product-modal" @click.self="closeModal">
       <div class="product-modal-content">
         <button class="modal-close-btn" @click="closeModal">&times;</button>
         <div class="modal-body">
-
-          <!-- Image -->
           <div class="modal-img-side">
             <img :src="selectedProduct.image_name" :alt="selectedProduct.name" class="modal-img">
           </div>
-
-          <!-- Infos -->
           <div class="modal-info-side">
             <span class="modal-tag">{{ selectedProduct.type }}</span>
             <h2 class="modal-title">{{ selectedProduct.name }}</h2>
             <div class="modal-price-row">
-              <span v-if="selectedProduct.sale_price > 0" class="modal-old-price">
-                {{ parseFloat(selectedProduct.price).toFixed(2) }} €
-              </span>
-              <span class="modal-price">
-                {{ selectedProduct.sale_price > 0 ? parseFloat(selectedProduct.sale_price).toFixed(2) : parseFloat(selectedProduct.price).toFixed(2) }} €
-              </span>
+              <span v-if="selectedProduct.sale_price > 0" class="modal-old-price">{{
+                parseFloat(selectedProduct.price).toFixed(2) }} €</span>
+              <span class="modal-price">{{ selectedProduct.sale_price > 0 ?
+                parseFloat(selectedProduct.sale_price).toFixed(2) : parseFloat(selectedProduct.price).toFixed(2) }}
+                €</span>
             </div>
             <p class="modal-description">{{ selectedProduct.description }}</p>
-
-            <!-- Partage -->
-            <div class="modal-share">
-              <span style="font-size:13px; color:#aaa;">Partager :</span>
-              <button @click.prevent="shareOnFacebook(selectedProduct)" class="share-btn facebook">
-                <i class="fa fa-facebook"></i>
-              </button>
-              <button @click.prevent="shareOnTwitter(selectedProduct)" class="share-btn twitter">
-                <i class="fa fa-twitter"></i>
-              </button>
-            </div>
-
-            <!-- Ajouter au panier -->
-            <template v-if="!isAuthenticated">
-              <div class="alert alert-danger" style="border-radius:8px; font-size:14px;">
-                🔒 Connectez-vous pour ajouter au panier
-              </div>
-            </template>
-            <template v-else>
-              <div class="modal-cart-section">
+            <div class="modal-cart-section">
+              <template v-if="!isAuthenticated">
+                <div class="alert alert-danger" style="border-radius:8px; font-size:14px;">🔒 Connectez-vous pour
+                  ajouter au panier</div>
+              </template>
+              <template v-else>
                 <div class="quantity-control">
                   <button @click="decreaseQuantity" class="qty-btn">−</button>
                   <input type="number" v-model="quantity" min="1" class="qty-input">
                   <button @click="increaseQuantity" class="qty-btn">+</button>
                 </div>
-                <div v-if="alertMessage" :class="['alert', alertType]" style="border-radius:8px; font-size:14px; margin:10px 0;">
+                <div v-if="alertMessage" :class="['alert', alertType]" style="border-radius:8px; font-size:14px;">
                   {{ alertMessage }}
                 </div>
-                <button class="add-to-cart-btn" @click="addToCart(selectedProduct.id, selectedProduct.price)">
-                  🛒 Ajouter au panier
-                </button>
-              </div>
-            </template>
+                <button class="add-to-cart-btn" @click="addToCart(selectedProduct.id, selectedProduct.price)">🛒 Ajouter
+                  au panier</button>
+              </template>
+            </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -160,22 +148,13 @@
 
 <script>
 import { mapActions } from 'vuex';
-import Isotope from 'isotope-layout';
 
 export default {
   props: {
-    products: {
-      type: [Array, Object],
-      required: true
-    },
-    isAuthenticated: {
-      type: [Boolean, Object],
-      default: false
-    },
-    paginated: {
-      type: Boolean,
-      default: false
-    }
+    products: { type: Array, required: true },
+    isAuthenticated: { type: Boolean, default: false },
+    disablePagination: { type: Boolean, default: false },
+    initialSearch: { type: String, default: '' }
   },
 
   data() {
@@ -185,19 +164,19 @@ export default {
       alertMessage: '',
       alertType: '',
       quantity: 1,
-      isotope: null,
       showFilterPanel: false,
       sortOption: 'default',
       activeCategory: '*',
       activePrice: '*',
-      currentFilter: '*',
+      currentPage: 1,
+      itemsPerPage: 8, // Modifie ici pour afficher plus ou moins de produits par page
       categories: [
         { label: 'Tous', value: '*' },
-        { label: 'Hommes', value: '.hommes' },
-        { label: 'Femmes', value: '.femmes' },
-        { label: 'Chaussures', value: '.chaussures' },
-        { label: 'Sacs', value: '.sacs' },
-        { label: 'Montres', value: '.montres' },
+        { label: 'Hommes', value: 'hommes' },
+        { label: 'Femmes', value: 'femmes' },
+        { label: 'Chaussures', value: 'chaussures' },
+        { label: 'Sacs', value: 'sacs' },
+        { label: 'Montres', value: 'montres' },
       ],
       sortOptions: [
         { label: 'Par défaut', value: 'default' },
@@ -206,110 +185,108 @@ export default {
       ],
       priceRanges: [
         { label: 'Tous les prix', value: '*' },
-        { label: '0 € - 50 €', value: '.price-0-50' },
-        { label: '50 € - 100 €', value: '.price-50-100' },
-        { label: '100 € - 200 €', value: '.price-100-200' },
-        { label: '200 € - 500 €', value: '.price-200-500' },
-        { label: '+ 500 €', value: '.price-500-plus' },
+        { label: '0 € - 50 €', value: '0-50' },
+        { label: '50 € - 100 €', value: '50-100' },
+        { label: '100 € - 200 €', value: '100-200' },
+        { label: '200 € - 500 €', value: '200-500' },
+        { label: '+ 500 €', value: '500-plus' },
       ],
+      searchQuery: this.initialSearch || '', // Initialisé avec la recherche globale
     };
   },
 
   computed: {
-    sortedProducts() {
-      let data = this.paginated ? this.products.data : this.products;
-      let sorted = [...data];
-      switch (this.sortOption) {
-        case 'price-asc':
-          sorted.sort((a, b) => a.price - b.price);
-          break;
-        case 'price-desc':
-          sorted.sort((a, b) => b.price - a.price);
-          break;
-        default:
-          break;
+    // 1. Filtrage et Tri global et immédiat
+    filteredProducts() {
+      let result = [...this.products];
+
+      // 1. Filtrage textuel (Barre de recherche globale ex: ?search=montre)
+      // On cherche une correspondance dans le nom ou le type/catégorie du produit
+      if (this.searchQuery) {
+        const query = this.searchQuery.trim().toLowerCase();
+        result = result.filter(p => {
+          const nameMatch = p.name ? p.name.toLowerCase().includes(query) : false;
+          const typeMatch = p.type ? p.type.toLowerCase().includes(query) : false;
+          return nameMatch || typeMatch;
+        });
       }
-      return sorted;
+
+      // 2. Filtrage par bouton de catégorie active
+      if (this.activeCategory !== '*') {
+        result = result.filter(p => p.type && p.type.toLowerCase() === this.activeCategory.toLowerCase());
+      }
+
+      // 3. Filtrage par tranches de prix (en gérant les prix de base et les prix en promotion)
+      if (this.activePrice !== '*') {
+        result = result.filter(p => {
+          const currentPrice = parseFloat(p.sale_price) > 0 ? parseFloat(p.sale_price) : parseFloat(p.price);
+
+          if (this.activePrice === '0-50') return currentPrice >= 0 && currentPrice < 50;
+          if (this.activePrice === '50-100') return currentPrice >= 50 && currentPrice < 100;
+          if (this.activePrice === '100-200') return currentPrice >= 100 && currentPrice < 200;
+          if (this.activePrice === '200-500') return currentPrice >= 200 && currentPrice < 500;
+          if (this.activePrice === '500-plus') return currentPrice >= 500;
+          return true;
+        });
+      }
+
+      // 4. Tri par prix croissant ou décroissant
+      if (this.sortOption === 'price-asc') {
+        result.sort((a, b) => {
+          const priceA = parseFloat(a.sale_price) > 0 ? parseFloat(a.sale_price) : parseFloat(a.price);
+          const priceB = parseFloat(b.sale_price) > 0 ? parseFloat(b.sale_price) : parseFloat(b.price);
+          return priceA - priceB;
+        });
+      } else if (this.sortOption === 'price-desc') {
+        result.sort((a, b) => {
+          const priceA = parseFloat(a.sale_price) > 0 ? parseFloat(a.sale_price) : parseFloat(a.price);
+          const priceB = parseFloat(b.sale_price) > 0 ? parseFloat(b.sale_price) : parseFloat(b.price);
+          return priceB - priceA;
+        });
+      }
+
+      return result;
+    },
+
+    // 2. Calcule le nombre total de pages en fonction des filtres actifs
+    totalPages() {
+      return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+    },
+
+    // 3. Extrait uniquement les produits à afficher sur la page courante
+    paginatedProducts() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.filteredProducts.slice(start, end);
     }
   },
 
   methods: {
-    // Filtre par catégorie — toujours Isotope, jamais de redirection
     filterByCategory(filter) {
-    this.activeCategory = filter;
-    this.activePrice = '*'; // reset prix
-    
-    // Gestion propre de la pagination Laravel
-    const paginationEl = document.getElementById('laravel-pagination');
-    if (paginationEl) {
-      paginationEl.style.display = filter === '*' ? 'flex' : 'none';
-    }
-
-    this.$nextTick(() => {
-      if (this.isotope) {
-        this.isotope.arrange({ filter: filter === '*' ? '*' : filter });
-      }
-    });
-  },
-
-    // Filtre par prix — toujours Isotope
-    filterByPrice(filter) {
-    this.activePrice = filter;
-    this.activeCategory = '*'; // reset catégorie
-    
-    // Gestion propre de la pagination Laravel
-    const paginationEl = document.getElementById('laravel-pagination');
-    if (paginationEl) {
-      paginationEl.style.display = filter === '*' ? 'flex' : 'none';
-    }
-
-    this.$nextTick(() => {
-      if (this.isotope) {
-        this.isotope.arrange({ filter: filter === '*' ? '*' : filter });
-      }
-    });
-  },
-
-    getPriceClass(price) {
-      if (price >= 0 && price < 50) return 'price-0-50';
-      if (price >= 50 && price < 100) return 'price-50-100';
-      if (price >= 100 && price < 200) return 'price-100-200';
-      if (price >= 200 && price < 500) return 'price-200-500';
-      if (price >= 500) return 'price-500-plus';
-      return '';
+      this.activeCategory = filter;
+      this.currentPage = 1; // Reset automatique en page 1
     },
-
+    filterByPrice(filter) {
+      this.activePrice = filter;
+      this.currentPage = 1; // Reset automatique en page 1
+    },
     sortProducts(option) {
       this.sortOption = option;
-      this.$nextTick(() => {
-        if (this.isotope) {
-          this.isotope.reloadItems();
-          this.isotope.arrange();
-        }
-      });
+      this.currentPage = 1;
     },
-
-    toggleFilterPanel() {
-      this.showFilterPanel = !this.showFilterPanel;
+    changePage(page) {
+      if (page >= 1 && page <= this.totalPages) {
+        this.currentPage = page;
+        // Optionnel : remonte l'écran en haut de la grille produits de façon fluide
+        window.scrollTo({ top: 400, behavior: 'smooth' });
+      }
     },
-
-    openModal(product) {
-      this.selectedProduct = product;
-      this.showModal = true;
-      this.alertMessage = '';
-      this.alertType = '';
-      this.quantity = 1;
-    },
-
-    closeModal() {
-      this.showModal = false;
-    },
-
+    toggleFilterPanel() { this.showFilterPanel = !this.showFilterPanel; },
+    openModal(product) { this.selectedProduct = product; this.showModal = true; this.quantity = 1; },
+    closeModal() { this.showModal = false; },
     increaseQuantity() { this.quantity++; },
     decreaseQuantity() { if (this.quantity > 1) this.quantity--; },
-
     ...mapActions({ addToCartAction: 'addToCart' }),
-
     addToCart(productId, productPrice) {
       this.addToCartAction({
         product_id: productId,
@@ -329,32 +306,32 @@ export default {
         this.alertType = 'alert-danger';
       });
     },
-
-    shareOnFacebook(product) {
-      const url = encodeURIComponent(window.location.href);
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
-    },
-
-    shareOnTwitter(product) {
-      const url = encodeURIComponent(window.location.href);
-      const text = encodeURIComponent(`Découvrez ce produit : ${product.name}`);
-      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
-    },
   },
 
-  async mounted() {
-    this.$nextTick(() => {
-      this.isotope = new Isotope(this.$refs.productGrid, {
-        itemSelector: '.isotope-item',
-        layoutMode: 'fitRows',
-      });
-    });
-  },
+  created() {
+    if (this.initialSearch) {
+      const searchLower = this.initialSearch.trim().toLowerCase();
+
+      // Liste de tes catégories disponibles (sans l'étoile)
+      const validCategories = ['hommes', 'femmes', 'chaussures', 'sacs', 'montres'];
+
+      // Si le mot recherché correspond exactement ou contient une catégorie
+      const foundCategory = validCategories.find(cat => searchLower.includes(cat) || cat.includes(searchLower));
+
+      if (foundCategory) {
+        this.activeCategory = foundCategory;
+      } else {
+        // Optionnel : Si la recherche ne correspond pas à un nom de catégorie (ex: "Rolex"), 
+        // tu peux stocker ce mot dans une variable "searchQuery" dans data() pour filtrer par texte.
+        this.activeCategory = '*';
+      }
+    }
+  }
 };
 </script>
 
 <style scoped>
-/* ===== BARRE DE FILTRES ===== */
+/* Code CSS existant inchangé ... */
 .filter-bar {
   display: flex;
   align-items: center;
@@ -382,9 +359,10 @@ export default {
   transition: all 0.2s;
 }
 
-.cat-btn:hover, .cat-btn.active {
-  background: #333;
-  border-color: #333;
+.cat-btn:hover,
+.cat-btn.active {
+  background: #1a1a2e;
+  border-color: #1a1a2e;
   color: white;
 }
 
@@ -400,15 +378,13 @@ export default {
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
 }
 
 .advanced-btn:hover {
-  border-color: #333;
-  color: #333;
+  border-color: #1a1a2e;
+  color: #1a1a2e;
 }
 
-/* ===== PANEL FILTRES ===== */
 .filter-panel {
   background: #f8f9fa;
   border-radius: 12px;
@@ -417,20 +393,6 @@ export default {
   display: flex;
   gap: 30px;
   flex-wrap: wrap;
-  align-items: flex-start;
-}
-
-.filter-section-title {
-  font-weight: 700;
-  color: #333;
-  font-size: 14px;
-  margin-bottom: 12px;
-}
-
-.filter-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
 }
 
 .filter-option-btn {
@@ -442,10 +404,10 @@ export default {
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
 }
 
-.filter-option-btn:hover, .filter-option-btn.active {
+.filter-option-btn:hover,
+.filter-option-btn.active {
   background: #6c63ff;
   border-color: #6c63ff;
   color: white;
@@ -457,27 +419,38 @@ export default {
   align-self: stretch;
 }
 
-/* Transition panel */
-.slide-down-enter-active, .slide-down-leave-active {
-  transition: all 0.3s ease;
-}
-.slide-down-enter-from, .slide-down-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
+.no-products-alert {
+  background: white;
+  padding: 40px;
+  text-align: center;
+  border-radius: 12px;
+  color: #777;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  margin-bottom: 30px;
 }
 
-/* ===== CARTE PRODUIT ===== */
+.style-grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
 .product-card {
   background: white;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
   transition: transform 0.3s, box-shadow 0.3s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
 .product-img-wrapper {
@@ -490,17 +463,12 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s;
-}
-
-.product-card:hover .product-img {
-  transform: scale(1.05);
 }
 
 .product-img-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -521,16 +489,14 @@ export default {
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
-}
-
-.product-view-btn:hover {
-  background: #333;
-  color: white;
 }
 
 .product-info {
   padding: 14px 16px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .product-name {
@@ -552,7 +518,7 @@ export default {
 .product-price {
   font-size: 16px;
   font-weight: 700;
-  color: #333;
+  color: #1a1a2e;
 }
 
 .product-old-price {
@@ -568,14 +534,57 @@ export default {
   font-weight: 700;
   padding: 2px 8px;
   border-radius: 10px;
-  text-transform: uppercase;
+}
+
+/* CSS DE LA PAGINATION INTÉGRÉE (PROPRE ET SANS BORDURE) */
+.vue-pagination-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0 40px;
+}
+
+.custom-blade-pagination .page-btn-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: none !important;
+  text-decoration: none !important;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.15s ease-in-out;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.custom-blade-pagination .page-btn-link.active-page {
+  background-color: #1a1a2e !important;
+  color: white !important;
+  cursor: default;
+}
+
+.custom-blade-pagination .page-btn-link:not(.active-page):not(.disabled-btn):hover {
+  background-color: #6c63ff !important;
+  color: white !important;
+}
+
+.custom-blade-pagination .page-btn-link.disabled-btn {
+  background-color: #f9fafb !important;
+  color: #d1d5db !important;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* ===== MODALE PRODUIT ===== */
 .product-modal {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   z-index: 2000;
   display: flex;
   align-items: center;
@@ -681,29 +690,6 @@ export default {
   margin-bottom: 20px;
 }
 
-.modal-share {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-.share-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 14px;
-}
-
-.share-btn.facebook { background: #1877F2; }
-.share-btn.twitter { background: #1DA1F2; }
-
 .modal-cart-section {
   display: flex;
   flex-direction: column;
@@ -713,7 +699,6 @@ export default {
 .quantity-control {
   display: flex;
   align-items: center;
-  gap: 0;
   border: 2px solid #eee;
   border-radius: 10px;
   overflow: hidden;
@@ -727,10 +712,7 @@ export default {
   height: 38px;
   font-size: 18px;
   cursor: pointer;
-  transition: background 0.2s;
 }
-
-.qty-btn:hover { background: #eee; }
 
 .qty-input {
   width: 50px;
@@ -742,7 +724,7 @@ export default {
 }
 
 .add-to-cart-btn {
-  background: #333;
+  background: #1a1a2e;
   color: white;
   border: none;
   padding: 14px 24px;
@@ -750,25 +732,22 @@ export default {
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s;
   width: 100%;
 }
 
-.add-to-cart-btn:hover { background: #555; }
-
-/* ===== ISOTOPE ===== */
-.isotope-grid {
-  position: relative;
-  height: inherit !important;
+.add-to-cart-btn:hover {
+  background: #333;
 }
 
-.isotope-item {
-  left: inherit !important;
-  top: inherit !important;
-  position: inherit !important;
+/* Transition */
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: all 0.3s ease;
 }
 
-.row.isotope-grid {
-  margin-bottom: 50px;
+.slide-down-enter-from,
+.slide-down-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 </style>

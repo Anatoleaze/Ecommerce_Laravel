@@ -16,58 +16,19 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
-    {
-        $search = $request->input('search');
-        $price = $request->input('price');
+  public function index(Request $request)
+{
+    $products = Product::latest()->get();
+    $search = $request->input('search'); 
+    $link = config('app.url');
 
-        $query = Product::query();
+    return view('products_list', [
+        'products' => $products,
+        'search' => $search, 
+        'initialSearch' => $search 
+    ]);
+}
 
-        // Filtre par type ou recherche par nom
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('type', $search)
-                    ->orWhere('name', 'like', '%' . $search . '%');
-            });
-        }
-
-        // Filtre par prix
-        if ($price) {
-            switch ($price) {
-                case 'price-0-50':
-                    $query->where('price', '<', 50);
-                    break;
-                case 'price-50-100':
-                    $query->whereBetween('price', [50, 100]);
-                    break;
-                case 'price-100-200':
-                    $query->whereBetween('price', [100, 200]);
-                    break;
-                case 'price-200-500':
-                    $query->whereBetween('price', [200, 500]);
-                    break;
-                case 'price-500-plus':
-                    $query->where('price', '>=', 500);
-                    break;
-            }
-        }
-
-        $products = $query->paginate(20)->withQueryString();
-        $link = config('app.url');
-
-        return view('products_list', [
-            'products' => $products,
-            'search' => $search,
-            'link' => $link
-        ]);
-    }
-
-    /**
-     * List all products
-     */
-    /**
-     * List all products (Admin)
-     */
     /**
      * List all products (Admin)
      */
@@ -90,7 +51,6 @@ class ProductController extends Controller
             'link' => $link
         ]);
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -158,20 +118,31 @@ class ProductController extends Controller
         // =========================
         // EMAIL (SAFE VERSION)
         // =========================
+        // =========================
+        // EMAIL (SAFE VERSION)
+        // =========================
         try {
-            $users = User::all();
+            // On récupère tous les utilisateurs par paquets de 50 pour économiser la mémoire RAM
+            User::chunk(50, function ($users) use ($product) {
+                foreach ($users as $user) {
+                    
+                    // Sécurité : Si l'utilisateur n'a pas de nom (inscrit newsletter), on met un texte par défaut
+                    $nom = !empty($user->name) ? $user->name : 'Abonné';
+                    $prenom = !empty($user->first_name) ? $user->first_name : 'Newsletter';
 
-            foreach ($users as $user) {
-                $contactData = [
-                    'nom' => $user->name,
-                    'prenom' => $user->first_name,
-                    'mail' => $user->email,
-                    'site' => config('app.name'),
-                    'link' => config('app.url'),
-                ];
+                    $contactData = [
+                        'nom' => $nom,
+                        'prenom' => $prenom,
+                        'mail' => $user->email,
+                        'site' => config('app.name'),
+                        'link' => config('app.url'),
+                        'product_name' => $product->name, // Pratique pour ton template de mail !
+                    ];
 
-                Mail::to($user->email)->send(new CreateProductMail($contactData));
-            }
+                   Mail::to($user->email)->send(new CreateProductMail($contactData));
+                                   }
+            });
+
         } catch (\Exception $e) {
             // on évite le 500 si email crash
             Log::error('Mail error: ' . $e->getMessage());
@@ -195,7 +166,7 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(String $id)
     {
         $product = Product::findOrFail($id);
 
@@ -207,7 +178,7 @@ class ProductController extends Controller
     /**
      * Public product detail page used for sharing redirects
      */
-    public function show($id)
+    public function show( String $id)
     {
         $product = Product::findOrFail($id);
         $link = config('app.url');
@@ -218,7 +189,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, String $id)
     {
         // Data Validation
         $request->validate([
@@ -276,11 +247,10 @@ class ProductController extends Controller
         return redirect()->route('edit', ['id' => $product->id, 'link' => $link])->with('success', 'Produit mis à jour avec succès.');
     }
 
-
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(String $id)
     {
         $product = Product::findOrFail($id);
 

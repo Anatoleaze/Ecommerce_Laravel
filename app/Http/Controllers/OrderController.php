@@ -11,9 +11,13 @@ use App\Models\Product;
 use Carbon\Carbon;
 use App\Mail\OrderStatusUpdated;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
+    /**
+     * Store a newly created order (Après succès Stripe)
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -22,11 +26,16 @@ class OrderController extends Controller
             'adresse_livraison' => 'required|string',
         ]);
 
+        // Génération d'un numéro de commande unique (Ex: CMD-6671CA3E)
+        $numeroCommande = 'CMD-' . strtoupper(Str::random(8));
+
         $commande = Order::create([
             'user_id' => Auth::id(),
+            'numero_commande' => $numeroCommande, // Requis par ta BDD
             'total' => $request->total,
             'methode_paiement' => $request->methode_paiement,
             'adresse_livraison' => $request->adresse_livraison,
+            'statut' => 'payé', // Défini par défaut par la migration, mais on sécurise ici
         ]);
 
         return response()->json([
@@ -35,14 +44,8 @@ class OrderController extends Controller
         ]);
     }
 
-    /*public function index()
-    {
-        return response()->json(Order::with('user')->latest()->get());
-    }*/
-
-
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource for the client
      */
     public function index(Request $request)
     {
@@ -58,74 +61,85 @@ class OrderController extends Controller
     }
 
     /**
-     * Show details of a order
+     * Show details of an order
      */
     public function details($order_id)
     {
-
+        $order = Order::findOrFail($order_id);
         $order_details = OrderDetails::where('order_id', $order_id)->get();
         $data = [];
 
-        $order = Order::where(['id' => $order_id])->first();
+        foreach ($order_details as $value) {
+            $product = Product::find($value->product_id);
 
-        foreach ($order_details as $key => $value) {
+            // Sécurité si un produit a été supprimé de la BDD entre temps
+            $productPrice = $product ? $product->price : $value->price; 
+            $productName = $product ? $product->name : 'Produit inconnu';
+            $productImage = $product ? $product->image_name : 'default.png';
 
-            $product = Product::where('id', $value->product_id)->first();
-
-            $data[] = array(
+            $data[] = [
                 'order_id' => $order->id,
                 'quantity' => $value->quantity,
-                'product_price' => $product->price,
-                'product_name' => $product->name,
-                'product_image' => $product->image_name,
+                'product_price' => $productPrice,
+                'product_name' => $productName,
+                'product_image' => $productImage,
                 'statut' => $order->statut,
                 'num' => $order->numero_commande,
                 'livraison' => $order->adresse_livraison,
                 'total' => $order->total
-
-            );
+            ];
         }
 
-        $date = Carbon::parse($order_details[0]['created_at'])->format('d/m/Y');
+        // Plus sécurisé : on prend la date de la commande directement
+        $date = Carbon::parse($order->created_at)->format('d/m/Y');
 
         return view('order_details', ['date' => $date, 'order' => $data]);
     }
 
     /**
-     * Show order in admin
+     * Show orders in admin panel
      */
     public function adminShow(Request $request)
     {
-        $orders = Order::where('statut', 'pending')->get();
+        // On affiche les commandes payées en priorité (les nouvelles reçues)
+        // Tu pourras enlever le ->where() si tu veux que l'admin voie TOUTES les commandes
+        $orders = Order::with('user')->where('statut', 'payé')->latest()->get();
 
-        return view('order', ['title' => 'Les Commandes reçuent', 'data' => $orders]);
+        return view('order', ['title' => 'Les Commandes reçues', 'data' => $orders]);
     }
 
 
-    // Change Order Status
+    /**
+     * Change Order Status (Côté Admin)
+     */
     public function updateOrderStatus(Request $request, $orderId)
     {
+        // Validation du statut envoyé par l'admin depuis le formulaire / Vue3
+        $request->validate([
+            'statut' => 'required|string|in:payé,expédié,en cours de livraison,livrée,remboursé'
+        ]);
 
         $order = Order::findOrFail($orderId);
+        
+        // On met à jour avec le statut choisi par l'admin
+        $order->statut = $request->statut;
+        $order->save();
 
-        if ($order->statut === 'en attente') {
-            $order->statut = 'en cours de livraison';
-            $order->save();
+        try {
+            // On récupère l'utilisateur à qui appartient la commande pour l'avertir
+            $user = $order->user; 
 
-            $user = auth()->user();
-
-            Mail::to($user->email)->send(new OrderStatusUpdated($order));
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Le statut de la commande a été mis à jour.',
-                'status' => $order->statut
-            ]);
+            if ($user) {
+                Mail::to($user->email)->send(new OrderStatusUpdated($order));
+            }
+        } catch (\Exception $e) {
+            Log::error("Impossible d'envoyer l'email de changement de statut : " . $e->getMessage());
         }
 
         return response()->json([
-            'success' => false,
-            'message' => 'Le statut de la commande ne peut pas être mis à jour.'
+            'success' => true,
+            'message' => 'Le statut de la commande a été mis à jour avec succès.',
+            'status' => $order->statut
         ]);
     }
 }
