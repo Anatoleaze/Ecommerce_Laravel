@@ -20,28 +20,34 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+        // 1. Validation stricte des données entrantes
         $request->validate([
             'total' => 'required|numeric|min:0',
             'methode_paiement' => 'required|string',
             'adresse_livraison' => 'required|string',
+            'payment_intent_id' => 'required|string|unique:orders,payment_intent_id', // Évite les doublons de commande
         ]);
 
-        // Génération d'un numéro de commande unique (Ex: CMD-6671CA3E)
+        // 2. Génération du numéro de commande unique
         $numeroCommande = 'CMD-' . strtoupper(Str::random(8));
 
+        // 3. Insertion propre en BDD (Ici, on utilise bien $request-> et JAMAIS $POST)
         $commande = Order::create([
             'user_id' => Auth::id(),
-            'numero_commande' => $numeroCommande, // Requis par ta BDD
+            'numero_commande' => $numeroCommande,
             'total' => $request->total,
             'methode_paiement' => $request->methode_paiement,
+            'payment_intent_id' => $request->payment_intent_id,
             'adresse_livraison' => $request->adresse_livraison,
-            'statut' => 'payé', // Défini par défaut par la migration, mais on sécurise ici
+            'statut' => 'payé',
         ]);
 
+        // 4. Réponse structurée attendue par ton composant Vue3
         return response()->json([
+            'success' => true,
             'message' => 'Commande créée avec succès !',
             'commande' => $commande
-        ]);
+        ], 201);
     }
 
     /**
@@ -49,10 +55,14 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $orders = Order::with('user')
-            ->where('user_id', Auth::id())
-            ->latest()
-            ->get();
+        if (Auth::user()->isAdmin()) {
+            $orders = Order::with('user')->latest()->get();
+        } else {
+            $orders = Order::with('user')
+                ->where('user_id', Auth::id())
+                ->latest()
+                ->get();
+        }
 
         return view('order', [
             'title' => 'Mes Commandes',
@@ -73,7 +83,7 @@ class OrderController extends Controller
             $product = Product::find($value->product_id);
 
             // Sécurité si un produit a été supprimé de la BDD entre temps
-            $productPrice = $product ? $product->price : $value->price; 
+            $productPrice = $product ? $product->price : $value->price;
             $productName = $product ? $product->name : 'Produit inconnu';
             $productImage = $product ? $product->image_name : 'default.png';
 
@@ -114,31 +124,19 @@ class OrderController extends Controller
      */
     public function updateOrderStatus(Request $request, $orderId)
     {
-        // Validation du statut envoyé par l'admin depuis le formulaire / Vue3
-        $request->validate([
-            'statut' => 'required|string|in:payé,expédié,en cours de livraison,livrée,remboursé'
-        ]);
+        // Récupère le statut envoyé depuis le body JSON du fetch ({ status: nextStatus })
+        $newStatus = $request->input('status');
 
-        $order = Order::findOrFail($orderId);
-        
-        // On met à jour avec le statut choisi par l'admin
-        $order->statut = $request->statut;
-        $order->save();
-
-        try {
-            // On récupère l'utilisateur à qui appartient la commande pour l'avertir
-            $user = $order->user; 
-
-            if ($user) {
-                Mail::to($user->email)->send(new OrderStatusUpdated($order));
-            }
-        } catch (\Exception $e) {
-            Log::error("Impossible d'envoyer l'email de changement de statut : " . $e->getMessage());
+        $order = Order::find($orderId);
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Commande introuvable'], 404);
         }
+
+        $order->statut = $newStatus;
+        $order->save();
 
         return response()->json([
             'success' => true,
-            'message' => 'Le statut de la commande a été mis à jour avec succès.',
             'status' => $order->statut
         ]);
     }

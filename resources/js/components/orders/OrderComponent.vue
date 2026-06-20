@@ -1,151 +1,241 @@
 <template>
-  <div style="padding:10px 0; width: 100%;">
-    <div style="width:100%;">
+  <div style="padding:10px 0; width:100%;">
 
-      <div
-        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; width: 100%;">
-        <div>
-          <h2 style="font-size:24px; font-weight:800; color:#1a1a2e; margin:0;">
-            {{ user.role === 'admin' ? 'Gestion des commandes (Admin)' : 'Mes commandes' }}
-          </h2>
-          <p style="color:#777; font-size:13px; margin-top:6px; margin-bottom: 0;">
-            {{ user.role === 'admin' ? 'Suivi logistique, filtrage et mises à jour' : 'Historique et suivi de vos commandes' }}
-          </p>
-        </div>
-
-        <div v-if="user.role !== 'admin'">
-          <select v-model="selectedPeriod"
-            style="padding: 10px 16px; border-radius: 10px; border: 2px solid #eee; background: white; font-size: 14px; font-weight: 600; color: #1a1a2e; outline: none; cursor: pointer;">
-            <option value="all">Toutes les commandes</option>
-            <option value="3months">3 derniers mois</option>
-            <option value="2026">Année 2026</option>
-            <option value="2025">Année 2025</option>
-          </select>
-        </div>
+    <div
+      style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px; flex-wrap:wrap; gap:16px;">
+      <div>
+        <h2 style="font-size:24px; font-weight:800; color:#1a1a2e; margin:0;">
+          {{ user.role === 'admin' ? '🗂️ Gestion des commandes' : '📦 Mes commandes' }}
+        </h2>
+        <p style="color:#777; font-size:13px; margin-top:6px; margin-bottom:0;">
+          {{ user.role === 'admin' ? 'Suivi logistique et mises à jour' : 'Historique et suivi de vos commandes' }}
+        </p>
       </div>
-
-      <div v-if="user.role === 'admin'" style="display: flex; flex-direction: column; gap: 40px; width: 100%;">
-
-        <div class="admin-section" style="width: 100%;">
-          <div
-            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
-            <h3 style="font-size:16px; font-weight:800; color:#e67e22; margin:0;">{{ getTableHeaderText('payé', '💳 Commandes Payées(À préparer)') }}</h3>
-            <input type="text" v-model="tablesState['payé'].search" placeholder="🔍 Rechercher un numéro..."
-              style="padding:6px 12px; border-radius:8px; border:1px solid #ccc; font-size:13px; outline:none; width:220px;">
-          </div>
-          <div v-html="renderAdminTable('payé', 'expédié', '📦 Marquer Expédiée')"></div>
-        </div>
-
-        <div class="admin-section" style="width: 100%;">
-          <div
-            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
-            <h3 style="font-size:16px; font-weight:800; color:#2980b9; margin:0;">{{ getTableHeaderText('expédié', '📦 Commandes Expédiées(En transit)') }}</h3>
-            <input type="text" v-model="tablesState['expédié'].search" placeholder="🔍 Rechercher un numéro..."
-              style="padding:6px 12px; border-radius:8px; border:1px solid #ccc; font-size:13px; outline:none; width:220px;">
-          </div>
-          <div v-html="renderAdminTable('expédié', 'en cours de livraison', '🚚 Mettre En cours de livraison')"></div>
-        </div>
-
-        <div class="admin-section" style="width: 100%;">
-          <div
-            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
-            <h3 style="font-size:16px; font-weight:800; color:#8e44ad; margin:0;">{{ getTableHeaderText('en cours de livraison', '🚚 Commandes en Cours de Livraison') }}</h3>
-            <input type="text" v-model="tablesState['en cours de livraison'].search"
-              placeholder="🔍 Rechercher un numéro..."
-              style="padding:6px 12px; border-radius:8px; border:1px solid #ccc; font-size:13px; outline:none; width:220px;">
-          </div>
-          <div v-html="renderAdminTable('en cours de livraison', 'livrée', '✅ Marquer Livrée')"></div>
-        </div>
-
-        <div class="admin-section" style="width: 100%;">
-          <div
-            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
-            <h3 style="font-size:16px; font-weight:800; color:#27ae60; margin:0;">{{ getTableHeaderText('livrée', '✅ Commandes Livrées') }}</h3>
-            <input type="text" v-model="tablesState['livrée'].search" placeholder="🔍 Rechercher un numéro..."
-              style="padding:6px 12px; border-radius:8px; border:1px solid #ccc; font-size:13px; outline:none; width:220px;">
-          </div>
-          <div v-html="renderAdminTable('livrée')"></div>
-        </div>
-
-        <div class="admin-section" style="width: 100%;">
-          <div
-            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
-            <h3 style="font-size:16px; font-weight:800; color:#7f8c8d; margin:0;">{{ getTableHeaderText('remboursé', '💰 Commandes Remboursées') }}</h3>
-            <input type="text" v-model="tablesState['remboursé'].search" placeholder="🔍 Rechercher un numéro..."
-              style="padding:6px 12px; border-radius:8px; border:1px solid #ccc; font-size:13px; outline:none; width:220px;">
-          </div>
-          <div v-html="renderAdminTable('remboursé')"></div>
-        </div>
-
+      <div v-if="user.role !== 'admin'">
+        <select v-model="selectedPeriod"
+          style="padding:10px 16px; border-radius:10px; border:2px solid #eee; background:white; font-size:14px; font-weight:600; color:#1a1a2e; outline:none; cursor:pointer;">
+          <option value="all">Toutes les commandes</option>
+          <option value="3months">3 derniers mois</option>
+          <option value="2026">Année 2026</option>
+          <option value="2025">Année 2025</option>
+        </select>
       </div>
+    </div>
 
-      <div v-else
-        style="background:white; border-radius:16px; box-shadow:0 4px 15px rgba(0,0,0,0.06); overflow:hidden; width: 100%;">
-        <div
-          :style="`display:grid; grid-template-columns: ${gridColumns}; padding:16px 24px; background:#1a1a2e; color:white; font-size:12px; font-weight:800; text-transform:uppercase;`">
-          <div>Date</div>
-          <div>Tracking</div>
-          <div>Montant</div>
-          <div>Status</div>
-          <div>Détail</div>
-        </div>
+    <div style="display:flex; flex-direction:column; gap:40px;">
 
-        <div v-if="filteredOrders.length === 0" style="padding:40px; text-align:center; color:#aaa; font-size:14px;">
-          📦 Aucune commande pour cette période
-        </div>
+      <order-table title="💳 Commandes Payées" title-color="#e67e22" :orders="getOrdersByStatus('paye')"
+        next-status="expedie" button-text="📦 Marquer Expédiée" :per-page="perPage" @update-status="updateStatus" />
 
-        <div v-for="order in filteredOrders" :key="order.id"
-          :style="`display:grid; grid-template-columns: ${gridColumns}; padding:16px 24px; align-items:center; border-bottom:1px solid #f3f4f6;`">
-          <div style="font-size:13px; color:#333; font-weight:600;">{{ formatDate(order.created_at) }}</div>
-          <div style="font-size:12px; color:#1a1a2e; font-family:monospace; font-weight:700;">{{ order.numero_commande
-            }}</div>
-          <div style="font-size:14px; font-weight:800; color:#1a1a2e;">{{ order.total }} €</div>
-          <div>
-            <span :style="getSpanStyle(order.statut)">
-              {{ order.statut }}
-            </span>
-          </div>
-          <div>
-            <a :href="`/commandes/details/${order.id}`"
-              style="display:inline-flex; align-items:center; padding:8px 16px; background:#1a1a2e; color:white; border-radius:8px; font-size:12px; font-weight:700; text-decoration:none;">👁️
-              Voir</a>
-          </div>
-        </div>
-      </div>
+      <order-table title="📦 Commandes Expédiées" title-color="#2980b9" :orders="getOrdersByStatus('expedie')"
+        next-status="livraison" button-text="🚚 Mettre en Livraison" :per-page="perPage"
+        @update-status="updateStatus" />
+
+      <order-table title="🚚 En cours de livraison" title-color="#8e44ad" :orders="getOrdersByStatus('livraison')"
+        next-status="livre" button-text="✅ Marquer Livrée" :per-page="perPage"
+        @update-status="updateStatus" />
+
+      <order-table title="✅ Commandes Livrées" title-color="#27ae60" :orders="getOrdersByStatus('livre')"
+        :per-page="perPage" @update-status="updateStatus" />
+
+      <order-table v-if="user.role === 'admin'" title="💰 Commandes Remboursées" title-color="#7f8c8d"
+        :orders="getOrdersByStatus('rembourse')" :per-page="perPage" @update-status="updateStatus" />
 
     </div>
+
   </div>
 </template>
 
 <script>
+const OrderTable = {
+  name: 'OrderTable',
+  props: {
+    title: String,
+    titleColor: { type: String, default: '#333' },
+    orders: { type: Array, default: () => [] },
+    nextStatus: { type: String, default: null },
+    buttonText: { type: String, default: '' },
+    perPage: { type: Number, default: 5 },
+  },
+  emits: ['update-status'],
+  data() {
+    return {
+      search: '',
+      currentPage: 1,
+    };
+  },
+  computed: {
+    filteredOrders() {
+      const q = this.search.trim().toLowerCase();
+      if (!q) return this.orders;
+      return this.orders.filter(o => o.numero_commande.toLowerCase().includes(q));
+    },
+    totalPages() {
+      return Math.max(1, Math.ceil(this.filteredOrders.length / this.perPage));
+    },
+    paginatedOrders() {
+      const start = (this.currentPage - 1) * this.perPage;
+      return this.filteredOrders.slice(start, start + this.perPage);
+    },
+    headerText() {
+      const q = this.search.trim();
+      if (!q) return `${this.title} (${this.orders.length})`;
+      return `${this.title} (${this.filteredOrders.length}/${this.orders.length})`;
+    }
+  },
+  watch: {
+    search() {
+      this.currentPage = 1;
+    },
+    orders() {
+      this.currentPage = 1;
+    }
+  },
+  methods: {
+    changePage(page) {
+      if (page >= 1 && page <= this.totalPages) {
+        this.currentPage = page;
+      }
+    },
+    
+    formatDate(date) {
+      return new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(date));
+    },
+    getStatusLabel(statut) {
+      // Permet d'afficher un joli texte avec accents aux utilisateurs, même si la BDD stocke sans accent
+      const labels = {
+        'paye': 'Payée',
+        'expedie': 'Expédiée',
+        'livraison': 'En cours de livraison',
+        'livre': 'Livrée',
+        'rembourse': 'Remboursée'
+      };
+      return labels[statut] || statut;
+    },
+    getStatusColor(statut) {
+      const map = {
+        'paye': { bg: '#e8f8f5', text: '#1e8449' },
+        'expedie': { bg: '#e8f4fd', text: '#2980b9' },
+        'livraison': { bg: '#f4ecf7', text: '#8e44ad' },
+        'livre': { bg: '#d4efdf', text: '#196f3d' },
+        'rembourse': { bg: '#f2f4f4', text: '#7f8c8d' },
+      };
+      return map[statut] || { bg: '#f0f0f0', text: '#555' };
+    },
+  },
+  template: `
+    <div style="width:100%;">
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+        <h3 :style="\`font-size:16px; font-weight:800; color:\${titleColor}; margin:0;\`">
+          {{ headerText }}
+        </h3>
+        <input
+          type="text"
+          v-model="search"
+          placeholder="🔍 Rechercher un numéro..."
+          style="padding:8px 14px; border-radius:8px; border:2px solid #eee; font-size:13px; outline:none; width:240px; transition:border-color 0.2s;"
+          onfocus="this.style.borderColor='#6c63ff'"
+          onblur="this.style.borderColor='#eee'">
+      </div>
+
+      <div style="background:white; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.05); overflow:hidden; border:1px solid #eee;">
+
+        <div style="display:grid; grid-template-columns:1fr 1.8fr 1fr 1.8fr 1fr; padding:14px 20px; background:#1a1a2e; color:white; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px;">
+          <div>Date</div>
+          <div>Numéro</div>
+          <div>Montant</div>
+          <div>{{ nextStatus ? 'Action' : 'Statut' }}</div>
+          <div>Détail</div>
+        </div>
+
+        <div v-if="paginatedOrders.length === 0"
+          style="padding:30px; text-align:center; color:#aaa; font-size:14px; font-style:italic;">
+          📭 Aucune commande trouvée
+        </div>
+
+        <div v-for="order in paginatedOrders" :key="order.id"
+          style="display:grid; grid-template-columns:1fr 1.8fr 1fr 1.8fr 1fr; padding:14px 20px; align-items:center; border-bottom:1px solid #f3f4f6; transition:background 0.15s;"
+          onmouseover="this.style.background='#fafafa'"
+          onmouseout="this.style.background='white'">
+
+          <div style="font-size:13px; font-weight:600; color:#333;">
+            {{ formatDate(order.created_at) }}
+          </div>
+
+          <div style="font-size:12px; font-family:monospace; font-weight:700; color:#1a1a2e; word-break:break-all;">
+            {{ order.numero_commande }}
+          </div>
+
+          <div style="font-size:14px; font-weight:800; color:#1a1a2e;">
+            {{ order.total }} €
+          </div>
+
+          <div>
+            <button 
+              v-if="nextStatus" 
+              @click="$emit('update-status', order.id, nextStatus)"
+              style="padding:6px 12px; background:#1a1a2e; color:white; border:none; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;"
+            >
+              {{ buttonText }}
+            </button>
+            <span v-else
+              :style="\`display:inline-block; padding:5px 12px; border-radius:999px; font-size:11px; font-weight:800; background:\${getStatusColor(order.statut).bg}; color:\${getStatusColor(order.statut).text};\`">
+              {{ getStatusLabel(order.statut) }}
+            </span>
+          </div>
+
+          <div>
+            <a :href="\`/commandes/details/\${order.id}\`"
+              style="display:inline-flex; align-items:center; gap:4px; padding:7px 14px; border:2px solid #1a1a2e; color:#1a1a2e; border-radius:8px; font-size:11px; font-weight:700; text-decoration:none; transition:all 0.2s;"
+              onmouseover="this.style.background='#1a1a2e'; this.style.color='white'"
+              onmouseout="this.style.background='transparent'; this.style.color='#1a1a2e'">
+              👁️ Voir
+            </a>
+          </div>
+
+        </div>
+
+        <div v-if="totalPages > 1"
+          style="display:flex; justify-content:center; align-items:center; gap:8px; padding:14px; background:#fafafa; border-top:1px solid #eee; flex-wrap:wrap;">
+          <span style="font-size:12px; color:#888; margin-right:4px;">
+            Page {{ currentPage }} / {{ totalPages }}
+          </span>
+          <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1"
+            style="width:32px; height:32px; border-radius:8px; border:1px solid #ddd; background:white; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center;"
+            :style="currentPage === 1 ? 'opacity:0.4; cursor:not-allowed;' : ''">
+            ‹
+          </button>
+          <button v-for="page in totalPages" :key="page" @click="changePage(page)"
+            :style="\`width:32px; height:32px; border-radius:8px; border:none; cursor:pointer; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; background:\${page === currentPage ? '#1a1a2e' : '#f3f4f6'}; color:\${page === currentPage ? 'white' : '#555'};\`">
+            {{ page }}
+          </button>
+          <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages"
+            style="width:32px; height:32px; border-radius:8px; border:1px solid #ddd; background:white; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center;"
+            :style="currentPage === totalPages ? 'opacity:0.4; cursor:not-allowed;' : ''">
+            ›
+          </button>
+        </div>
+
+      </div>
+    </div>
+  `
+};
+
 export default {
   name: 'OrderComponent',
+  components: { OrderTable },
 
   props: {
-    orders: {
-      type: Array,
-      required: true
-    },
-    user: {
-      type: Object,
-      required: true
-    }
+    orders: { type: Array, required: true },
+    user: { type: Object, required: true }
   },
 
   data() {
     return {
       selectedPeriod: 'all',
       localOrders: [...this.orders],
-      perPage: 5, // Nombre d'éléments affichés par page
-
-      // Centralisation de l'état de recherche et pagination pour chaque tableau admin
-      tablesState: {
-        'payé': { search: '', page: 1 },
-        'expédié': { search: '', page: 1 },
-        'en cours de livraison': { search: '', page: 1 },
-        'livrée': { search: '', page: 1 },
-        'remboursé': { search: '', page: 1 }
-      }
+      perPage: 5,
     };
   },
 
@@ -156,14 +246,9 @@ export default {
   },
 
   computed: {
-    gridColumns() {
-      return '1fr 2fr 1fr 1.5fr 1fr';
-    },
-
-    filteredOrders() {
+    filteredByPeriod() {
       if (this.selectedPeriod === 'all') return this.localOrders;
       const now = new Date();
-
       return this.localOrders.filter(order => {
         const orderDate = new Date(order.created_at);
         if (this.selectedPeriod === '3months') {
@@ -177,64 +262,28 @@ export default {
   },
 
   methods: {
-    formatDate(date) {
-      return new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(date));
+    getOrdersByStatus(status) {
+      return this.filteredByPeriod.filter(o => o.statut === status);
     },
 
-    getSpanStyle(statut) {
-      const colors = this.getStatusColor(statut);
-      return {
-        display: 'inline-block', padding: '5px 12px', borderRadius: '999px', fontSize: '11px', fontWeight: '800', background: colors.bg, color: colors.text
-      };
-    },
-
-    getStatusColor(statut) {
-      const map = {
-        'payé': { bg: '#e8f8f5', text: '#1e8449' },
-        'expédié': { bg: '#e8f4fd', text: '#2980b9' },
-        'en cours de livraison': { bg: '#f4ecf7', text: '#8e44ad' },
-        'livrée': { bg: '#d4efdf', text: '#196f3d' },
-        'remboursé': { bg: '#f2f4f4', text: '#7f8c8d' },
-      };
-      return map[statut] || { bg: '#f0f0f0', text: '#555' };
-    },
-
-    // Permet d'afficher à côté du titre le décompte (ex: "3/14") filtré vs total
-    getTableHeaderText(status, baseTitle) {
-      const allForStatus = this.localOrders.filter(order => order.statut === status);
-      const search = this.tablesState[status].search.trim().toLowerCase();
-
-      if (!search) return `${baseTitle} (${allForStatus.length})`;
-
-      const filteredCount = allForStatus.filter(o => o.numero_commande.toLowerCase().includes(search)).length;
-      return `${baseTitle} (${filteredCount}/${allForStatus.length})`;
-    },
-
-    // Changer de page depuis le bouton injecté en v-html
-    changePage(status, newPage) {
-      if (this.tablesState[status]) {
-        this.tablesState[status].page = newPage;
-      }
-    },
-
-    async updateStatus(orderId, nextStatus) { // On garde nextStatus ici juste pour la mise à jour réactive locale si ça fonctionne
+    async updateStatus(orderId, nextStatus) {
       try {
-        const response = await fetch(`/api/orders/${orderId}/status`, {
-          method: 'POST',
+        const response = await fetch(`/commande/update_status/${orderId}`, {
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
-          }
-          // Plus de "body: JSON.stringify(...)" ici !
+          },
+          body: JSON.stringify({ status: nextStatus })
         });
 
         const result = await response.json();
 
-        if (result.success) {
-          // Le serveur renvoie le nouveau statut exact calculé par Laravel
+        if (response.ok && result.success) {
           const index = this.localOrders.findIndex(o => o.id === orderId);
           if (index !== -1) {
-            this.localOrders[index].statut = result.status;
+            this.localOrders[index].statut = nextStatus;
           }
         } else {
           alert(result.message || "Erreur lors du changement de statut");
@@ -244,101 +293,6 @@ export default {
         alert("Impossible de contacter le serveur.");
       }
     },
-
-    // Générateur dynamique de tableau avec Recherche et Pagination intégrées
-    renderAdminTable(status, nextStatus = null, buttonText = '') {
-      // 1. Filtrer par statut de base
-      let baseList = this.localOrders.filter(order => order.statut === status);
-
-      // 2. Appliquer la recherche (si saisie)
-      const query = this.tablesState[status].search.trim().toLowerCase();
-      if (query) {
-        baseList = baseList.filter(order =>
-          order.numero_commande.toLowerCase().includes(query)
-        );
-      }
-
-      if (baseList.length === 0) {
-        return `<div style="padding:20px; background:white; border-radius:12px; text-align:center; color:#999; font-size:13px; border: 1px dashed #ccc; width: 100%; box-sizing: border-box;">Aucune commande trouvée</div>`;
-      }
-
-      // 3. Appliquer la pagination logique
-      const totalItems = baseList.length;
-      const totalPages = Math.ceil(totalItems / this.perPage);
-
-      // Sécurité : Si la page courante dépasse à la suite d'un filtre ou d'une action, on la réajuste
-      if (this.tablesState[status].page > totalPages) {
-        this.tablesState[status].page = 1;
-      }
-
-      const currentPage = this.tablesState[status].page;
-      const startIndex = (currentPage - 1) * this.perPage;
-      const paginatedList = baseList.slice(startIndex, startIndex + this.perPage);
-
-      // 4. Générer les lignes HTML
-      let rows = paginatedList.map(order => {
-        let actionColumn = '';
-        if (nextStatus) {
-          actionColumn = `<div>
-            <button onclick="window.vueOrderComponent.updateStatus(${order.id}, '${nextStatus}')" 
-                    style="padding:6px 12px; background:#1a1a2e; color:white; border:none; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">
-              ${buttonText}
-            </button>
-          </div>`;
-        } else {
-          actionColumn = `<div style="color:#aaa; font-size:12px; font-weight:600;">Aucune action requise</div>`;
-        }
-
-        return `
-          <div style="display:grid; grid-template-columns: 1fr 1.5fr 1fr 1.5fr 1fr; padding:14px 20px; align-items:center; background:white; border-bottom:1px solid #f3f4f6;">
-            <div style="font-size:13px; font-weight:600; color:#333;">${this.formatDate(order.created_at)}</div>
-            <div style="font-size:12px; font-family:monospace; font-weight:700; color:#1a1a2e;">${order.numero_commande}</div>
-            <div style="font-size:14px; font-weight:800; color:#1a1a2e;">${order.total} €</div>
-            ${actionColumn}
-            <div>
-              <a href="/commandes/details/${order.id}" style="display:inline-block; padding:6px 12px; border:1px solid #1a1a2e; color:#1a1a2e; border-radius:6px; font-size:11px; font-weight:700; text-decoration:none;">👁️ Détails</a>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      // 5. Générer la barre de pagination HTML (uniquement si plusieurs pages)
-      let paginationHTML = '';
-      if (totalPages > 1) {
-        let buttons = '';
-        for (let i = 1; i <= totalPages; i++) {
-          const isActive = i === currentPage;
-          buttons += `
-            <button onclick="window.vueOrderComponent.changePage('${status}', ${i})"
-                    style="padding: 4px 10px; margin: 0 3px; border-radius: 6px; border: 1px solid #1a1a2e; font-size:11px; font-weight:700; cursor:pointer;
-                    background: ${isActive ? '#1a1a2e' : 'white'}; color: ${isActive ? 'white' : '#1a1a2e'};">
-              ${i}
-            </button>
-          `;
-        }
-        paginationHTML = `
-          <div style="display:flex; justify-content:center; align-items:center; padding:12px; background:#fafafa; border-top:1px solid #eee;">
-            <span style="font-size:12px; color:#666; margin-right:10px;">Page ${currentPage} sur ${totalPages}</span>
-            <div style="display:flex;">${buttons}</div>
-          </div>
-        `;
-      }
-
-      // 6. Assembler le tout
-      return `
-        <div style="background:white; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.03); overflow:hidden; border: 1px solid #eee; width: 100%;">
-          <div style="display:grid; grid-template-columns: 1fr 1.5fr 1fr 1.5fr 1fr; padding:14px 20px; background:#f8f9fa; color:#555; font-size:11px; font-weight:800; text-transform:uppercase; border-bottom:1px solid #eee;">
-            <div>Date</div><div>Numéro</div><div>Montant</div><div>Action logistique</div><div>Lien</div>
-          </div>
-          ${rows}
-          ${paginationHTML}
-        </div>
-      `;
-    }
-  },
-
-  created() {
-    window.vueOrderComponent = this;
   }
-}
+};
 </script>
