@@ -151,10 +151,8 @@ class OrderController extends Controller
      */
     public function refundOrder($orderId)
     {
-        // 1. Récupérer la commande par son ID
         $order = Order::findOrFail($orderId);
 
-        // 2. Vérifier que le statut est bien 'livre'
         if ($order->statut !== 'livre') {
             return response()->json([
                 'success' => false,
@@ -162,24 +160,34 @@ class OrderController extends Controller
             ], 422);
         }
 
-        // 3. Vérifier qu'on a bien un ID Stripe enregistré pour cette commande
         if (empty($order->payment_intent_id)) {
             return response()->json([
                 'success' => false,
-                'error' => 'Erreur : Aucun identifiant de paiement Stripe (payment_intent_id) trouvé pour cette commande.'
+                'error' => 'Erreur : Aucun identifiant de paiement trouvé pour cette commande.'
             ], 422);
         }
 
-        try {
-            // 4. Initialiser Stripe avec la clé secrète du fichier .env
-            Stripe::setApiKey(config('services.stripe.secret'));
-
-            // 5. Créer le remboursement en utilisant 'payment_intent' (et la bonne colonne BDD)
-            $refund = Refund::create([
-                'payment_intent' => $order->payment_intent_id, // 👈 Corrigé ici
+        // 🛠️ MODE SIMULATION / DEV
+        // Si l'ID commence par 'demo_', on valide le remboursement en BDD sans contacter Stripe
+        if (str_starts_with($order->payment_intent_id, 'demo_')) {
+            $order->update([
+                'statut' => 'rembourse'
             ]);
 
-            // 6. Si Stripe valide, mise à jour du statut sans accent
+            return response()->json([
+                'success' => true,
+                'message' => '[MODE DEMO] La fausse commande a été marquée comme remboursée localement !'
+            ]);
+        }
+
+        // 💳 VRAI MODE (PRODUCTION OU VRAIS TESTS STRIPE)
+        try {
+            Stripe::setApiKey(config('services.stripe.secret'));
+
+            $refund = Refund::create([
+                'payment_intent' => $order->payment_intent_id,
+            ]);
+
             $order->update([
                 'statut' => 'rembourse'
             ]);

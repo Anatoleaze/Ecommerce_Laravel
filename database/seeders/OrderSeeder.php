@@ -20,20 +20,22 @@ class OrderSeeder extends Seeder
                 'numero_commande' => $this->generateOrderNumber(),
                 'user_id' => 1,
                 'total' => 8189.66,
-                'statut' => 'payé', // Le statut par défaut après succès Stripe
+                'statut' => 'paye',
                 'methode_paiement' => 'CB',
+                'payment_intent_id' => 'demo_pi_' . strtoupper(Str::random(10)), // Pour simuler Stripe
                 'adresse_livraison' => '4 route de la garre, 14000 Caen',
-                'created_at' => Carbon::now()->subDays(2), // Passée il y a 2 jours
+                'created_at' => Carbon::now()->subDays(2),
                 'updated_at' => Carbon::now()->subDays(2),
             ],
             [
                 'numero_commande' => $this->generateOrderNumber(),
                 'user_id' => 1,
                 'total' => 6212.89,
-                'statut' => 'expédié', // Un autre statut pour tester tes composants Vue / vues Blade
+                'statut' => 'livre', 
                 'methode_paiement' => 'CB',
+                'payment_intent_id' => 'demo_pi_' . strtoupper(Str::random(10)), //  Pour simuler Stripe
                 'adresse_livraison' => '4 route de la garre, 14000 Caen',
-                'created_at' => Carbon::now(), // Passée aujourd'hui
+                'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
         ]);
