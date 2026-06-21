@@ -103,9 +103,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/check-promo', [PromoController::class, 'checkPromo']);
 
-
     Route::post('/commandes/create', [OrderController::class, 'store']);
-
 
     Route::get('/commandes/show', [OrderController::class, 'index']);
 
@@ -118,6 +116,9 @@ Route::middleware(['auth'])->group(function () {
     // Update order status in admin
     Route::patch('/commande/update_status/{orderId}', [OrderController::class, 'updateOrderStatus'])->name('updateStatusOrder');
 
+    // Remboursement d'une commande
+    Route::post('/commande/refund/{orderId}', [OrderController::class, 'refundOrder'])->name('refundOrder');
+    
     // Route creation payement intent
     Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 

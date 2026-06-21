@@ -3,7 +3,6 @@
 
     <div class="container" style="max-width: 1100px;">
 
-      <!-- HEADER -->
       <div style="margin-bottom: 30px;">
         <span style="
           display:inline-block;
@@ -31,7 +30,6 @@
 
       <div class="row" style="gap: 30px 0;">
 
-        <!-- PRODUITS -->
         <div class="col-lg-7">
 
           <div style="
@@ -45,8 +43,7 @@
               🛍️ Produits
             </h5>
 
-            <div v-for="row in order" :key="row.id"
-              style="
+            <div v-for="row in order" :key="row.id" style="
                 display:flex;
                 gap:16px;
                 padding:14px 0;
@@ -54,21 +51,20 @@
                 align-items:center;
               ">
 
-              <!-- IMAGE -->
-              <div style="
-                width:70px;
-                height:70px;
-                border-radius:12px;
-                overflow:hidden;
-                background:#f3f4f6;
-                flex-shrink:0;
-              ">
-                <img :src="row.product_image"
-                     :alt="row.product_name"
-                     style="width:100%; height:100%; object-fit:cover;">
+              <div @click="openModal(row.product_image, row.product_name)" style="
+                  width:70px;
+                  height:70px;
+                  border-radius:12px;
+                  overflow:hidden;
+                  background:#f3f4f6;
+                  flex-shrink:0;
+                  cursor: pointer;
+                  transition: transform 0.2s;
+                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                <img :src="row.product_image" :alt="row.product_name"
+                  style="width:100%; height:100%; object-fit:cover;">
               </div>
 
-              <!-- INFOS -->
               <div style="flex:1;">
                 <p style="margin:0; font-weight:700; color:#1a1a2e; font-size:14px;">
                   {{ row.product_name }}
@@ -84,7 +80,6 @@
           </div>
         </div>
 
-        <!-- RECAP -->
         <div class="col-lg-5">
 
           <div style="
@@ -98,7 +93,6 @@
               📋 Récapitulatif
             </h5>
 
-            <!-- STATUS -->
             <div style="margin-bottom:14px;">
               <div style="display:flex; justify-content:space-between; align-items:center;">
                 <span style="font-size:12px; color:#777; font-weight:700;">Statut</span>
@@ -111,12 +105,11 @@
                   background:${getStatusColor(orderLocal.statut).bg};
                   color:${getStatusColor(orderLocal.statut).text};
                 `">
-                  {{ orderLocal.statut }}
+                  {{ getStatusLabel(orderLocal.statut) }}
                 </span>
               </div>
             </div>
 
-            <!-- TRACKING -->
             <div style="margin-bottom:14px;">
               <div style="display:flex; justify-content:space-between;">
                 <span style="font-size:12px; color:#777; font-weight:700;">Tracking</span>
@@ -126,7 +119,6 @@
               </div>
             </div>
 
-            <!-- LIVRAISON -->
             <div style="margin-bottom:14px;">
               <div style="display:flex; justify-content:space-between;">
                 <span style="font-size:12px; color:#777; font-weight:700;">Livraison</span>
@@ -136,7 +128,6 @@
               </div>
             </div>
 
-            <!-- TOTAL -->
             <div style="
               margin-top:18px;
               padding:16px;
@@ -155,43 +146,79 @@
               </span>
             </div>
 
-            <!-- ADMIN ACTION -->
-            <template v-if="user.role === 'admin' && orderLocal.statut === 'en attente'">
+            <div v-if="user.role === 'admin'"
+              style="margin-top:20px; border-top:1px solid #f3f4f6; padding-top:16px; display:flex; flex-direction:column; gap:10px;">
 
-              <div style="margin-top:20px; border-top:1px solid #f3f4f6; padding-top:16px;">
+              <p style="font-size:12px; font-weight:800; color:#555; margin-bottom:2px;">
+                ⚙️ Actions administrateur
+              </p>
 
-                <p style="font-size:12px; font-weight:800; color:#555; margin-bottom:10px;">
-                  ⚙️ Action admin
-                </p>
+              <button v-if="orderLocal.statut === 'paye'" @click="changeStatus(order[0].order_id, 'expedie')"
+                style="width:100%; padding:12px; background:linear-gradient(135deg, #1a1a2e, #333); color:white; border:none; border-radius:12px; font-size:13px; font-weight:800; cursor:pointer;">
+                🚚 Marquer Expédiée
+              </button>
 
-                <button @click="changeStatus(order[0].order_id)"
-                  style="
-                    width:100%;
-                    padding:12px;
-                    background: linear-gradient(135deg, #1a1a2e, #333);
-                    color:white;
-                    border:none;
-                    border-radius:12px;
-                    font-size:13px;
-                    font-weight:800;
-                    cursor:pointer;
-                    transition:0.2s;
-                  "
-                  onmouseover="this.style.transform='translateY(-1px)'"
-                  onmouseout="this.style.transform='translateY(0)'">
+              <button v-if="orderLocal.statut === 'expedie'" @click="changeStatus(order[0].order_id, 'livraison')"
+                style="width:100%; padding:12px; background:linear-gradient(135deg, #2980b9, #1f618d); color:white; border:none; border-radius:12px; font-size:13px; font-weight:800; cursor:pointer;">
+                🚚 Mettre en Livraison
+              </button>
 
-                  🚚 Marquer en cours de livraison
-                </button>
+              <button v-if="orderLocal.statut === 'livre'" @click="refundOrder(order[0].order_id)"
+                :disabled="isRefunding"
+                style="width:100%; padding:12px; background:linear-gradient(135deg, #e74c3c, #c0392b); color:white; border:none; border-radius:12px; font-size:13px; font-weight:800; cursor:pointer;"
+                :style="isRefunding ? 'opacity: 0.6; cursor: not-allowed;' : ''">
+                {{ isRefunding ? '⏳ Traitement du remboursement...' : '💰 Rembourser la commande (Stripe)' }}
+              </button>
 
-              </div>
-
-            </template>
+            </div>
 
           </div>
         </div>
 
       </div>
     </div>
+
+    <div v-if="isModalOpen" @click.self="closeModal" style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      padding: 20px;
+    ">
+      <div
+        style="position: relative; max-width: 550px; background: white; padding: 12px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+        <button @click="closeModal" style="
+          position: absolute;
+          top: -15px;
+          right: -15px;
+          background: #1a1a2e;
+          color: white;
+          border: none;
+          border-radius: 50%;
+          width: 32px;
+          height: 32px;
+          font-weight: bold;
+          cursor: pointer;
+          font-size: 14px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        ">✕</button>
+
+        <img :src="modalImage" :alt="modalTitle"
+          style="width: 100%; height: auto; max-height: 75vh; object-fit: contain; border-radius: 10px;">
+        <p style="margin: 10px 0 0; text-align: center; font-weight: 700; color: #1a1a2e; font-size: 14px;">{{
+          modalTitle }}</p>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -209,35 +236,88 @@ export default {
   data() {
     return {
       orderLocal: { ...this.order[0] },
+      isRefunding: false,
+      // États de la modale d'image
+      isModalOpen: false,
+      modalImage: '',
+      modalTitle: '',
     };
   },
 
   methods: {
+    getStatusLabel(statut) {
+      const labels = {
+        'paye': 'Payée',
+        'expedie': 'Expédiée',
+        'livraison': 'En cours de livraison',
+        'livre': 'Livrée',
+        'rembourse': 'Remboursée'
+      };
+      return labels[statut] || statut;
+    },
+
     getStatusColor(statut) {
       const map = {
-        'en attente': { bg: '#fff8e1', text: '#f39c12' },
-        'encours de livraison': { bg: '#e8f4fd', text: '#2980b9' },
-        'En cours de livraison': { bg: '#e8f4fd', text: '#2980b9' },
-        'livré': { bg: '#eafaf1', text: '#27ae60' },
-        'annulé': { bg: '#fef0f0', text: '#e74c3c' },
+        'paye': { bg: '#e8f8f5', text: '#1e8449' },
+        'expedie': { bg: '#e8f4fd', text: '#2980b9' },
+        'livraison': { bg: '#f4ecf7', text: '#8e44ad' },
+        'livre': { bg: '#d4efdf', text: '#196f3d' },
+        'rembourse': { bg: '#f2f4f4', text: '#7f8c8d' },
       };
       return map[statut] || { bg: '#f0f0f0', text: '#555' };
     },
 
-    async changeStatus(order_id) {
+    // Gestion de la modale d'image
+    openModal(image, title) {
+      this.modalImage = image;
+      this.modalTitle = title;
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+      this.modalImage = '';
+      this.modalTitle = '';
+    },
+
+    // Modification dynamique de statut logistique
+    async changeStatus(order_id, targetStatus) {
       try {
-        const response = await axios.patch(`/commande/${order_id}/status`, {
-          statut: 'encours de livraison',
+        const response = await axios.patch(`/commande/update_status/${order_id}`, {
+          status: targetStatus,
         });
 
         if (response.data.success) {
-          this.orderLocal.statut = 'En cours de livraison';
+          this.orderLocal.statut = targetStatus;
         }
-
       } catch (error) {
-        console.error(error);
+        console.error("Erreur lors du changement de statut :", error);
+        alert("Impossible de modifier le statut de la commande.");
       }
     },
+
+    // Déclenchement du remboursement Stripe
+    async refundOrder(order_id) {
+      if (!confirm("Êtes-vous sûr de vouloir rembourser intégralement cette commande sur Stripe ? Cette action est irréversible.")) {
+        return;
+      }
+
+      this.isRefunding = true;
+      try {
+        // Envoi vers ta route Laravel dédiée au remboursement
+        const response = await axios.post(`/commande/refund/${order_id}`);
+
+        if (response.data.message) {
+          alert(response.data.message);
+          this.orderLocal.statut = 'rembourse'; // On passe directement au statut remboursé
+        }
+      } catch (error) {
+        console.error("Erreur remboursement :", error);
+        const errorMsg = error.response?.data?.error || "Une erreur s'est produite lors de la communication avec Stripe.";
+        alert(errorMsg);
+      } finally {
+        this.isRefunding = false;
+      }
+    }
   },
 };
 </script>

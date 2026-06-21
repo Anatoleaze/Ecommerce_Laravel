@@ -12,6 +12,8 @@ use Carbon\Carbon;
 use App\Mail\OrderStatusUpdated;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Stripe\Stripe;
+use Stripe\Refund;
 
 class OrderController extends Controller
 {
@@ -139,5 +141,57 @@ class OrderController extends Controller
             'success' => true,
             'status' => $order->statut
         ]);
+    }
+
+    /**
+     * Rembourser une commande via Stripe et mettre à jour la BDD.
+     *
+     * @param int $orderId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refundOrder($orderId)
+    {
+        // 1. Récupérer la commande par son ID
+        $order = Order::findOrFail($orderId);
+
+        // 2. Vérifier que le statut est bien 'livre'
+        if ($order->statut !== 'livre') {
+            return response()->json([
+                'success' => false,
+                'error' => 'Erreur : Seules les commandes livrées peuvent être remboursées.'
+            ], 422);
+        }
+
+        // 3. Vérifier qu'on a bien un ID Stripe enregistré pour cette commande
+        if (empty($order->payment_intent_id)) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Erreur : Aucun identifiant de paiement Stripe (payment_intent_id) trouvé pour cette commande.'
+            ], 422);
+        }
+
+        try {
+            // 4. Initialiser Stripe avec la clé secrète du fichier .env
+            Stripe::setApiKey(config('services.stripe.secret'));
+
+            // 5. Créer le remboursement en utilisant 'payment_intent' (et la bonne colonne BDD)
+            $refund = Refund::create([
+                'payment_intent' => $order->payment_intent_id, // 👈 Corrigé ici
+            ]);
+
+            // 6. Si Stripe valide, mise à jour du statut sans accent
+            $order->update([
+                'statut' => 'rembourse'
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'La commande a été remboursée avec succès sur Stripe !'
+            ]);
+        } catch (\Stripe\Exception\CardException $e) {
+            return response()->json(['error' => 'Erreur Stripe (Carte) : ' . $e->getMessage()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erreur lors du remboursement : ' . $e->getMessage()], 500);
+        }
     }
 }
