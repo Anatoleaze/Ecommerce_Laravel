@@ -50,7 +50,7 @@
                 <a class="dropdown-item-custom" :href="profile">
                   <i class="zmdi zmdi-account"></i> Mon profil
                 </a>
-                <a class="dropdown-item-custom" :href="orders">
+                <a v-if="headerUser.role !== 'admin'" class="dropdown-item-custom" :href="orders">
                   <i class="zmdi zmdi-receipt"></i> Mes commandes
                 </a>
                 <template v-if="headerUser.role == 'admin'">

@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use App\Models\OrderDetails;
 use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Mail\OrderStatusUpdated;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Stripe\Stripe;
 use Stripe\Refund;
@@ -18,33 +15,27 @@ use Stripe\Refund;
 class OrderController extends Controller
 {
     /**
-     * Store a newly created order (Après succès Stripe)
+     * Enregistre une nouvelle commande après le succès Stripe
      */
     public function store(Request $request)
     {
-        // 1. Validation stricte des données entrantes
         $request->validate([
             'total' => 'required|numeric|min:0',
             'methode_paiement' => 'required|string',
             'adresse_livraison' => 'required|string',
-            'payment_intent_id' => 'required|string|unique:orders,payment_intent_id', // Évite les doublons de commande
+            'payment_intent_id' => 'nullable|string|unique:orders,payment_intent_id',
         ]);
 
-        // 2. Génération du numéro de commande unique
-        $numeroCommande = 'CMD-' . strtoupper(Str::random(8));
-
-        // 3. Insertion propre en BDD (Ici, on utilise bien $request-> et JAMAIS $POST)
         $commande = Order::create([
             'user_id' => Auth::id(),
-            'numero_commande' => $numeroCommande,
+            'numero_commande' => 'CMD-' . strtoupper(Str::random(8)),
             'total' => $request->total,
+            'statut' => 'En attente',
             'methode_paiement' => $request->methode_paiement,
-            'payment_intent_id' => $request->payment_intent_id,
+            'payment_intent_id' => $request->payment_intent_id ?? null,
             'adresse_livraison' => $request->adresse_livraison,
-            'statut' => 'payé',
         ]);
 
-        // 4. Réponse structurée attendue par ton composant Vue3
         return response()->json([
             'success' => true,
             'message' => 'Commande créée avec succès !',
@@ -53,7 +44,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Display a listing of the resource for the client
+     * Liste des commandes pour le client (et fallback admin global)
      */
     public function index(Request $request)
     {
@@ -67,13 +58,24 @@ class OrderController extends Controller
         }
 
         return view('order', [
-            'title' => 'Mes Commandes',
+            'title' => Auth::user()->isAdmin() ? 'Gestion de toutes les commandes' : 'Mes Commandes',
             'data' => $orders
         ]);
     }
 
     /**
-     * Show details of an order
+     * Vue Admin globale : Envoie TOUTES les commandes à Vue
+     */
+    public function adminShow(Request $request)
+    {
+        // CORRIGÉ : Plus de ->where() restrictif pour que Vue reçoive tous les statuts
+        $orders = Order::with('user')->latest()->get();
+
+        return view('order', ['title' => 'Gestion globale des commandes', 'data' => $orders]);
+    }
+
+    /**
+     * Détails d'une commande (Produits inclus)
      */
     public function details($order_id)
     {
@@ -84,7 +86,6 @@ class OrderController extends Controller
         foreach ($order_details as $value) {
             $product = Product::find($value->product_id);
 
-            // Sécurité si un produit a été supprimé de la BDD entre temps
             $productPrice = $product ? $product->price : $value->price;
             $productName = $product ? $product->name : 'Produit inconnu';
             $productImage = $product ? $product->image_name : 'default.png';
@@ -102,31 +103,16 @@ class OrderController extends Controller
             ];
         }
 
-        // Plus sécurisé : on prend la date de la commande directement
         $date = Carbon::parse($order->created_at)->format('d/m/Y');
 
         return view('order_details', ['date' => $date, 'order' => $data]);
     }
 
     /**
-     * Show orders in admin panel
-     */
-    public function adminShow(Request $request)
-    {
-        // On affiche les commandes payées en priorité (les nouvelles reçues)
-        // Tu pourras enlever le ->where() si tu veux que l'admin voie TOUTES les commandes
-        $orders = Order::with('user')->where('statut', 'payé')->latest()->get();
-
-        return view('order', ['title' => 'Les Commandes reçues', 'data' => $orders]);
-    }
-
-
-    /**
-     * Change Order Status (Côté Admin)
+     * Changement de statut logistique (Boutons du tableau Vue)
      */
     public function updateOrderStatus(Request $request, $orderId)
     {
-        // Récupère le statut envoyé depuis le body JSON du fetch ({ status: nextStatus })
         $newStatus = $request->input('status');
 
         $order = Order::find($orderId);
@@ -144,10 +130,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Rembourser une commande via Stripe et mettre à jour la BDD.
-     *
-     * @param int $orderId
-     * @return \Illuminate\Http\JsonResponse
+     * Remboursement Stripe avec double sécurité (statut 'livre' + Mock Seeder)
      */
     public function refundOrder($orderId)
     {
@@ -163,43 +146,37 @@ class OrderController extends Controller
         if (empty($order->payment_intent_id)) {
             return response()->json([
                 'success' => false,
-                'error' => 'Erreur : Aucun identifiant de paiement trouvé pour cette commande.'
+                'error' => 'Erreur : Aucun identifiant de paiement trouvé.'
             ], 422);
         }
 
-        // 🛠️ MODE SIMULATION / DEV
-        // Si l'ID commence par 'demo_', on valide le remboursement en BDD sans contacter Stripe
+        // Bypasser Stripe si c'est une fausse commande du Seeder (commence par demo_)
         if (str_starts_with($order->payment_intent_id, 'demo_')) {
-            $order->update([
-                'statut' => 'rembourse'
-            ]);
-
+            $order->update(['statut' => 'rembourse']);
             return response()->json([
                 'success' => true,
-                'message' => '[MODE DEMO] La fausse commande a été marquée comme remboursée localement !'
+                'message' => '[MODE SIMULATION] La fausse commande a été remboursée localement !'
             ]);
         }
 
-        // 💳 VRAI MODE (PRODUCTION OU VRAIS TESTS STRIPE)
         try {
             Stripe::setApiKey(config('services.stripe.secret'));
 
-            $refund = Refund::create([
+            // Utilisation du bon paramètre 'payment_intent' avec ta colonne 'payment_intent_id'
+            Refund::create([
                 'payment_intent' => $order->payment_intent_id,
             ]);
 
-            $order->update([
-                'statut' => 'rembourse'
-            ]);
+            $order->update(['statut' => 'rembourse']);
 
             return response()->json([
                 'success' => true,
                 'message' => 'La commande a été remboursée avec succès sur Stripe !'
             ]);
         } catch (\Stripe\Exception\CardException $e) {
-            return response()->json(['error' => 'Erreur Stripe (Carte) : ' . $e->getMessage()], 422);
+            return response()->json(['error' => 'Erreur Stripe : ' . $e->getMessage()], 422);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Erreur lors du remboursement : ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Erreur serveur : ' . $e->getMessage()], 500);
         }
     }
 }

@@ -227,97 +227,55 @@ import axios from 'axios';
 
 export default {
   name: 'OrderDetailsComponent',
-
   props: {
     order: { type: Array, required: true },
     user: { type: Object, required: true },
   },
-
   data() {
     return {
       orderLocal: { ...this.order[0] },
       isRefunding: false,
-      // États de la modale d'image
       isModalOpen: false,
       modalImage: '',
       modalTitle: '',
     };
   },
-
   methods: {
     getStatusLabel(statut) {
-      const labels = {
-        'paye': 'Payée',
-        'expedie': 'Expédiée',
-        'livraison': 'En cours de livraison',
-        'livre': 'Livrée',
-        'rembourse': 'Remboursée'
-      };
-      return labels[statut] || statut;
+      return { 'paye': 'Payée', 'expedie': 'Expédiée', 'livraison': 'En cours de livraison', 'livre': 'Livrée', 'rembourse': 'Remboursée' }[statut] || statut;
     },
-
     getStatusColor(statut) {
-      const map = {
-        'paye': { bg: '#e8f8f5', text: '#1e8449' },
-        'expedie': { bg: '#e8f4fd', text: '#2980b9' },
-        'livraison': { bg: '#f4ecf7', text: '#8e44ad' },
-        'livre': { bg: '#d4efdf', text: '#196f3d' },
-        'rembourse': { bg: '#f2f4f4', text: '#7f8c8d' },
-      };
-      return map[statut] || { bg: '#f0f0f0', text: '#555' };
+      return { 'paye': { bg: '#e8f8f5', text: '#1e8449' }, 'expedie': { bg: '#e8f4fd', text: '#2980b9' }, 'livraison': { bg: '#f4ecf7', text: '#8e44ad' }, 'livre': { bg: '#d4efdf', text: '#196f3d' }, 'rembourse': { bg: '#f2f4f4', text: '#7f8c8d' } }[statut] || { bg: '#f0f0f0', text: '#555' };
     },
-
-    // Gestion de la modale d'image
     openModal(image, title) {
-      this.modalImage = image;
-      this.modalTitle = title;
-      this.isModalOpen = true;
+      this.modalImage = image; this.modalTitle = title; this.isModalOpen = true;
     },
-    closeModal() {
-      this.isModalOpen = false;
-      this.modalImage = '';
-      this.modalTitle = '';
-    },
+    closeModal() { this.isModalOpen = false; },
 
-    // Modification dynamique de statut logistique
     async changeStatus(order_id, targetStatus) {
       try {
-        const response = await axios.patch(`/commande/update_status/${order_id}`, {
-          status: targetStatus,
-        });
-
-        if (response.data.success) {
-          this.orderLocal.statut = targetStatus;
-        }
+        const response = await axios.patch(`/commande/update_status/${order_id}`, { status: targetStatus });
+        if (response.data.success) { this.orderLocal.statut = targetStatus; }
       } catch (error) {
-        console.error("Erreur lors du changement de statut :", error);
-        alert("Impossible de modifier le statut de la commande.");
+        alert("Erreur lors du changement de statut.");
       }
     },
 
-    // Déclenchement du remboursement Stripe
     async refundOrder(order_id) {
-      if (!confirm("Êtes-vous sûr de vouloir rembourser intégralement cette commande sur Stripe ? Cette action est irréversible.")) {
-        return;
-      }
-
+      if (!confirm("Voulez-vous rembourser cette commande ?")) return;
       this.isRefunding = true;
       try {
-        // Envoi vers ta route Laravel dédiée au remboursement
         const response = await axios.post(`/commande/refund/${order_id}`);
-
-        if (response.data.message) {
+        if (response.data.success) {
           alert(response.data.message);
-          this.orderLocal.statut = 'rembourse'; // On passe directement au statut remboursé
+          this.orderLocal.statut = 'rembourse';
         }
       } catch (error) {
-        console.error("Erreur remboursement :", error);
-        const errorMsg = error.response?.data?.error || "Une erreur s'est produite lors de la communication avec Stripe.";
-        alert(errorMsg);
+        alert(error.response?.data?.error || "Erreur Stripe");
       } finally {
         this.isRefunding = false;
       }
     }
-  },
+  }
 };
 </script>
