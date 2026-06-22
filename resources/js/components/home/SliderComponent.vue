@@ -18,7 +18,7 @@
         <p class="slide-subtitle" :key="'sub-' + currentSlide">
           {{ slides[currentSlide].subtitle }}
         </p>
-        <a :href="link + '?search=' + slides[currentSlide].search" class="slide-btn">
+        <a :href="link.replace(/=.*/, '=' + slides[currentSlide].search)" class="slide-btn">
           Découvrir la collection →
         </a>
       </div>

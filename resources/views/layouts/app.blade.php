@@ -36,7 +36,7 @@
 	
 
 	<!-- Footer -->
-<footer style="background: #1a1a2e; padding: 60px 0 0 0; margin-top: 60px;">
+<footer style="background: #1a1a2e; padding: 60px 0 0 0;">
     <div class="container">
         <div class="row" style="padding-bottom: 40px;">
 
@@ -45,6 +45,7 @@
                 <h5 style="color: white; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px;">
                     🏷️ Catégories
                 </h5>
+
                 <ul style="list-style: none; padding: 0; margin: 0;">
                     @foreach([
                         ['label' => '👗 Femmes', 'search' => 'femmes'],
@@ -55,7 +56,7 @@
                     ] as $cat)
                     <li style="margin-bottom: 12px;">
                         <a href="{{ route('products_list', [], false) }}?search={{ $cat['search'] }}"
-                           style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; transition: color 0.2s;"
+                           style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;"
                            onmouseover="this.style.color='white'"
                            onmouseout="this.style.color='rgba(255,255,255,0.6)'">
                             {{ $cat['label'] }}
@@ -70,6 +71,7 @@
                 <h5 style="color: white; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px;">
                     👤 Mon Compte
                 </h5>
+
                 <ul style="list-style: none; padding: 0; margin: 0;">
                     <li style="margin-bottom: 12px;">
                         <a href="{{ route('profils') }}"
@@ -79,6 +81,7 @@
                             📋 Mon profil
                         </a>
                     </li>
+
                     <li style="margin-bottom: 12px;">
                         <a href="{{ route('order') }}"
                            style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;"
@@ -87,45 +90,70 @@
                             📦 Mes commandes
                         </a>
                     </li>
-                    @auth
-                        @if(Auth::user()->isAdmin())
+                </ul>
+            </div>
+
+            @auth
+                <!-- Espace administrateur -->
+                @if(Auth::user()->isAdmin())
+                <div class="col-sm-6 col-lg-3" style="margin-bottom: 40px;">
+                    <h5 style="color: white; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px;">
+                        🔧 Administration
+                    </h5>
+
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+
                         <li style="margin-bottom: 12px;">
                             <a href="{{ route('products_list_admin') }}"
                                style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;"
                                onmouseover="this.style.color='white'"
                                onmouseout="this.style.color='rgba(255,255,255,0.6)'">
-                                🗂️ Liste des produits
+                                📦 Gestion des produits
                             </a>
                         </li>
-                        @endif
-                    @endauth
-                </ul>
-            </div>
 
-            <!-- Infos -->
-            <div class="col-sm-6 col-lg-3" style="margin-bottom: 40px;">
-                <h5 style="color: white; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px;">
-                    ℹ️ Informations
-                </h5>
-                <ul style="list-style: none; padding: 0; margin: 0;">
-                    <li style="margin-bottom: 12px;">
-                        <a href="{{ route('home') }}"
-                           style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;"
-                           onmouseover="this.style.color='white'"
-                           onmouseout="this.style.color='rgba(255,255,255,0.6)'">
-                            🏠 Accueil
-                        </a>
-                    </li>
-                    <li style="margin-bottom: 12px;">
-                        <a href="{{ route('contact') }}"
-                           style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;"
-                           onmouseover="this.style.color='white'"
-                           onmouseout="this.style.color='rgba(255,255,255,0.6)'">
-                            📞 Contact
-                        </a>
-                    </li>
-                </ul>
-            </div>
+                        <li style="margin-bottom: 12px;">
+                            <a href="{{ route('adminOrderShow') }}"
+                               style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;"
+                               onmouseover="this.style.color='white'"
+                               onmouseout="this.style.color='rgba(255,255,255,0.6)'">
+                                🧾 Gestion des commandes
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+                @endif
+            @else 
+                <!-- Informations -->
+                <div class="col-sm-6 col-lg-3" style="margin-bottom: 40px;">
+                    <h5 style="color: white; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px;">
+                        ℹ️ Informations
+                    </h5>
+
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+
+                        <li style="margin-bottom: 12px;">
+                            <a href="{{ route('home') }}"
+                            style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;"
+                            onmouseover="this.style.color='white'"
+                            onmouseout="this.style.color='rgba(255,255,255,0.6)'">
+                                🏠 Accueil
+                            </a>
+                        </li>
+
+                        <li style="margin-bottom: 12px;">
+                            <a href="{{ route('contact') }}"
+                            style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;"
+                            onmouseover="this.style.color='white'"
+                            onmouseout="this.style.color='rgba(255,255,255,0.6)'">
+                                📞 Contact
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            @endauth
 
             <!-- Newsletter -->
             <div class="col-sm-6 col-lg-3" style="margin-bottom: 40px;">
@@ -146,10 +174,13 @@
 
                 <form method="GET" action="{{ route('addNewsLetter') }}">
                     <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <input type="email" name="email" placeholder="votre@email.com"
+                        <input type="email"
+                               name="email"
+                               placeholder="votre@email.com"
                                style="padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: white; font-size: 14px; outline: none; width: 100%;">
+
                         <button type="submit"
-                                style="padding: 12px; border-radius: 8px; background: white; color: #1a1a2e; border: none; font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.2s;"
+                                style="padding: 12px; border-radius: 8px; background: white; color: #1a1a2e; border: none; font-size: 14px; font-weight: 700; cursor: pointer;"
                                 onmouseover="this.style.background='#eee'"
                                 onmouseout="this.style.background='white'">
                             S'abonner →
@@ -163,34 +194,42 @@
         <!-- Séparateur -->
         <div style="border-top: 1px solid rgba(255,255,255,0.1); padding: 30px 0;">
 
-            <!-- Icônes paiement -->
-            <div style="display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 24px;">
-                <span style="color: rgba(255,255,255,0.4); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-right: 8px;">
+             <p style="color: white; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-right: 8px;text-align:center;">
                     Paiement sécurisé
-                </span>
+                </p><br>
+
+            <!-- Paiement -->
+            <div style="display:flex; justify-content:center; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:24px;">
+
                 @foreach(['icon-pay-01.png', 'icon-pay-02.png', 'icon-pay-03.png', 'icon-pay-04.png', 'icon-pay-05.png'] as $icon)
-                <a href="#">
-                    <img src="{{ asset('images/icons/' . $icon) }}" alt="Paiement"
-                         style="height: 28px; opacity: 0.7; transition: opacity 0.2s;"
-                         onmouseover="this.style.opacity='1'"
-                         onmouseout="this.style.opacity='0.7'">
-                </a>
+                    <a href="#">
+                        <img src="{{ asset('images/icons/' . $icon) }}"
+                             alt="Paiement"
+                             style="height:28px; opacity:0.7; transition:opacity .2s;"
+                             onmouseover="this.style.opacity='1'"
+                             onmouseout="this.style.opacity='0.7'">
+                    </a>
                 @endforeach
+
             </div>
 
             <!-- Copyright -->
-            <p style="text-align: center; color: rgba(255,255,255,0.35); font-size: 13px; margin: 0;">
+            <p style="text-align:center; color:rgba(255,255,255,0.35); font-size:13px; margin:0;">
                 © <span id="footer-year"></span> Tous droits réservés —
                 @isset($link)
-                    <a href="{{ $link }}" target="_blank" style="color: rgba(255,255,255,0.5); text-decoration: none;">
+                    <a href="{{ $link }}"
+                       target="_blank"
+                       style="color: rgba(255,255,255,0.5); text-decoration: none;">
                         {{ config('app.name', 'Laravel') }}
                     </a>
                 @else
-                    <a href="#" style="color: rgba(255,255,255,0.5); text-decoration: none;">
+                    <a href="#"
+                       style="color: rgba(255,255,255,0.5); text-decoration: none;">
                         {{ config('app.name', 'Laravel') }}
                     </a>
                 @endisset
             </p>
+
         </div>
     </div>
 </footer>
@@ -322,6 +361,8 @@
 
 	<script src="{{ asset('js/main.js')}}"></script>
 
+    @yield('scripts')
+    
 	<!-- JS Script Vue -->
 	@vite([ 'resources/js/app.js'])
 

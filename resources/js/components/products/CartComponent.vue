@@ -26,7 +26,20 @@
                                     {{ row.product.name }}
                                 </p>
                                 <p style="color:#888; font-size:13px; margin-bottom:8px;">
-                                    Prix unitaire : {{ parseFloat(row.product.price).toFixed(2) }} €
+                                    Prix unitaire : 
+                                    
+                                    <span v-if="parseFloat(row.product.sale_price) === 0" class="product-price">
+                                        {{ parseFloat(row.product.price).toFixed(2) }}€
+                                    </span>
+                                    
+                                    <span v-if="parseFloat(row.product.sale_price) > 0">
+                                        <span class="product-old-price">{{ parseFloat(row.product.price).toFixed(2) }} € </span> 
+                                        <span class="product-price"> {{ row.product.sale_price > 0 ? parseFloat(row.product.sale_price).toFixed(2) :
+                                        parseFloat(row.product.price).toFixed(2) }} €</span>
+                                    </span>
+
+                                    <span v-if="parseFloat(row.product.sale_price) > 0" class="product-badge">Promo</span>
+
                                 </p>
 
                                 <!-- Quantité -->
@@ -50,8 +63,10 @@
                             <div
                                 style="display:flex; flex-direction:column; align-items:flex-end; gap:10px; flex-shrink:0;">
                                 <span style="font-weight:bold; font-size:16px; color:#333;">
-                                    {{ (row.qty * parseFloat(row.product.price)).toFixed(2) }} €
+                                    <span v-if="parseFloat(row.product.sale_price) === 0">{{ (row.qty * parseFloat(row.product.price)).toFixed(2) }} €</span>
+                                    <span v-else>{{ (row.qty * parseFloat(row.product.sale_price)).toFixed(2) }} €</span>
                                 </span>
+
                                 <button @click="removeProduct(row.product_id)"
                                     style="background:none; border:1px solid #e74c3c; color:#e74c3c; border-radius:6px; padding:4px 10px; cursor:pointer; font-size:12px; transition:all 0.2s;"
                                     onmouseover="this.style.background='#e74c3c'; this.style.color='white'"
@@ -129,7 +144,7 @@
                                 style="display:flex; justify-content:space-between; margin-bottom:12px; align-items:center;">
                                 <span style="color:#555; font-size:14px;">💰 Sous-total</span>
                                 <span style="font-weight:bold; color:#27ae60;">{{ (totalCartPrice - discount).toFixed(2)
-                                }} €</span>
+                                    }} €</span>
                             </div>
 
                             <hr style="border:1px dashed #ddd; margin:12px 0;">
@@ -269,10 +284,12 @@ export default {
         increaseQuantity(row) {
             row.qty++;
 
+            let price = parseFloat(row.product.sale_price) > 0 ? parseFloat(row.product.sale_price) : parseFloat(row.product.price);
+
             this.updateCartItem({
                 product_id: row.product_id,
                 quantity: row.qty,
-                price: parseFloat(row.product.price),
+                price: price,
             });
         },
 
@@ -280,10 +297,12 @@ export default {
             if (row.qty > 1) {
                 row.qty--;
 
+                let price = row.product.sale_price > 0 ? parseFloat(row.product.sale_price) : parseFloat(row.product.price);
+
                 this.updateCartItem({
                     product_id: row.product_id,
                     quantity: row.qty,
-                    price: parseFloat(row.product.price),
+                    price: price,
                 });
             } else {
                 this.removeProduct(row.product_id);
@@ -409,8 +428,6 @@ export default {
 
     },
 
-
-
     mounted() {
         this.fetchCart();
         this.fetchPays();  // fetch pays when the component is mounted
@@ -418,7 +435,6 @@ export default {
     },
 
 };
-
 
 </script>
 
@@ -439,5 +455,28 @@ export default {
 .oldprice {
     text-decoration: line-through;
     color: red;
+}
+
+.product-badge {
+  background: #e74c3c;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  margin-left: 12px;
+}
+
+.product-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+}
+
+.product-old-price {
+  font-size: 13px;
+  color: #aaa;
+  text-decoration: line-through;
 }
 </style>

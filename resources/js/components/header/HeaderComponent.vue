@@ -50,7 +50,7 @@
                 <a class="dropdown-item-custom" :href="profile">
                   <i class="zmdi zmdi-account"></i> Mon profil
                 </a>
-                <a v-if="headerUser.role != 'admin'" class="dropdown-item-custom" :href="orders">
+                <a v-if="headerUser.role !== 'admin'" class="dropdown-item-custom" :href="orders">
                   <i class="zmdi zmdi-receipt"></i> Mes commandes
                 </a>
                 <template v-if="headerUser.role == 'admin'">
@@ -119,183 +119,210 @@
     </div>
 
     <!-- Modal Recherche -->
-    <div v-if="isSearchModalVisible" class="search-modal" @click.self="hideSearchModal">
-      <div class="search-modal-content">
-        <button class="search-close-btn" @click="hideSearchModal">
-          <i class="zmdi zmdi-close"></i>
-        </button>
-        <form class="search-form" method="GET" :action="catalogLink">
-          <i class="zmdi zmdi-search search-icon"></i>
-          <input type="text" name="search" placeholder="Rechercher un produit..." v-model="searchQuery" autofocus>
-          <button type="submit" class="search-submit-btn">Rechercher</button>
-        </form>
+    <transition name="fade-scale">
+      <div v-if="isSearchModalVisible" class="search-modal-overlay" @click.self="hideSearchModal">
+        <div class="modern-search-container">
+
+          <!-- Bouton Fermer Épuré -->
+          <button class="modern-close-btn" @click="hideSearchModal" title="Fermer (Échap)">
+            <i class="zmdi zmdi-close"></i>
+          </button>
+
+          <!-- Formulaire de Recherche Principal -->
+          <form class="modern-search-form" method="GET" :action="catalogLink">
+            <div class="search-input-wrapper">
+              <i class="zmdi zmdi-search modern-search-icon"></i>
+              <input type="text" name="search" placeholder="Que recherchez-vous aujourd'hui ?" v-model="searchQuery"
+                ref="searchInput" autocomplete="off" autofocus>
+            </div>
+            <button type="submit" class="modern-search-submit-btn">
+              <span>Rechercher</span>
+              <i class="zmdi zmdi-arrow-right"></i>
+            </button>
+          </form>
+
+          <!-- Petit indicateur contextuel discret -->
+          <p class="search-hint">Appuyez sur Entrée pour lancer la recherche</p>
+
+        </div>
       </div>
-    </div>
+    </transition>
 
   </header>
 </template>
-  
-  <script>
-  import { mapGetters, mapActions } from 'vuex';
-  import axios from 'axios';
 
-  export default {
-    name: 'HeaderComponent',
+<script>
+import { mapGetters, mapActions } from 'vuex';
+import axios from 'axios';
 
-    data() {
-        return {
-            isSearchModalVisible: false,
-            searchQuery: "",
-            isUserDropdownOpen: false,
-        isMobileMenuOpen: false,
-        };
+export default {
+  name: 'HeaderComponent',
+
+  data() {
+    return {
+      isSearchModalVisible: false,
+      searchQuery: "",
+      isUserDropdownOpen: false,
+      isMobileMenuOpen: false,
+    };
+  },
+
+  props: {
+    homeLink: {
+      type: String,
+      required: true,
     },
 
-    props:{ 
-        homeLink: {
-            type: String,
-            required: true,
-        },
-        
-        logo: {
-            type: String,
-            required: true
-        },
-
-        catalogLink:{
-            type: String,
-            required: true
-        },
-
-        cartLink:{
-            type: String,
-            required: true
-        },
-
-        contactLink:{
-            type: String,
-            required: true
-        },
-
-        adminOrderShow:{
-            type: String,
-            required: true
-        },
-
-        isAuthenticated: {
-            type: [Boolean, Object],
-            default: false
-        },
-
-        user: {
-            type: Object,
-            required: false,
-            default: () => ({})
-        },
-
-        login: {
-            type: String,
-            required: true
-        },
-
-        register: {
-            type: String,
-            required: false,
-            default: ''
-        },
-        
-        profile: {
-            type: String,
-            required: true
-        },
-        
-        orders: {
-            type: String,
-            required: true
-        },
-        
-        adminProducts: {
-            type: String,
-            required: true
-        },
-        
-        logout: {
-            type: String,
-            required: true
-        },
-
-        logoClose: {
-            type: String,
-            required: true
-        },
-
-        csrfToken: {
-            type: String,
-            required: false,
-            default: ''
-        },
-
-    }, 
-
-    computed: {
-        cartItemCount() {
-            return this.$store.getters.cartItemCount;
-        },
-        headerUser() {
-            return this.$store.state.user || this.user || {};
-        }
+    logo: {
+      type: String,
+      required: true
     },
 
-    methods: {
-        ...mapActions(['toggleCart']),
-        
-        logoutUser() {
-            axios.post(this.logout, {}, {
-                headers: { 'X-CSRF-TOKEN': this.csrfToken }
-            })
-            .then(() => {
-                window.location.href = this.homeLink; // Redirection après logout
-            })
-            .catch(error => console.error('Erreur lors du logout:', error));
-        },
-
-        showSearchModal() {
-            this.isSearchModalVisible = true;  
-        },
-
-        toggleUserDropdown() {
-            this.isUserDropdownOpen = !this.isUserDropdownOpen;
-        },
-    
-        hideSearchModal() {
-            this.isSearchModalVisible = false;
-            this.isUserDropdownOpen = false;
-        },
-  
-        toggleMobileMenu() {
-    this.isMobileMenuOpen = !this.isMobileMenuOpen;
-},
-
-        ...mapActions(['fetchCartCount', 'fetchCart']), // Load cart in starting state
-            
-
+    catalogLink: {
+      type: String,
+      required: true
     },
 
-    mounted() {
-        if(this.isAuthenticated){
-            this.fetchCartCount();
-            this.fetchCart();
-        }
+    cartLink: {
+      type: String,
+      required: true
+    },
 
-        if (this.isAuthenticated && this.user && Object.keys(this.user).length) {
-            this.$store.commit('SET_USER', this.user);
-        }
+    contactLink: {
+      type: String,
+      required: true
+    },
+
+    adminOrderShow: {
+      type: String,
+      required: true
+    },
+
+    isAuthenticated: {
+      type: [Boolean, Object],
+      default: false
+    },
+
+    user: {
+      type: Object,
+      required: false,
+      default: () => ({})
+    },
+
+    login: {
+      type: String,
+      required: true
+    },
+
+    register: {
+      type: String,
+      required: false,
+      default: ''
+    },
+
+    profile: {
+      type: String,
+      required: true
+    },
+
+    orders: {
+      type: String,
+      required: true
+    },
+
+    adminProducts: {
+      type: String,
+      required: true
+    },
+
+    logout: {
+      type: String,
+      required: true
+    },
+
+    logoClose: {
+      type: String,
+      required: true
+    },
+
+    csrfToken: {
+      type: String,
+      required: false,
+      default: ''
+    },
+
+  },
+
+  computed: {
+    cartItemCount() {
+      return this.$store.getters.cartItemCount;
+    },
+    headerUser() {
+      return this.$store.state.user || this.user || {};
+    }
+  },
+
+  methods: {
+    ...mapActions(['toggleCart']),
+
+    logoutUser() {
+      axios.post(this.logout, {}, {
+        headers: { 'X-CSRF-TOKEN': this.csrfToken }
+      })
+        .then(() => {
+          window.location.href = this.homeLink; // Redirection après logout
+        })
+        .catch(error => console.error('Erreur lors du logout:', error));
+    },
+
+    showSearchModal() {
+      this.isSearchModalVisible = true;
+    },
+
+    toggleUserDropdown() {
+      this.isUserDropdownOpen = !this.isUserDropdownOpen;
+    },
+
+    hideSearchModal() {
+      this.isSearchModalVisible = false;
+      this.isUserDropdownOpen = false;
+    },
+
+    toggleMobileMenu() {
+      this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    },
+
+    ...mapActions(['fetchCartCount', 'fetchCart']), // Load cart in starting state
+
+
+  },
+
+  watch: {
+    isSearchModalVisible(visible) {
+      if (visible) {
+        // Un court délai permet à la transition CSS de s'exécuter avant de cibler l'input
+        setTimeout(() => {
+          this.$refs.searchInput?.focus();
+        }, 100);
+      }
+    }
+  },
+
+  mounted() {
+    if (this.isAuthenticated) {
+      this.fetchCartCount();
+      this.fetchCart();
     }
 
-  };
-  </script>
-  
- <style scoped>
+    if (this.isAuthenticated && this.user && Object.keys(this.user).length) {
+      this.$store.commit('SET_USER', this.user);
+    }
+  }
+
+};
+</script>
+
+<style scoped>
 /* ===== HEADER DESKTOP ===== */
 .header-desktop {
   display: flex;
@@ -303,7 +330,7 @@
   padding: 0 40px;
   height: 70px;
   background: white;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -463,7 +490,7 @@
   top: calc(100% + 8px);
   background: white;
   border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   padding: 8px;
   min-width: 200px;
   z-index: 9999;
@@ -517,7 +544,7 @@
   padding: 0 20px;
   height: 60px;
   background: white;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -573,7 +600,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -649,8 +676,192 @@
   .header-desktop {
     display: none;
   }
+
   .header-mobile {
     display: flex;
+  }
+}
+
+
+
+/* Superposition plein écran avec flou d'arrière-plan (Glassmorphism) */
+.search-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 26, 46, 0.85);
+  /* Ton bleu foncé thématique avec opacité */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Conteneur principal de recherche */
+.modern-search-container {
+  width: 100%;
+  max-width: 800px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Formulaire épuré horizontal */
+.modern-search-form {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 16px;
+  padding: 10px 14px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modern-search-form:focus-within {
+  transform: scale(1.02);
+  box-shadow: 0 20px 60px rgba(108, 99, 255, 0.25);
+  /* Accentuation de couleur */
+}
+
+/* Wrapper de l'input et son icône */
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  gap: 16px;
+  padding-left: 12px;
+}
+
+.modern-search-icon {
+  font-size: 28px;
+  color: #6c63ff;
+  /* Ta couleur violette/bleutée d'accentuation */
+}
+
+/* Style de l'input géant */
+.search-input-wrapper input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a2e;
+  outline: none;
+  padding: 12px 0;
+}
+
+.search-input-wrapper input::placeholder {
+  color: #aaa;
+  font-weight: 500;
+}
+
+/* Bouton de soumission moderne */
+.modern-search-submit-btn {
+  background: #1a1a2e;
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+
+.modern-search-submit-btn:hover {
+  background: #6c63ff;
+  transform: translateX(2px);
+}
+
+.modern-search-submit-btn i {
+  font-size: 16px;
+}
+
+/* Bouton Fermer minimaliste dans le coin supérieur droit */
+.modern-close-btn {
+  position: absolute;
+  top: -80px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.modern-close-btn:hover {
+  background: white;
+  color: #1a1a2e;
+  transform: rotate(90deg);
+}
+
+/* Petit texte d'indication sous la barre */
+.search-hint {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  margin: 0;
+  padding-left: 16px;
+}
+
+/* --- ANIMATION DE TRANSITION (Fade & Scale) --- */
+.fade-scale-enter-active,
+.fade-scale-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-scale-enter-active .modern-search-container,
+.fade-scale-leave-active .modern-search-container {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.fade-scale-enter-from,
+.fade-scale-leave-to {
+  opacity: 0;
+}
+
+.fade-scale-enter-from .modern-search-container {
+  transform: scale(0.9) translateY(10px);
+}
+
+.fade-scale-leave-to .modern-search-container {
+  transform: scale(0.95);
+}
+
+/* Responsive pour les petits écrans mobiles */
+@media (max-width: 576px) {
+  .modern-search-form {
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .search-input-wrapper {
+    padding-left: 0;
+    width: 100%;
+  }
+
+  .modern-search-submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .modern-close-btn {
+    top: -60px;
   }
 }
 </style>

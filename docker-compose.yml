@@ -6,8 +6,8 @@ services:
     container_name: laravel-app
     volumes:
       - .:/var/www
-      - /var/www/vendor        # ← protège vendor/ du volume
-      - /var/www/node_modules  # ← protège node_modules aussi
+      - /var/www/vendor # ← protège vendor/ du volume
+      - /var/www/node_modules # ← protège node_modules aussi
     ports:
       - "9000:9000"
     depends_on:
@@ -16,8 +16,9 @@ services:
       sh -c "chmod -R o+rx /var/www &&
             chmod -R 777 /var/www/storage &&
             chmod -R 777 /var/www/bootstrap/cache &&
-            chown -R www-data:www-data /var/www/storage &&
-            chown -R www-data:www-data /var/www/bootstrap/cache &&
+            chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache &&
+            mkdir -p /var/www/public/images &&
+            chmod -R 775 /var/www/public/images &&
             cp -n /var/www/.env.local /var/www/.env &&
             docker-php-entrypoint php-fpm"
 

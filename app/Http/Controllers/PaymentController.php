@@ -54,10 +54,12 @@ class PaymentController extends Controller
                     'user_id' => Auth::id(),
                     'numero_commande' => 'CMD-' . Str::upper(Str::random(10)),
                     'total' => $request->amount,
-                    'statut' => 'en attente',
+                    'statut' => 'paye',
                     'methode_paiement' => 'CB',
                     'adresse_livraison' => $request->address,
+                    'payment_intent_id' => $paymentIntent->id, 
                 ]);
+
 
                 // Récupération du panier
                 $cart = Basket::where('user_id', Auth::id())->get();

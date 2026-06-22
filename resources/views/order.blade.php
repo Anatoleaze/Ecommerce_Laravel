@@ -4,37 +4,53 @@
 
 <!-- Header -->
 <div>
-	<header-component
-		:home-link="'{{ route('home') }}'"
-		:logo="'{{ asset('images/icons/logo-01.png') }}'"
-		:catalog-link="'{{ route('products_list') }}'"
-		:cart-link="'{{ route('cart_show') }}'"
-		:contact-link="'{{ route('contact') }}'"
-		:admin-order-show="'{{ route('adminOrderShow') }}'"
-		:is-authenticated="{{ json_encode(Auth::check()) }}"
-		:user="{{ json_encode(Auth::user()) }}"
-		:login="'{{ route('login') }}'"
-		:register="'{{ route('register') }}'"
-		:profile="'{{ route('profils') }}'"
-		:orders="'{{ route('order') }}'"
-		:admin-products="'{{ route('products_list_admin') }}'"
-		:logout="'{{ route('logout') }}'"
-		:logo-close="'{{ asset('images/icons/icon-close2.png') }}'"
-		:csrfToken="'{{ csrf_token() }}'"
-		
-	/>
+    <header-component
+        :home-link="'{{ route('home') }}'"
+        :logo="'{{ asset('images/icons/logo-01.png') }}'"
+        :catalog-link="'{{ route('products_list') }}'"
+        :cart-link="'{{ route('cart_show') }}'"
+        :contact-link="'{{ route('contact') }}'"
+        :admin-order-show="'{{ route('adminOrderShow') }}'"
+        :is-authenticated="{{ json_encode(Auth::check()) }}"
+        :user="{{ json_encode(Auth::user()) }}"
+        :login="'{{ route('login') }}'"
+        :register="'{{ route('register') }}'"
+        :profile="'{{ route('profils') }}'"
+        :orders="'{{ route('order') }}'"
+        :admin-products="'{{ route('products_list_admin') }}'"
+        :logout="'{{ route('logout') }}'"
+        :logo-close="'{{ asset('images/icons/icon-close2.png') }}'"
+        :csrfToken="'{{ csrf_token() }}'"
+    />
 </div>
 
-<section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('/images/bg-01.jpg');">
-    <h2 class="ltext-105 cl0 txt-center">
-        {{ $title }}
-    </h2>
+<!-- Hero -->
+<section style="position:relative; background-image:url('{{ asset('images/bg-01.jpg') }}'); background-size:cover; background-position:center; padding:70px 20px; text-align:center;">
+    <div style="position:absolute; inset:0; background:rgba(0,0,0,0.55);"></div>
+    <div style="position:relative; z-index:1;">
+        <div style="width:70px; height:70px; background:rgba(255,255,255,0.1); border-radius:20px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:32px; backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,0.2);">
+            📦
+        </div>
+        <span style="display:inline-block; background:rgba(255,255,255,0.15); color:white; padding:6px 18px; border-radius:25px; font-size:13px; font-weight:600; letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,0.3);">
+            Commandes
+        </span>
+        <h1 style="color:white; font-size:36px; font-weight:800; margin:0 0 8px;">{{ $title }}</h1>
+        <p style="color:rgba(255,255,255,0.6); font-size:14px; margin:0;">
+            Suivi et gestion de vos commandes
+        </p>
+    </div>
 </section>
 
-<order-component 
-    :orders= "{{json_encode($data)}}"
-	:user="{{ json_encode(Auth::user()) }}"
-/>    
-	
-	
+<!-- Contenu -->
+<section style="padding:50px 0; background:#f8f9fa; min-height:60vh;">
+    <div class="container">
+        <div style="background:white; border-radius:16px; padding:28px; box-shadow:0 4px 15px rgba(0,0,0,0.06);">
+            <order-component
+                :orders="{{ json_encode($data) }}"
+                :user="{{ json_encode(Auth::user()) }}"
+            />
+        </div>
+    </div>
+</section>
+
 @endsection

@@ -137,7 +137,7 @@ export default {
       loading: false,
       alertMessage: '',
       alertClass: '',
-      stripeInitialized : false,
+      stripeInitialized: false,
     };
   },
 
@@ -146,9 +146,9 @@ export default {
 
       await this.$nextTick();
 
-        if (this.stripeInitialized) {
-    return;
-  }
+      if (this.stripeInitialized) {
+        return;
+      }
 
 
       try {
@@ -235,31 +235,36 @@ export default {
         }
 
         if (response.data.success) {
+          // Le paiement est fait ET le serveur a déjà créé la commande en BDD !
           this.alertMessage = "✅ Paiement validé avec succès !";
           this.alertClass = 'alert-success';
 
-          // Compte à rebours de 5 secondes puis redirection
+          // On lance directement le compte à rebours pour la redirection
           let countdown = 5;
-          this.alertMessage = `✅ Paiement validé ! Redirection dans ${countdown}s...`;
+          this.alertMessage = `✅ Paiement validé et commande enregistrée ! Redirection dans ${countdown}s...`;
 
           const timer = setInterval(() => {
             countdown--;
             if (countdown > 0) {
-              this.alertMessage = `✅ Paiement validé ! Redirection dans ${countdown}s...`;
+              this.alertMessage = `✅ Paiement validé et commande enregistrée ! Redirection dans ${countdown}s...`;
             } else {
               clearInterval(timer);
+
+              // Actions de fin de processus
               this.$emit('payment-success');
               this.closeModal();
-              window.location.href = '/';
+
+              // Redirection vers l'historique des commandes
+              window.location.href = '/order';
             }
           }, 1000);
+
         } else {
           this.alertMessage = "Oups... Une erreur est survenue.";
           this.alertClass = 'alert-error';
         }
 
       } catch (err) {
-
         this.alertMessage =
           err.response?.data?.error ||
           "Une erreur est survenue lors du paiement.";
