@@ -1,7 +1,7 @@
-# E-Commerce Laravel & Vue.js
+# Primestore - E-Commerce Laravel & Vue.js
 
-Ce projet est un site e-commerce développé avec **Laravel** pour le back-end et **Vue.js** pour le front-end.  
-L'application permet la gestion des produits, des paniers, des utilisateurs et des commandes dans un environnement moderne et performant.
+Ce projet est une plateforme e-commerce développée avec **Laravel** pour le back-end et **Vue.js** pour le front-end.  
+L'application Primestore permet la gestion des produits, des paniers, des utilisateurs et des commandes dans un environnement moderne et performant.
 
 ---
 
@@ -76,7 +76,7 @@ STRIPE_SECRET=sk_test_votre_cle_secrete
 
 ---
 
-## 3. Démarrer les containers Docker
+## 3. Démarrer les containers Docker PrimeStore
 
 ```bash
 docker compose up -d --build
@@ -92,7 +92,7 @@ docker exec -it laravel-app php artisan key:generate
 
 ---
 
-## 5. Lancer les migrations et les seeders
+## 5. Lancer les migrations et les seeders de Primestore
 
 ```bash
 docker exec -it laravel-app php artisan migrate --seed
@@ -100,7 +100,7 @@ docker exec -it laravel-app php artisan migrate --seed
 
 ---
 
-## 6. Accéder à l’application
+## 6. Accéder à l’application Primestore
 
 Ouvrez votre navigateur à l’adresse suivante :
 
