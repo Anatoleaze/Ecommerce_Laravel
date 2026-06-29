@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="100%" height="100%">
+  <defs>
+    <!-- Dégradé Or Premium (identique à ton logo) -->
+    <linearGradient id="faviconGold" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#C5A880" />
+      <stop offset="50%" stop-color="#E5D0B1" />
+      <stop offset="100%" stop-color="#A88960" />
+    </linearGradient>
+  </defs>
+
+  <!-- L'icône du "P" centrée -->
+  <g transform="translate(5, 2.5)">
+    <!-- Forme Extérieure diamant/hexagone (Bleu Nuit de ton footer) -->
+    <polygon points="35,5 65,22 65,58 35,75 5,58 5,22" fill="none" stroke="#1a1a2e" stroke-width="4.5" stroke-linejoin="round"/>
+    
+    <!-- Ligne verticale principale du P -->
+    <path d="M35,5 L35,75" fill="none" stroke="#1a1a2e" stroke-width="4.5" stroke-linecap="round"/>
+    
+    <!-- Boucle supérieure dorée -->
+    <path d="M35,5 L58,18 L58,42 L35,55" fill="none" stroke="url(#faviconGold)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M35,38 L50,30" fill="none" stroke="url(#faviconGold)" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>

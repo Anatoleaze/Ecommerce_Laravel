@@ -346,7 +346,7 @@ export default {
 }
 
 .header-logo img {
-  height: 40px;
+  height: 65px;
   object-fit: contain;
 }
 
