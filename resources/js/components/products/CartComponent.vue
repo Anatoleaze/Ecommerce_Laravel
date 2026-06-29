@@ -1,47 +1,37 @@
 <template>
-
     <form class="bg0 p-t-75 p-b-85">
         <div class="container">
             <div class="row">
+                <!-- Colonne panier -->
                 <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
                     <div class="m-l-25 m-r--38 m-lr-0-xl">
-
                         <!-- Titre -->
                         <h4 class="mtext-109 cl2 p-b-20">🛍️ Mon Panier</h4>
 
                         <!-- Carte produit -->
                         <div v-for="row in cart" :key="row.product_id"
                             style="background:#fff; border:1px solid #eee; border-radius:12px; padding:15px; margin-bottom:15px; display:flex; align-items:center; gap:15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-
                             <!-- Image -->
                             <div style="flex-shrink:0; width:90px; height:90px; border-radius:8px; overflow:hidden;">
                                 <img :src="row.product.image_name.startsWith('http') ? row.product.image_name : '/' + row.product.image_name"
                                     alt="IMG" style="width:100%; height:100%; object-fit:cover;" />
                             </div>
-
                             <!-- Infos produit -->
                             <div style="flex:1; min-width:0;">
-                                <p
-                                    style="font-weight:bold; color:#333; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                <p style="font-weight:bold; color:#333; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                                     {{ row.product.name }}
                                 </p>
                                 <p style="color:#888; font-size:13px; margin-bottom:8px;">
-                                    Prix unitaire : 
-                                    
+                                    Prix unitaire :
                                     <span v-if="parseFloat(row.product.sale_price) === 0" class="product-price">
                                         {{ parseFloat(row.product.price).toFixed(2) }}€
                                     </span>
-                                    
-                                    <span v-if="parseFloat(row.product.sale_price) > 0">
-                                        <span class="product-old-price">{{ parseFloat(row.product.price).toFixed(2) }} € </span> 
-                                        <span class="product-price"> {{ row.product.sale_price > 0 ? parseFloat(row.product.sale_price).toFixed(2) :
-                                        parseFloat(row.product.price).toFixed(2) }} €</span>
+                                    <span v-else>
+                                        <span class="product-old-price">{{ parseFloat(row.product.price).toFixed(2) }} € </span>
+                                        <span class="product-price">{{ parseFloat(row.product.sale_price).toFixed(2) }} €</span>
+                                        <span class="product-badge">Promo</span>
                                     </span>
-
-                                    <span v-if="parseFloat(row.product.sale_price) > 0" class="product-badge">Promo</span>
-
                                 </p>
-
                                 <!-- Quantité -->
                                 <div style="display:flex; align-items:center; gap:8px;">
                                     <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m"
@@ -58,15 +48,12 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Total ligne + Supprimer -->
-                            <div
-                                style="display:flex; flex-direction:column; align-items:flex-end; gap:10px; flex-shrink:0;">
+                            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px; flex-shrink:0;">
                                 <span style="font-weight:bold; font-size:16px; color:#333;">
                                     <span v-if="parseFloat(row.product.sale_price) === 0">{{ (row.qty * parseFloat(row.product.price)).toFixed(2) }} €</span>
                                     <span v-else>{{ (row.qty * parseFloat(row.product.sale_price)).toFixed(2) }} €</span>
                                 </span>
-
                                 <button @click="removeProduct(row.product_id)"
                                     style="background:none; border:1px solid #e74c3c; color:#e74c3c; border-radius:6px; padding:4px 10px; cursor:pointer; font-size:12px; transition:all 0.2s;"
                                     onmouseover="this.style.background='#e74c3c'; this.style.color='white'"
@@ -96,13 +83,12 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
+                <!-- Colonne récapitulatif -->
                 <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
                     <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-
                         <!-- Titre -->
                         <h4 class="mtext-109 cl2 p-b-30">🛒 Récapitulatif</h4>
 
@@ -118,10 +104,8 @@
 
                         <!-- Carte récapitulatif -->
                         <div style="background:#f8f9fa; border-radius:12px; padding:20px; margin-bottom:20px;">
-
                             <!-- Prix initial -->
-                            <div
-                                style="display:flex; justify-content:space-between; margin-bottom:12px; align-items:center;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:12px; align-items:center;">
                                 <span style="color:#555; font-size:14px;">🏷️ Prix du panier</span>
                                 <span v-if="discount > 0"
                                     style="text-decoration:line-through; color:#e74c3c; font-weight:bold;">
@@ -143,8 +127,7 @@
                             <div v-if="discount > 0"
                                 style="display:flex; justify-content:space-between; margin-bottom:12px; align-items:center;">
                                 <span style="color:#555; font-size:14px;">💰 Sous-total</span>
-                                <span style="font-weight:bold; color:#27ae60;">{{ (totalCartPrice - discount).toFixed(2)
-                                    }} €</span>
+                                <span style="font-weight:bold; color:#27ae60;">{{ (totalCartPrice - discount).toFixed(2) }} €</span>
                             </div>
 
                             <hr style="border:1px dashed #ddd; margin:12px 0;">
@@ -152,56 +135,70 @@
                             <!-- Livraison -->
                             <div style="display:flex; justify-content:space-between; align-items:center;">
                                 <span style="color:#555; font-size:14px;">🚚 Livraison</span>
-                                <span v-if="deliveryFees > 0" style="font-weight:bold; color:#333;">{{ deliveryFees }}
-                                    €</span>
-                                <span v-else style="color:#aaa; font-style:italic; font-size:13px;">À calculer</span>
+                                <span v-if="deliveryFees > 0" style="font-weight:bold; color:#333;">{{ deliveryFees }} €</span>
+                                <span v-else style="color:#aaa; font-style:italic; font-size:13px;">Sélectionnez une adresse</span>
                             </div>
                         </div>
 
-                        <!-- Adresse & Pays -->
-                        <div
-                            style="background:#fff; border:1px solid #eee; border-radius:12px; padding:20px; margin-bottom:20px;">
+                        <!-- Adresse de livraison -->
+                        <div style="background:#fff; border:1px solid #eee; border-radius:12px; padding:20px; margin-bottom:20px;">
                             <p style="font-weight:bold; margin-bottom:12px; color:#333;">📦 Adresse de livraison</p>
 
-                            <p v-if="selectedCountryErrors" class="alert alert-danger" style="font-size:13px;">{{
-                                selectedCountryErrors }}</p>
-                            <select v-model="selectedCountry" class="stext-104 cl2 plh4 size-116 bor13 p-lr-20 m-b-12"
-                                name="time" required>
-                                <option selected>Sélectionnez votre pays</option>
-                                <option v-for="pays in paysList" :key="pays" :value="pays">{{ pays }}</option>
-                            </select>
+                            <!-- Liste des adresses -->
+                            <div v-if="user.addresses && user.addresses.length > 0">
+                                <div v-for="addr in user.addresses" :key="addr.id"
+                                    @click="selectAddress(addr)"
+                                    :style="`
+                                        padding:14px;
+                                        border-radius:10px;
+                                        border:2px solid ${selectedAddressId === addr.id ? '#6c63ff' : '#eee'};
+                                        background:${selectedAddressId === addr.id ? '#f0f0ff' : 'white'};
+                                        cursor:pointer;
+                                        margin-bottom:10px;
+                                        transition:all 0.2s;
+                                    `">
+                                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                        <div>
+                                            <p style="font-weight:700; color:#333; margin:0 0 4px; font-size:14px;">
+                                                {{ user.first_name }} {{ user.name }} {{ addr.last_name || '' }}
+                                                <span v-if="addr.is_default"
+                                                    style="background:#6c63ff; color:white; font-size:10px; padding:2px 8px; border-radius:10px; margin-left:6px; font-weight:700;">
+                                                    Par défaut
+                                                </span>
+                                            </p>
+                                            <p style="color:#666; font-size:13px; margin:0; line-height:1.6;">
+                                                {{ addr.street }}
+                                                <span v-if="addr.additional_address">, {{ addr.additional_address }}</span><br>
+                                                {{ addr.postal_code }} {{ addr.city }}, {{ addr.country }}
+                                            </p>
+                                            <p v-if="addr.phone" style="color:#888; font-size:12px; margin:4px 0 0;">
+                                                📞 {{ addr.phone }}
+                                            </p>
+                                        </div>
+                                        <div v-if="selectedAddressId === addr.id"
+                                            style="color:#6c63ff; font-size:22px; font-weight:bold;">✓</div>
+                                    </div>
+                                </div>
+                            </div>
 
-                            <input v-model="address.rue" class="stext-104 cl2 plh4 bor13 size-116 p-lr-20 m-b-12"
-                                type="text" placeholder="🏠 Rue" :disabled="isAddressDisabled" required>
-                            <p v-if="addressErrors.rue" class="alert alert-danger" style="font-size:13px;">{{
-                                addressErrors.rue }}</p>
-
-                            <input v-model="address.code_postal"
-                                class="stext-104 cl2 plh4 bor13 size-116 p-lr-20 m-b-12" type="number"
-                                placeholder="📮 Code Postal" :disabled="isAddressDisabled" required>
-                            <p v-if="addressErrors.code_postal" class="alert alert-danger" style="font-size:13px;">{{
-                                addressErrors.code_postal }}</p>
-
-                            <input v-model="address.ville" class="stext-104 cl2 plh4 bor13 size-116 p-lr-20 m-b-12"
-                                type="text" placeholder="🏙️ Ville" :disabled="isAddressDisabled" required>
-                            <p v-if="addressErrors.ville" class="alert alert-danger" style="font-size:13px;">{{
-                                addressErrors.ville }}</p>
-
-                            <div @click="validateAddress"
-                                class="flex-c-m stext-101 cl2 size-116 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-t-10">
-                                🔄 Mettre à jour le total
+                            <!-- Aucune adresse -->
+                            <div v-else
+                                style="background:#fff8e1; border-radius:8px; padding:14px; font-size:13px; color:#f39c12; text-align:center;">
+                                📭 Aucune adresse enregistrée.<br>
+                                <a href="/profils" style="color:#6c63ff; font-weight:600; text-decoration:none;">
+                                    → Ajouter une adresse dans mon profil
+                                </a>
                             </div>
                         </div>
 
                         <!-- Total TTC -->
-                        <div
-                            style="background: linear-gradient(135deg, #333, #555); border-radius:12px; padding:20px; margin-bottom:20px;">
+                        <div style="background: linear-gradient(135deg, #333, #555); border-radius:12px; padding:20px; margin-bottom:20px;">
                             <div style="display:flex; justify-content:space-between; align-items:center;">
                                 <span style="color:white; font-size:15px; font-weight:bold;">💳 Total TTC</span>
                                 <span v-if="newTotal > 0" style="color:#f1c40f; font-size:22px; font-weight:bold;">
                                     {{ newTotal }} €
                                 </span>
-                                <span v-else style="color:#aaa; font-size:14px;">En attente de l'adresse</span>
+                                <span v-else style="color:#aaa; font-size:14px;">Sélectionnez une adresse</span>
                             </div>
                             <p v-if="newTotal > 0" style="color:#aaa; font-size:12px; margin-top:8px; margin-bottom:0;">
                                 Livraison incluse · Paiement sécurisé
@@ -209,46 +206,49 @@
                         </div>
 
                         <!-- Bouton paiement -->
-                        <button v-if="deliveryFees > 0" @click.prevent="openPaymentModal"
+                        <button v-if="selectedAddressId && deliveryFees > 0" @click.prevent="openPaymentModal"
                             class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer"
                             style="width:100%; font-size:16px;">
                             🔒 Procéder au paiement
                         </button>
+                        <p v-else-if="!selectedAddressId" style="text-align:center; color:#aaa; font-size:13px; margin-top:10px;">
+                            Sélectionnez une adresse pour continuer
+                        </p>
 
-                        <PaymentModal :isOpen="isPaymentModalOpen" :total="newTotal" :userName="user.name"
-                            :userEmail="user.email" :userAdressLine="address.rue" :userCodePostal="address.code_postal"
-                            :userVille="address.ville" :userPays="selectedCountry"
-                            @update:isOpen="isPaymentModalOpen = false" />
+                        <PaymentModal
+                            :isOpen="isPaymentModalOpen"
+                            :total="newTotal"
+                            :userName="user.name"
+                            :userEmail="user.email"
+                            :userAdressLine="selectedAddress ? selectedAddress.street : ''"
+                            :userCodePostal="selectedAddress ? String(selectedAddress.postal_code) : ''"
+                            :userVille="selectedAddress ? selectedAddress.city : ''"
+                            :userPays="selectedAddress ? selectedAddress.country : ''"
+                            @update:isOpen="isPaymentModalOpen = false"
+                        />
                     </div>
                 </div>
             </div>
         </div>
     </form>
-
-
 </template>
 
 <script>
-
 import { mapActions, mapGetters } from 'vuex';
 import PaymentModal from "../orders/PaymentModal.vue";
 import axios from 'axios';
 
 export default {
-
     name: 'CartComponent',
-
     props: {
         user: {
             type: Object,
             required: true
         },
     },
-
     components: {
         PaymentModal,
     },
-
     data() {
         return {
             couponCode: '',
@@ -257,58 +257,58 @@ export default {
             pourcentage: 0,
             couponError: '',
             couponSuccess: '',
-            paysList: [],
-            selectedCountry: "Sélectionnez votre pays",
-            selectedCountryErrors: '',
-            isAddressDisabled: false,
             deliveryFees: 0,
-            address: {
-                rue: '',
-                code_postal: '',
-                ville: ''
-            },
-            addressErrors: {},
+            selectedAddressId: null,
+            selectedAddress: null,
             isPaymentModalOpen: false,
         };
     },
-
     computed: {
         ...mapGetters(["cart", "totalCartPrice"]),
-
     },
-
+    watch: {
+        // Recalcule le total quand les frais ou la réduction changent
+        deliveryFees() {
+            this.computeTotal();
+        },
+        discount() {
+            this.computeTotal();
+        },
+        totalCartPrice() {
+            this.computeTotal();
+        },
+        // Si l'utilisateur change, réinitialise les adresses
+        user: {
+            immediate: true,
+            handler(newUser) {
+                if (newUser && newUser.addresses) {
+                    // Sélectionne l'adresse par défaut si elle existe
+                    const defaultAddr = newUser.addresses.find(a => a.is_default === 1);
+                    if (defaultAddr) {
+                        this.selectAddress(defaultAddr);
+                    }
+                }
+            }
+        }
+    },
     methods: {
-
         ...mapActions(['updateCartItem', 'removeFromCart', 'fetchCart']),
 
         increaseQuantity(row) {
             row.qty++;
-
-            let price = parseFloat(row.product.sale_price) > 0 ? parseFloat(row.product.sale_price) : parseFloat(row.product.price);
-
-            this.updateCartItem({
-                product_id: row.product_id,
-                quantity: row.qty,
-                price: price,
-            });
+            const price = parseFloat(row.product.sale_price) > 0 ? parseFloat(row.product.sale_price) : parseFloat(row.product.price);
+            this.updateCartItem({ product_id: row.product_id, quantity: row.qty, price });
         },
 
         decreaseQuantity(row) {
             if (row.qty > 1) {
                 row.qty--;
-
-                let price = row.product.sale_price > 0 ? parseFloat(row.product.sale_price) : parseFloat(row.product.price);
-
-                this.updateCartItem({
-                    product_id: row.product_id,
-                    quantity: row.qty,
-                    price: price,
-                });
+                const price = parseFloat(row.product.sale_price) > 0 ? parseFloat(row.product.sale_price) : parseFloat(row.product.price);
+                this.updateCartItem({ product_id: row.product_id, quantity: row.qty, price });
             } else {
                 this.removeProduct(row.product_id);
             }
         },
-
 
         removeProduct(product_id) {
             this.removeFromCart(product_id);
@@ -318,165 +318,87 @@ export default {
         async applyCoupon() {
             this.couponError = '';
             this.couponSuccess = '';
-
             try {
-
                 const response = await axios.post('/check-promo', {
                     code: this.couponCode,
                     total: this.totalCartPrice
                 });
-
                 this.discount = response.data.discount;
                 this.couponSuccess = response.data.success;
                 this.pourcentage = response.data.pourcentage;
-                this.updateTotal();
-
-
-                this.$nextTick(() => {
-                    this.newTotal = parseFloat((parseFloat(this.totalCartPrice) + parseFloat(this.deliveryFees) - this.discount).toFixed(2));
-                });
             } catch (error) {
-                this.couponError = error.response.data.error;
+                this.couponError = error.response?.data?.error || 'Erreur lors de l\'application du coupon.';
             }
         },
 
-        async fetchPays() {
-            try {
-                const response = await axios.get("/pays");
-                this.paysList = response.data;
-            } catch (error) {
-                console.error("Erreur lors de la récupération des pays :", error);
-            }
+        async selectAddress(addr) {
+            this.selectedAddressId = addr.id;
+            this.selectedAddress = addr;
+            await this.fetchDeliveryFees(addr.country);
         },
 
-        async fetchDeliveryFees() {
-            if (!this.selectedCountry || this.selectedCountry === 'Sélectionnez votre pays') {
+        async fetchDeliveryFees(country) {
+            if (!country) {
                 this.deliveryFees = 0;
                 return;
             }
-
             try {
-                const response = await axios.get(`/frais-livraison/${this.selectedCountry}`);
-                this.deliveryFees = response.data.frais;
+                const response = await axios.get(`/frais-livraison/${country}`);
+                this.deliveryFees = response.data.frais || 0;
             } catch (error) {
-                console.error("Erreur lors de la récupération des frais de livraison :", error);
+                console.error('Erreur frais de livraison:', error);
                 this.deliveryFees = 0;
             }
         },
 
-        async updateTotal() {
-            await this.fetchDeliveryFees();
-            this.newTotal = parseFloat((parseFloat(this.totalCartPrice) + parseFloat(this.deliveryFees) - this.discount).toFixed(2));
-        },
-
-        // Click on button "Mettre à jour le total"
-        async onUpdateTotalClick() {
-            await this.updateTotal();
-            this.disableAddressInputs();
-        },
-
-
-        disableAddressInputs() {
-
-            // Block modification of “street”, “postal code”, and “city” fields
-            const addressFields = document.querySelectorAll('input[name="rue"], input[name="code_postal"], input[name="ville"]');
-            addressFields.forEach(field => {
-                field.disabled = true;
-            });
-        },
-
-        async validateAddress() {
-            this.addressErrors = {};
-            this.selectedCountryErrors = '';
-
-            if (this.selectedCountry === "Sélectionnez votre pays") {
-                this.selectedCountryErrors = "Le pays doit être renseigné.";
-            }
-
-            if (!this.address.rue || this.address.rue.length < 3) {
-                this.addressErrors.rue = "Le champ rue doit contenir au moins 3 caractères.";
-            }
-
-            if (!this.address.ville || this.address.ville.length < 3) {
-                this.addressErrors.ville = "Le champ ville doit contenir au moins 3 caractères.";
-            }
-
-            if (!this.address.code_postal || !/^\d{4,5}$/.test(this.address.code_postal)) {
-                this.addressErrors.code_postal = "Le code postal doit contenir 4 ou 5 chiffres.";
-            }
-
-            if (Object.keys(this.addressErrors).length === 0 && this.selectedCountryErrors == "") {
-                await this.onUpdateTotalClick();
-            }
+        computeTotal() {
+            this.newTotal = parseFloat(
+                (parseFloat(this.totalCartPrice) + parseFloat(this.deliveryFees) - this.discount).toFixed(2)
+            );
         },
 
         openPaymentModal(event) {
             if (event) {
-                event.preventDefault(); // Stop default behavior
-                event.stopPropagation(); // Stop propagation
+                event.preventDefault();
+                event.stopPropagation();
             }
             this.isPaymentModalOpen = true;
         },
-        closePaymentModal(event) {
-            if (event) event.preventDefault();
-
-            this.isPaymentModalOpen = false;
-
-            // Reaload fess delivry
-            this.fetchDeliveryFees();
-        }
-
     },
-
     mounted() {
         this.fetchCart();
-        this.fetchPays();  // fetch pays when the component is mounted
-
+        // Sélectionne l'adresse par défaut si elle existe
+        if (this.user.addresses && this.user.addresses.length > 0) {
+            const defaultAddr = this.user.addresses.find(a => a.is_default === 1);
+            if (defaultAddr) {
+                this.selectAddress(defaultAddr);
+            }
+        }
     },
-
 };
-
 </script>
 
 <style>
-.column-2 {
-    text-align: center;
-}
-
-.msg-promo {
-    padding-left: 15px;
-}
-
-.new-total {
-    color: green;
-    font-weight: bold;
-}
-
-.oldprice {
-    text-decoration: line-through;
-    color: red;
-}
-
 .product-badge {
-  background: #e74c3c;
-  color: white;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 10px;
-  text-transform: uppercase;
-  margin-left: 12px;
+    background: #e74c3c;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    margin-left: 8px;
 }
 
 .product-price {
-  font-size: 16px;
-  font-weight: 700;
-  color: #333;
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
 }
 
 .product-old-price {
-  font-size: 13px;
-  color: #aaa;
-  text-decoration: line-through;
+    font-size: 13px;
+    color: #aaa;
+    text-decoration: line-through;
 }
 </style>

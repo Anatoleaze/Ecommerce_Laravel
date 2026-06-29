@@ -69,25 +69,31 @@ class CartController extends Controller
      * Show cart of user
      */
     public function show(Basket $cartModel)
-    {
-        $data = array();
-        $cart = Basket::where('user_id', Auth::id())->get();
+{
+    $user = Auth::user();
+    $cart = Basket::where('user_id', Auth::id())->with('product')->get();
 
-        foreach($cart as $cart_row) {
-            $product = Product::where('id', $cart_row->product_id)->first();
-            $data[]= [
-                'product_id' => $cart_row->product_id,
+    $cartData = [];
+    foreach ($cart as $cartRow) {
+        $product = $cartRow->product;
+        $cartData[] = [
+            'product_id' => $product->id,
+            'qty' => $cartRow->qty,
+            'product' => [
+                'id' => $product->id,
                 'name' => $product->name,
                 'price' => $product->price,
-                'quantity' => $cart_row->qty,
-                'img' => '/'.$product->image_name
-            ];
-            
-        }
-
-        return view('cart', compact('data'));
-        
+                'sale_price' => $product->sale_price ?? 0,
+                'image_name' => $product->image_name,
+            ]
+        ];
     }
+
+    return view('cart', [
+        'user' => $user,
+        'cart' => $cartData
+    ]);
+}
 
     
 

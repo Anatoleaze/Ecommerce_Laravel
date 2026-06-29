@@ -32,10 +32,8 @@
     </h2>
 </section>	
 
-
-<cart-component 
-	:user="{{ json_encode(Auth::user()) }}"
-
+<cart-component
+    :user="{{ json_encode(Auth::user()->load('addresses')) }}"
 />
-	
+
 @endsection

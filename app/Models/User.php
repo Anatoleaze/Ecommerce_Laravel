@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
+use App\Models\Address;
 
 class User extends Authenticatable
 {
@@ -63,5 +64,20 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    public function defaultAddress()
+    {
+        return $this->hasOne(Address::class)->where('is_default', true);
+    }
+
+    public function address()
+    {
+        return $this->hasOne(Address::class);
     }
 }

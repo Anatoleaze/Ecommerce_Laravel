@@ -104,7 +104,6 @@
                                border:2px solid #eee;
                                border-radius:10px;
                                font-size:14px;
-                               outline:none;
                            ">
 
                     @error('name')
@@ -168,6 +167,162 @@
                     @enderror
                 </div>
 
+                <!-- 📍 ADRESSE -->
+                <div style="margin-bottom:16px;">
+
+                    <label style="display:block;font-size:13px;font-weight:700;color:#444;margin-bottom:8px;">
+                        🏠 Adresse <span style="color:#e74c3c;">*</span>
+                    </label>
+
+                    <input id="street"
+                           type="text"
+                           name="street"
+                           value="{{ old('street') }}"
+                           required
+                           placeholder="Numéro et rue"
+                           style="
+                               width:100%;
+                               padding:12px 16px;
+                               border:2px solid #eee;
+                               border-radius:10px;
+                               font-size:14px;
+                               margin-bottom:10px;
+                           ">
+
+                    @error('street')
+                        <div style="color:#e74c3c;font-size:12px;margin-top:6px;">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
+
+                    <input id="additional_address"
+                           type="text"
+                           name="additional_address"
+                           value="{{ old('additional_address') }}"
+                           placeholder="Complément (appartement, étage...)"
+                           style="
+                               width:100%;
+                               padding:12px 16px;
+                               border:2px solid #eee;
+                               border-radius:10px;
+                               font-size:14px;
+                           ">
+
+                </div>
+
+                <!-- Ville / CP -->
+                <div style="display:flex; gap:10px; margin-bottom:16px;">
+
+                    <div style="flex:1;">
+                        <label style="display:block;font-size:13px;font-weight:700;color:#444;margin-bottom:8px;">
+                            📮 Code postal <span style="color:#e74c3c;">*</span>
+                        </label>
+
+                        <input id="postal_code"
+                               type="text"
+                               name="postal_code"
+                               value="{{ old('postal_code') }}"
+                               required
+                               placeholder="75000"
+                               style="
+                                   width:100%;
+                                   padding:12px 16px;
+                                   border:2px solid #eee;
+                                   border-radius:10px;
+                                   font-size:14px;
+                               ">
+
+                        @error('postal_code')
+                            <div style="color:#e74c3c;font-size:12px;margin-top:6px;">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    <div style="flex:1;">
+                        <label style="display:block;font-size:13px;font-weight:700;color:#444;margin-bottom:8px;">
+                            🏙 Ville <span style="color:#e74c3c;">*</span>
+                        </label>
+
+                        <input id="city"
+                               type="text"
+                               name="city"
+                               value="{{ old('city') }}"
+                               required
+                               placeholder="Paris"
+                               style="
+                                   width:100%;
+                                   padding:12px 16px;
+                                   border:2px solid #eee;
+                                   border-radius:10px;
+                                   font-size:14px;
+                               ">
+
+                        @error('city')
+                            <div style="color:#e74c3c;font-size:12px;margin-top:6px;">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                </div>
+
+                <!-- Pays + téléphone -->
+                <div style="margin-bottom:24px;">
+
+                    <label style="display:block;font-size:13px;font-weight:700;color:#444;margin-bottom:8px;">
+                        🌍 Pays <span style="color:#e74c3c;">*</span>
+                    </label>
+
+                    <select id="country"
+                    name="country"
+                    required
+                    style="
+                        width:100%;
+                        padding:12px 16px;
+                        border:2px solid #eee;
+                        border-radius:10px;
+                        font-size:14px;
+                        background:white;
+                        margin-bottom:10px;
+                    ">
+                
+                        <option value="">-- Sélectionnez un pays --</option>
+                        <option value="France" {{ old('country') == 'France' ? 'selected' : '' }}>France</option>
+                        <option value="Belgique" {{ old('country') == 'Belgique' ? 'selected' : '' }}>Belgique</option>
+                        <option value="Canada" {{ old('country') == 'Canada' ? 'selected' : '' }}>Canada</option>
+                        <option value="États-Unis" {{ old('country') == 'États-Unis' ? 'selected' : '' }}>États-Unis</option>
+                        <option value="Allemagne" {{ old('country') == 'Allemagne' ? 'selected' : '' }}>Allemagne</option>
+
+                    </select>
+
+                    @error('country')
+                        <div style="color:#e74c3c;font-size:12px;margin-top:6px;">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
+
+                    <label style="display:block;font-size:13px;font-weight:700;color:#444;margin-bottom:8px;">
+                        📱 Téléphone
+                    </label>
+
+                    <input id="phone"
+                           type="text"
+                           name="phone"
+                           value="{{ old('phone') }}"
+                           placeholder="+33 6 12 34 56 78"
+                           style="
+                               width:100%;
+                               padding:12px 16px;
+                               border:2px solid #eee;
+                               border-radius:10px;
+                               font-size:14px;
+                           ">
+
+                </div>
+
                 <!-- Mot de passe -->
                 <div style="margin-bottom:16px;">
 
@@ -208,42 +363,17 @@
 
                     </div>
 
-                    <!-- Barre -->
                     <div style="margin-top:10px;">
-
-                        <div style="
-                            background:#eee;
-                            height:8px;
-                            border-radius:20px;
-                            overflow:hidden;
-                        ">
+                        <div style="background:#eee;height:8px;border-radius:20px;overflow:hidden;">
                             <div id="password-strength-bar"
-                                 style="
-                                    width:0%;
-                                    height:100%;
-                                    background:#e74c3c;
-                                    transition:.3s;
-                                 ">
-                            </div>
+                                 style="width:0%;height:100%;background:#e74c3c;transition:.3s;"></div>
                         </div>
 
                         <div id="password-strength-text"
-                             style="
-                                margin-top:6px;
-                                font-size:12px;
-                                color:#999;
-                                font-weight:600;
-                             ">
+                             style="margin-top:6px;font-size:12px;color:#999;font-weight:600;">
                             Force du mot de passe
                         </div>
-
                     </div>
-
-                    @error('password')
-                        <div style="color:#e74c3c;font-size:12px;margin-top:6px;">
-                            {{ $message }}
-                        </div>
-                    @enderror
 
                 </div>
 
@@ -323,24 +453,20 @@
 
 </section>
 
+
+@endsection
+
+@section('scripts')
 <script>
 
 function togglePassword() {
     let password = document.getElementById('password');
-
-    password.type =
-        password.type === 'password'
-        ? 'text'
-        : 'password';
+    password.type = password.type === 'password' ? 'text' : 'password';
 }
 
 function toggleConfirmPassword() {
     let confirmPassword = document.getElementById('password-confirm');
-
-    confirmPassword.type =
-        confirmPassword.type === 'password'
-        ? 'text'
-        : 'password';
+    confirmPassword.type = confirmPassword.type === 'password' ? 'text' : 'password';
 }
 
 function checkPasswordStrength() {
@@ -359,31 +485,22 @@ function checkPasswordStrength() {
     const text = document.getElementById('password-strength-text');
 
     if (score <= 2) {
-
         bar.style.width = '33%';
         bar.style.background = '#e74c3c';
-
         text.innerHTML = '🔴 Faible';
         text.style.color = '#e74c3c';
-
     }
     else if (score <= 3) {
-
         bar.style.width = '66%';
         bar.style.background = '#f39c12';
-
         text.innerHTML = '🟠 Moyen';
         text.style.color = '#f39c12';
-
     }
     else {
-
         bar.style.width = '100%';
         bar.style.background = '#27ae60';
-
         text.innerHTML = '🟢 Fort';
         text.style.color = '#27ae60';
-
     }
 }
 
