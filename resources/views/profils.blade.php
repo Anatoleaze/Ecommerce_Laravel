@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+$user = Auth::user()->load('address');
+@endphp
+
 @section('content')
 
 <!-- Header -->
@@ -27,12 +31,13 @@
 <!-- Contenu profil -->
 <section style="background:#f8f9fa; min-height:100vh;">
     <profil-component
-        name="{{ Auth::user()->name }}"
-        first_name="{{ Auth::user()->first_name }}"
-        mail="{{ Auth::user()->email }}"
-        :user-data='@json(["name" => Auth::user()->name, "first_name" => Auth::user()->first_name, "email" => Auth::user()->email])'
-        bg-image="{{ asset('images/bg-01.jpg') }}"
-    ></profil-component>
+    name="{{ $user->name }}"
+    first_name="{{ $user->first_name }}"
+    mail="{{ $user->email }}"
+    :user-data='@json($user)'
+    bg-image="{{ asset('images/bg-01.jpg') }}"
+></profil-component>
+
 </section>
 
 @endsection

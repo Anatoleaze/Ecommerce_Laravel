@@ -3,133 +3,287 @@
 
     <transition name="fade">
       <div v-if="message" :class="['update-alert', messageType]">
-        <span>{{ messageType === 'alert-success' ? '✅' : messageType === 'alert-danger' ? '❌' : 'ℹ️' }}</span>
+        <span>
+          {{ messageType === 'alert-success' ? '✅' : messageType === 'alert-danger' ? '❌' : 'ℹ️' }}
+        </span>
         {{ message }}
       </div>
     </transition>
 
     <form @submit.prevent="updateUser">
-      
-      <p class="form-notice"><span class="required">*</span> Champs obligatoires</p>
 
+      <p class="form-notice">
+        <span class="required">*</span> Champs obligatoires
+      </p>
+
+      <!-- MODE PROFIL -->
       <template v-if="isProfileMode">
 
+        <!-- NOM -->
         <div class="field-group">
-          <label class="field-label">👤 Nom <span class="required">*</span></label>
+          <label class="field-label">
+            👤 Nom <span class="required">*</span>
+          </label>
           <input
-            type="text"
             v-model="user.name"
-            name="name"
+            class="field-input"
             placeholder="Votre nom"
-            class="field-input"
-            onfocus="this.style.borderColor='#6c63ff'"
-            onblur="this.style.borderColor='#eee'">
+          >
         </div>
 
+        <!-- PRENOM -->
         <div class="field-group">
-          <label class="field-label">✏️ Prénom <span class="required">*</span></label>
+          <label class="field-label">
+            ✏️ Prénom <span class="required">*</span>
+          </label>
           <input
-            type="text"
             v-model="user.first_name"
-            name="first_name"
-            placeholder="Votre prénom"
             class="field-input"
-            onfocus="this.style.borderColor='#6c63ff'"
-            onblur="this.style.borderColor='#eee'">
+            placeholder="Votre prénom"
+          >
         </div>
 
+        <!-- EMAIL -->
         <div class="field-group">
-          <label class="field-label">✉️ Email <span class="required">*</span></label>
+          <label class="field-label">
+            ✉️ Email <span class="required">*</span>
+          </label>
           <input
-            type="email"
             v-model="user.email"
-            name="email"
-            placeholder="votre@email.com"
+            type="email"
             class="field-input"
-            onfocus="this.style.borderColor='#6c63ff'"
-            onblur="this.style.borderColor='#eee'">
+            placeholder="votre@email.com"
+          >
+        </div>
+
+        <!-- RUE -->
+        <div class="field-group">
+          <label class="field-label">
+            🏠 Rue <span class="required">*</span>
+          </label>
+          <input
+            v-model="user.street"
+            class="field-input"
+            placeholder="12 rue de Paris"
+          >
+        </div>
+
+        <!-- COMPLEMENT -->
+        <div class="field-group">
+          <label class="field-label">
+            🏢 Complément d'adresse
+          </label>
+          <input
+            v-model="user.additional_address"
+            class="field-input"
+            placeholder="Appartement, bâtiment, étage..."
+          >
+        </div>
+
+        <!-- CODE POSTAL -->
+        <div class="field-group">
+          <label class="field-label">
+            📮 Code postal <span class="required">*</span>
+          </label>
+          <input
+            v-model="user.postal_code"
+            class="field-input"
+            placeholder="75001"
+          >
+        </div>
+
+        <!-- VILLE -->
+        <div class="field-group">
+          <label class="field-label">
+            🏙 Ville <span class="required">*</span>
+          </label>
+          <input
+            v-model="user.city"
+            class="field-input"
+            placeholder="Paris"
+          >
+        </div>
+
+        <!-- PAYS -->
+        <div class="field-group">
+          <label class="field-label">
+            🌍 Pays <span class="required">*</span>
+          </label>
+
+          <select
+            v-model="user.country"
+            class="field-input"
+          >
+            <option value="">Sélectionner un pays</option>
+            <option value="France">France</option>
+            <option value="Belgique">Belgique</option>
+            <option value="Canada">Canada</option>
+            <option value="États-Unis">États-Unis</option>
+            <option value="Allemagne">Allemagne</option>
+          </select>
+        </div>
+
+        <!-- TELEPHONE -->
+        <div class="field-group">
+          <label class="field-label">
+            📞 Téléphone
+          </label>
+          <input
+            v-model="user.phone"
+            class="field-input"
+            placeholder="06 12 34 56 78"
+          >
         </div>
 
       </template>
 
+      <!-- MODE PASSWORD -->
       <template v-else>
 
         <div class="field-group">
-          <label class="field-label">🔒 Nouveau mot de passe <span class="required">*</span></label>
+          <label class="field-label">
+            🔒 Nouveau mot de passe
+            <span class="required">*</span>
+          </label>
+
           <div class="password-wrapper">
+
             <input
-                :type="showPassword ? 'text' : 'password'"
-                v-model="form.password"
-                name="password"
-                placeholder="Minimum 8 caractères"
-                class="field-input"
-                autocomplete="new-password"
-                onfocus="this.style.borderColor='#6c63ff'"
-                onblur="this.style.borderColor='#eee'">
-            <button type="button" class="password-toggle" @click="showPassword = !showPassword">
-                {{ showPassword ? '🙈' : '👁️' }}
+              :type="showPassword ? 'text' : 'password'"
+              v-model="form.password"
+              class="field-input"
+              placeholder="Minimum 8 caractères"
+            >
+
+            <button
+              type="button"
+              class="password-toggle"
+              @click="showPassword = !showPassword"
+            >
+              {{ showPassword ? '🙈' : '👁️' }}
             </button>
+
           </div>
+
           <div v-if="form.password" class="password-strength">
+
             <div class="strength-bar">
-              <div :class="['strength-fill', strengthClass]" :style="{ width: strengthWidth }"></div>
+              <div
+                :class="['strength-fill', strengthClass]"
+                :style="{ width: strengthWidth }"
+              >
+              </div>
             </div>
-            <span :class="['strength-label', strengthClass]">{{ strengthLabel }}</span>
+
+            <span :class="['strength-label', strengthClass]">
+              {{ strengthLabel }}
+            </span>
+
           </div>
+
         </div>
 
+        <!-- CONFIRMATION -->
         <div class="field-group">
-          <label class="field-label">🔒 Confirmer le mot de passe <span class="required">*</span></label>
+
+          <label class="field-label">
+            🔒 Confirmation
+            <span class="required">*</span>
+          </label>
+
           <input
             :type="showPassword ? 'text' : 'password'"
             v-model="form.confirmPass"
-            name="confirmPass"
-            placeholder="Répétez le mot de passe"
             class="field-input"
-            autocomplete="new-password"
-            onfocus="this.style.borderColor='#6c63ff'"
-            onblur="this.style.borderColor='#eee'">
-          <p v-if="form.confirmPass && form.password !== form.confirmPass"
-            style="color:#e74c3c; font-size:12px; margin-top:6px;">
+            placeholder="Confirmez"
+          >
+
+          <p
+            v-if="form.confirmPass && form.password !== form.confirmPass"
+            style="color:#e74c3c;font-size:12px;margin-top:6px;"
+          >
             ❌ Les mots de passe ne correspondent pas
           </p>
-          <p v-if="form.confirmPass && form.password === form.confirmPass && form.password.length >= 8"
-            style="color:#27ae60; font-size:12px; margin-top:6px;">
-            ✅ Les mots de passe correspondent
+
+          <p
+            v-if="form.confirmPass && form.password === form.confirmPass && form.password.length >= 8"
+            style="color:#27ae60;font-size:12px;margin-top:6px;"
+          >
+            ✅ Correspond
           </p>
+
         </div>
 
       </template>
 
-      <button type="submit" :disabled="loading" class="submit-btn">
-        <span v-if="loading" class="btn-spinner"></span>
-        {{ loading ? 'Enregistrement...' : (isProfileMode ? '💾 Enregistrer le profil' : '🔒 Enregistrer le mot de passe') }}
+      <!-- BOUTON -->
+      <button
+        type="submit"
+        :disabled="loading"
+        class="submit-btn"
+      >
+
+        <span
+          v-if="loading"
+          class="btn-spinner"
+        >
+        </span>
+
+        {{
+          loading
+            ? 'Enregistrement...'
+            : (
+                isProfileMode
+                  ? '💾 Enregistrer'
+                  : '🔒 Modifier mot de passe'
+              )
+        }}
+
       </button>
 
     </form>
+
   </div>
 </template>
+
 
 <script>
 import axios from 'axios';
 
 export default {
   props: {
-    userData: { type: Object, required: true },
-    type_modify: { type: String, required: true },
+    userData: {
+      type: Object,
+      required: true,
+    },
+    type_modify: {
+      type: String,
+      required: true,
+    },
   },
 
   data() {
+    const addr = this.userData?.address || {};
+
     return {
       user: {
         name: this.userData.name || '',
         first_name: this.userData.first_name || '',
         email: this.userData.email || '',
+
+        street: addr.street || '',
+        additional_address: addr.additional_address || '',
+        postal_code: addr.postal_code || '',
+        city: addr.city || '',
+        country: addr.country || '',
+        phone: addr.phone || '',
       },
+
       form: {
         password: '',
         confirmPass: '',
       },
+
       message: '',
       messageType: 'alert-info',
       loading: false,
@@ -144,20 +298,26 @@ export default {
 
     passwordStrength() {
       const p = this.form.password;
+
       if (!p) return 0;
+
       let score = 0;
+
       if (p.length >= 8) score++;
       if (p.length >= 12) score++;
       if (/[A-Z]/.test(p)) score++;
       if (/[0-9]/.test(p)) score++;
       if (/[^A-Za-z0-9]/.test(p)) score++;
+
       return score;
     },
 
     strengthClass() {
       const s = this.passwordStrength;
+
       if (s <= 1) return 'weak';
       if (s <= 3) return 'medium';
+
       return 'strong';
     },
 
@@ -167,8 +327,10 @@ export default {
 
     strengthLabel() {
       const s = this.passwordStrength;
+
       if (s <= 1) return 'Faible';
       if (s <= 3) return 'Moyen';
+
       return 'Fort';
     },
   },
@@ -176,15 +338,30 @@ export default {
   watch: {
     userData: {
       deep: true,
-      handler(newValue) {
-        this.user.name = newValue.name || '';
-        this.user.first_name = newValue.first_name || '';
-        this.user.email = newValue.email || '';
+      immediate: true,
+
+      handler(newVal) {
+        const addr = newVal?.address || {};
+
+        this.user = {
+          name: newVal.name || '',
+          first_name: newVal.first_name || '',
+          email: newVal.email || '',
+
+          street: addr.street || '',
+          additional_address: addr.additional_address || '',
+          postal_code: addr.postal_code || '',
+          city: addr.city || '',
+          country: addr.country || '',
+          phone: addr.phone || '',
+        };
       },
     },
+
     type_modify() {
       this.message = '';
       this.messageType = 'alert-info';
+
       if (!this.isProfileMode) {
         this.form.password = '';
         this.form.confirmPass = '';
@@ -194,59 +371,72 @@ export default {
 
   methods: {
     async updateUser() {
-      this.message = '';
       this.loading = true;
+      this.message = '';
 
       const payload = {};
 
-      if (this.isProfileMode) {
-        payload.name = this.user.name;
-        payload.first_name = this.user.first_name;
-        payload.email = this.user.email;
-      } else {
-        if (!this.form.password || !this.form.confirmPass) {
-          this.message = 'Veuillez remplir les deux champs.';
-          this.messageType = 'alert-danger';
-          this.loading = false;
-          return;
-        }
-        if (this.form.password.length < 8) {
-          this.message = 'Le mot de passe doit contenir au moins 8 caractères.';
-          this.messageType = 'alert-danger';
-          this.loading = false;
-          return;
-        }
-        if (this.form.password !== this.form.confirmPass) {
-          this.message = 'Les mots de passe ne correspondent pas.';
-          this.messageType = 'alert-danger';
-          this.loading = false;
-          return;
-        }
-        payload.password = this.form.password;
-        payload.password_confirmation = this.form.confirmPass;
-      }
-
       try {
-        const response = await axios.post('/profilUpdated', payload);
-        const data = response.data;
-
-        if (data.errors) {
-          this.message = Object.values(data.errors).flat().join(' ');
-          this.messageType = 'alert-danger';
-          this.loading = false;
-          return;
-        }
 
         if (this.isProfileMode) {
+
+          payload.name = this.user.name;
+          payload.first_name = this.user.first_name;
+          payload.email = this.user.email;
+
+          payload.address = {
+            street: this.user.street,
+            additional_address: this.user.additional_address,
+            postal_code: this.user.postal_code,
+            city: this.user.city,
+            country: this.user.country,
+            phone: this.user.phone,
+          };
+
+        } else {
+
+          if (!this.form.password || !this.form.confirmPass) {
+            throw new Error('Veuillez remplir tous les champs.');
+          }
+
+          if (this.form.password.length < 8) {
+            throw new Error('Le mot de passe doit contenir au moins 8 caractères.');
+          }
+
+          if (this.form.password !== this.form.confirmPass) {
+            throw new Error('Les mots de passe ne correspondent pas.');
+          }
+
+          payload.password = this.form.password;
+          payload.password_confirmation = this.form.confirmPass;
+        }
+
+        const { data } = await axios.post('/profilUpdated', payload);
+
+        if (this.isProfileMode) {
+
           this.$store.commit('SET_USER', {
             ...this.$store.state.user,
+
             name: this.user.name,
             first_name: this.user.first_name,
             email: this.user.email,
+
+            address: {
+              street: this.user.street,
+              additional_address: this.user.additional_address,
+              postal_code: this.user.postal_code,
+              city: this.user.city,
+              country: this.user.country,
+              phone: this.user.phone,
+            },
           });
         }
 
-        this.message = data.message || 'Mise à jour réussie !';
+        this.message =
+          data.message ||
+          'Mise à jour réussie.';
+
         this.messageType = 'alert-success';
 
         if (!this.isProfileMode) {
@@ -254,13 +444,13 @@ export default {
           this.form.confirmPass = '';
         }
 
-      } catch (error) {
-        const responseData = error.response?.data;
-        if (responseData?.errors) {
-          this.message = Object.values(responseData.errors).flat().join(' ');
-        } else {
-          this.message = responseData?.message || 'Une erreur est survenue.';
-        }
+      } catch (err) {
+
+        this.message =
+          err.response?.data?.message ||
+          err.message ||
+          'Erreur serveur';
+
         this.messageType = 'alert-danger';
       }
 
@@ -370,9 +560,17 @@ export default {
   transition: width 0.3s, background 0.3s;
 }
 
-.strength-fill.weak { background: #e74c3c; }
-.strength-fill.medium { background: #f39c12; }
-.strength-fill.strong { background: #27ae60; }
+.strength-fill.weak {
+  background: #e74c3c;
+}
+
+.strength-fill.medium {
+  background: #f39c12;
+}
+
+.strength-fill.strong {
+  background: #27ae60;
+}
 
 .strength-label {
   font-size: 12px;
@@ -380,9 +578,17 @@ export default {
   min-width: 40px;
 }
 
-.strength-label.weak { color: #e74c3c; }
-.strength-label.medium { color: #f39c12; }
-.strength-label.strong { color: #27ae60; }
+.strength-label.weak {
+  color: #e74c3c;
+}
+
+.strength-label.medium {
+  color: #f39c12;
+}
+
+.strength-label.strong {
+  color: #27ae60;
+}
 
 /* Bouton */
 .submit-btn {
@@ -416,7 +622,7 @@ export default {
 .btn-spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(255,255,255,0.3);
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-top-color: white;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -424,12 +630,21 @@ export default {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Transition */
-.fade-enter-active, .fade-leave-active { transition: opacity 0.3s; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 
 .required {
   color: #e74c3c;
@@ -438,7 +653,7 @@ export default {
 
 .form-notice {
   font-size: 13px;
-  color: #666; 
+  color: #666;
   margin-bottom: 20px;
   font-style: italic;
 }

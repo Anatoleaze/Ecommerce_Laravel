@@ -26,12 +26,11 @@
 </div>
 
 <div style="margin:55px;">
-    <h3 class="text-center">Modifier mon profils</h3>
+    <h3 class="text-center">Modifier mon profil</h3>
 
-    <profil-update-component 
-        :user-data="{{ json_encode($user) }}"
+    <profil-update-component
+        :user-data='@json($user)'
     />
-    
 </div>
 
 @endsection

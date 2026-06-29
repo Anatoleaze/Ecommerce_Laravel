@@ -25,7 +25,13 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
             'email' => 'test@example.com',
             'password' => bcrypt('password'),
-        ]);
+        ])->each(function ($user) {
+
+        $user->address()->create(
+            \App\Models\Address::factory()->make()->toArray()
+        );
+
+    });
 
         $this->call([
             ProductSeeder::class,
