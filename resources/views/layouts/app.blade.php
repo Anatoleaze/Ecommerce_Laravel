@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'PrimeStore') }}</title>
 
     <!-- Scripts -->
 	<link rel="stylesheet" href="{{ asset('css/bootstrap/bootstrap.css') }}">
@@ -221,12 +221,12 @@
                     <a href="{{ $link }}"
                        target="_blank"
                        style="color: rgba(255,255,255,0.5); text-decoration: none;">
-                        {{ config('app.name', 'Laravel') }}
+                        {{ config('app.name', 'PrimeStore') }}
                     </a>
                 @else
                     <a href="#"
                        style="color: rgba(255,255,255,0.5); text-decoration: none;">
-                        {{ config('app.name', 'Laravel') }}
+                        {{ config('app.name', 'PrimeStore') }}
                     </a>
                 @endisset
             </p>

@@ -50,7 +50,7 @@
                     Tout a commencé lorsque l'idée de créer une boutique de vêtements en ligne germa dans l'esprit d'un jeune entrepreneur passionné par la mode. Observant que de nombreuses personnes recherchaient des vêtements uniques et tendance, il réalisa qu'il y avait un marché non exploité pour des créations originales. Frustré par l'uniformité des offres dans les magasins physiques, il décida de se lancer dans l'aventure du commerce électronique.
                 </p>
                 <p style="font-size:15px; color:#666; line-height:1.9;">
-                    Après plusieurs mois de recherche, il lança <strong style="color:#1a1a2e;">{{ config('app.name', 'Laravel') }}</strong>, une boutique en ligne dédiée à la mode originale et accessible, visant à transformer l'expérience d'achat en ligne en quelque chose de spécial et mémorable.
+                    Après plusieurs mois de recherche, il lança <strong style="color:#1a1a2e;">{{ config('app.name', 'PrimeStore') }}</strong>, une boutique en ligne dédiée à la mode originale et accessible, visant à transformer l'expérience d'achat en ligne en quelque chose de spécial et mémorable.
                 </p>
                 <div style="display:flex; gap:30px; margin-top:36px; flex-wrap:wrap;">
                     <div style="text-align:center;">
@@ -93,7 +93,7 @@
                     Ce qui nous anime
                 </h2>
                 <p style="font-size:15px; color:#666; line-height:1.9; margin-bottom:28px;">
-                    {{ config('app.name', 'Laravel') }} a pour mission de devenir une référence en matière de satisfaction client en fournissant une expérience d'achat exceptionnelle avec une large gamme de produits, des prix compétitifs et une livraison rapide et fiable. Nous investissons continuellement dans l'innovation et la technologie, intégrant les dernières avancées pour optimiser notre plateforme.
+                    {{ config('app.name', 'PrimeStore') }} a pour mission de devenir une référence en matière de satisfaction client en fournissant une expérience d'achat exceptionnelle avec une large gamme de produits, des prix compétitifs et une livraison rapide et fiable. Nous investissons continuellement dans l'innovation et la technologie, intégrant les dernières avancées pour optimiser notre plateforme.
                 </p>
                 <div style="background:white; border-left:4px solid #6c63ff; border-radius:0 12px 12px 0; padding:20px 24px; box-shadow:0 4px 15px rgba(0,0,0,0.06); margin-bottom:24px;">
                     <p style="font-size:15px; color:#555; line-height:1.8; font-style:italic; margin-bottom:12px;">

@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <title>@yield('title', config('app.name'))</title>
 </head>
 <body style="margin:0; padding:0; background-color:#f5f7fa; font-family:Arial,Helvetica,sans-serif; color:#2e3a4a;">
