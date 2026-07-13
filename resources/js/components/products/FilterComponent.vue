@@ -750,4 +750,42 @@ export default {
   opacity: 0;
   transform: translateY(-10px);
 }
+
+@media (max-width: 576px) {
+  /* 1. On s'assure que le conteneur prend 100% de la largeur */
+  .vue-pagination-container {
+    width: 100% !important;
+    display: flex;
+    justify-content: center;
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
+
+  /* 2. On ajuste la navigation */
+  .custom-blade-pagination {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* 3. On force les boutons à se centrer et à passer à la ligne proprement si besoin */
+  .custom-blade-pagination ul {
+    justify-content: center;
+    width: 100%;
+    /* Permet aux boutons de revenir à la ligne si l'écran est vraiment très petit (ex: 320px) */
+    flex-wrap: wrap !important; 
+    gap: 4px !important; /* On réduit un poil l'espace pour que ça passe mieux */
+  }
+
+  /* 4. Optionnel : On peut légèrement agrandir la zone de clic des boutons sur mobile */
+  .page-btn-link {
+    min-width: 35px;
+    height: 35px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+}
 </style>

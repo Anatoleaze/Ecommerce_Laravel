@@ -42,8 +42,10 @@
             </div>
             @endif
 
-            <form method="POST" action="{{ route('password.update') }}">
+            <form method="POST" action="{{ route('password.update') }}" novalidate>
                 @csrf
+                <input type="hidden" name="token" value="{{ $token }}">
+<input type="hidden" name="email" value="{{ request()->email }}">
                 <input type="hidden" name="token" value="{{ $token }}">
 
                 <div style="margin-bottom:15px;">

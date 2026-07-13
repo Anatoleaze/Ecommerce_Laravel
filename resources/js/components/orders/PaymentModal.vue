@@ -153,6 +153,7 @@ export default {
 
       try {
         this.stripe = await loadStripe(import.meta.env.VITE_STRIPE_KEY);
+        console.log(import.meta.env.VITE_STRIPE_KEY);
         this.elements = this.stripe.elements();
 
         const style = {
@@ -183,6 +184,17 @@ export default {
       event.preventDefault();
       event.stopPropagation();
 
+      const countryMapping = {
+        'france': 'FR',
+        'belgique': 'BE',
+        'suisse': 'CH',
+        'canada': 'CA',
+        'états-unis': 'US',
+        'etats-unis': 'US',
+      };
+      const normalizedCountry = this.userPays.trim().toLowerCase();
+      const stripeCountryCode = countryMapping[normalizedCountry] || 'FR';
+
       this.loading = true;
       this.alertMessage = '';
 
@@ -204,7 +216,7 @@ export default {
               line1: this.userAdressLine,
               city: this.userVille,
               postal_code: this.userCodePostal,
-              country: this.userPays.slice(0, 2).toLowerCase(),
+              country: stripeCountryCode,
             },
           },
         });

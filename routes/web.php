@@ -17,11 +17,7 @@ use App\Models\FraisLivraison;
 
 Auth::routes();
 
-
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-// Share URL for social previews (provides OG meta tags per product)
-Route::get('/share/product/{id}', [ShareController::class, 'productShare'])->name('share_product');
 
 // Public product detail page (used after social share redirect)
 Route::get('/product/show/{id}', [ProductController::class, 'show'])->name('product_show');

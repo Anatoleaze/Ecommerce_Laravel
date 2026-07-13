@@ -864,4 +864,11 @@ export default {
     top: -60px;
   }
 }
+
+/* Réduction de la taille du logo sur les mobiles et petits écrans */
+@media (max-width: 576px) {
+  .header-mobile .header-logo img {
+    height: 36px !important;
+  }
+}
 </style>

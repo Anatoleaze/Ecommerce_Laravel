@@ -23,7 +23,7 @@
                                 </p>
                                 <p style="color:#888; font-size:13px; margin-bottom:8px;">
                                     Prix unitaire :
-                                    <span v-if="parseFloat(row.product.sale_price) === 0" class="product-price">
+                                    <span v-if="parseFloat(row.product.sale_price ?? 0) === 0" class="product-price">
                                         {{ parseFloat(row.product.price).toFixed(2) }}€
                                     </span>
                                     <span v-else>
@@ -51,7 +51,7 @@
                             <!-- Total ligne + Supprimer -->
                             <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px; flex-shrink:0;">
                                 <span style="font-weight:bold; font-size:16px; color:#333;">
-                                    <span v-if="parseFloat(row.product.sale_price) === 0">{{ (row.qty * parseFloat(row.product.price)).toFixed(2) }} €</span>
+                                    <span v-if="parseFloat(row.product.sale_price ?? 0) === 0">{{ (row.qty * parseFloat(row.product.price)).toFixed(2) }} €</span>
                                     <span v-else>{{ (row.qty * parseFloat(row.product.sale_price)).toFixed(2) }} €</span>
                                 </span>
                                 <button @click="removeProduct(row.product_id)"

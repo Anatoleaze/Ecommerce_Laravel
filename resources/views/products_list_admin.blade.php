@@ -166,11 +166,11 @@
                 </table>
             </div>
 
-            <div class="modern-pagination" style="margin-top:30px; display:flex; justify-content:center; width:100%;">
+            <div class="modern-pagination" style="margin-top:30px; display:flex; justify-content:center;">
                 {{ $products->appends(request()->query())->onEachSide(1)->links() }}
             </div>
         @endif
-
+ 
     </div>
 </section>
 
@@ -352,6 +352,29 @@ document.addEventListener('keydown', function(e) {
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.95); }
     to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 576px) {
+    /* 1. Force la balise de navigation principale à prendre 100% */
+    nav[role="navigation"].flex.items-center.justify-between {
+        width: 100% !important;
+        justify-content: center !important; /* Centre la pagination sur mobile */
+        padding: 0 16px;
+    }
+
+    /* 2. Force le conteneur interne de Laravel à s'afficher et à prendre 100% */
+    nav[role="navigation"] .hidden.sm\:flex-1 {
+        display: flex !important; /* Force l'affichage même sous le breakpoint 'sm' */
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    /* 3. Force la div interne avec le style inline à prendre 100% */
+    nav[role="navigation"] div[style*="width: 45%"] {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
 }
 </style>
 @endsection

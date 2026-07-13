@@ -29,7 +29,7 @@ class ContactController extends Controller
             'message' => 'required|string',
         ]);
         
-        Mail::to('admin@example.com')->send(new ContactMail($validatedData));
+        Mail::to('primestore@anatoleaze.fr')->send(new ContactMail($validatedData));
 
         return response()->json(['message' => 'Votre message a été envoyé avec succès!']);
     }
