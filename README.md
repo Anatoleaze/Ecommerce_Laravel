@@ -1,6 +1,6 @@
 # 🛒 Primestore – E-Commerce Laravel & Vue.js
 
-![Aperçu du projet](image/primestore.png)
+![Aperçu du projet](images/primestore.png)
 
 ## 📄 Description courte
 Plateforme e-commerce full-stack moderne développée avec Laravel (Back-end) et Vue.js (Front-end).
